@@ -1,0 +1,14 @@
+details:
+  simple_metal_leg:
+    name: Металева Нога
+    description: ОПИС
+
+  simple_metal_arm:
+    name: Металева Рука
+    description: ОПИС
+
+  simple_metal_body:
+    name: |
+      Металеве
+      Тіло
+    description: ОПИС

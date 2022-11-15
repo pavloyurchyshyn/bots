@@ -1,0 +1,12 @@
+skills:
+  simple_step:
+    name: Просто Крок
+    description: ОПИС
+
+  simple_hit:
+    name: Простий Удар
+    description: ОПИС
+
+  disconnect_detail:
+    name: Від'єднати
+    description: ОПИС

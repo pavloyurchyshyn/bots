@@ -1,0 +1,12 @@
+details:
+  simple_metal_leg:
+    name: Metal Leg
+    description: DESC
+
+  simple_metal_arm:
+    name: Metal Arm
+    description: DESC
+
+  simple_metal_body:
+    name: Metal Body
+    description: DESC

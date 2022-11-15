@@ -1,0 +1,43 @@
+common:
+  'yes': 'Так'
+  'no': 'Ні'
+  'ready': 'Готово'
+  'cancel': Відмінити
+  'ok': Добре
+
+UI:
+  main_menu:
+    menu_start: Старт
+    multiplayer: Приєднатись
+    settings: Налаштування
+    exit: Вихід
+    exit_yes: Так
+    exit_no: Ні
+    host_game: Створити гру
+    lang_disapp_msg: |
+      Потрібно перезайти в гру
+      для зміни мови
+  # ----------------------------------
+  round:
+    exit_pop_up:
+      exit_pop_text: 'Вийти з гри?'
+
+    ready_body:
+      ready_button: 'Готово'
+
+    mana_text: 'Мaнa'
+    hp_text: Здоров'я
+
+  main_menu_settings:
+    nickname_text: Ваше ім'я
+
+  host_menu:
+    host: 'Захостити'
+
+  join_menu:
+    join: Приєднатись
+
+  lobby:
+    exit_pop_up:
+      exit_pop_text: Закрити лобі?
+    go_button: Поїхали!

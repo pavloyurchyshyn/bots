@@ -1,0 +1,47 @@
+common:
+  'yes': 'Yes'
+  'no': 'No'
+  'ready': 'Ready'
+  'cancel': Cancel
+  'ok': Ok
+  'press_space': Press Space
+
+
+UI:
+  main_menu:
+    menu_start: Start
+    multiplayer: Join game
+    settings: Settings
+    exit: Exit
+    exit_yes: 'Yes'
+    exit_no: 'No'
+    host_game: Host game
+    lang_disapp_msg: |
+      Better to restart the game
+      to accept changes
+  # ----------------------------------
+  round:
+    exit_pop_up:
+      exit_pop_text: 'You want to close game?'
+
+    ready_body:
+      ready_button: 'Ready'
+
+    energy_text: 'Mana'
+    hp_text: 'Health'
+
+  main_menu_settings:
+    nickname_text: 'Your nickname'
+
+  host_menu:
+    host: 'Host'
+
+  join_menu:
+    join: Join
+
+  lobby:
+    exit_pop_up:
+      exit_pop_text: Close lobby?
+
+    players_number: "Players number"
+    go_button: Lets go!

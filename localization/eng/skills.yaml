@@ -1,0 +1,12 @@
+skills:
+  simple_step:
+    name: Simple Step
+    description: DESCRIPTION
+
+  simple_hit:
+    name: Simple Hit
+    description: DESCRIPTION
+
+  disconnect_detail:
+    name: Disconnect
+    description: DESCRIPTION
