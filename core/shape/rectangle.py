@@ -34,7 +34,7 @@ class Rectangle(CollideInterface, ABC):
         x1, y1 = self.x1, self.y1
 
         self._dots.clear()
-        self._dots.append(self._center)
+        self._dots.append(self.center)
         self._dots.append((x0, y0))  # left top
         self._dots.append(((x0 + x1) // 2, y0))  # mid top
         self._dots.append((x1, y0))  # right top
@@ -58,7 +58,7 @@ class Rectangle(CollideInterface, ABC):
         :return:
         """
         x, y = xy
-        self._center = [x + self.size_x // 2, y + self.size_y // 2]
+        self.center = [x + self.size_x // 2, y + self.size_y // 2]
         self.x0 = x
         self.y0 = y
 
@@ -77,7 +77,7 @@ class Rectangle(CollideInterface, ABC):
         :return:
         """
         x, y = xy
-        self._center = xy
+        self.center = xy
         self.x0 = x - self.size_x // 2
         self.y0 = y - self.size_y // 2
 

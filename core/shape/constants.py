@@ -1,4 +1,6 @@
-from typing import Iterable, Tuple, List, Union
+from typing import Iterable, Union
+
+__all__ = 'ShapeType', 'Vector2DType', 'DotsContainerType'
 
 
 class ShapeType:

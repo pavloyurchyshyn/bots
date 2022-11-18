@@ -24,3 +24,17 @@ class Attrs:
     SurfaceTransparent = 'surface_transparent'
     SurfaceColor = 'surface_color'
     SurfaceFlags = 'surface_flags'
+
+    PostponeRender = 'postpone_render'
+    BorderSize = 'border_size'
+    BorderColor = 'border_color'
+    BorderRadius = 'border_radius'
+    BorderTopLeftRadius = 'border_top_left_radius'
+    BorderTopRightRadius = 'border_top_right_radius'
+    BorderBottomLeftRadius = 'border_bottom_left_radius'
+    BorderBottomRightRadius = 'border_bottom_right_radius'
+
+    OnClickAction = 'on_click_action'
+    OnClickActionArgs = 'on_click_action_args'
+    OnClickActionKwargs = 'on_click_action_kwargs'
+

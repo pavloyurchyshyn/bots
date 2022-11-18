@@ -1,6 +1,5 @@
 from launch import GameRunner
 from visual.UI.base.text import Text
-from settings.base import ROOT_OF_GAME
 
 
 class Body:

@@ -1,6 +1,6 @@
 from os import environ
 from time import time
-
+environ['VisualPygameOn'] = 'on'
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
 from pygame import init
@@ -19,7 +19,7 @@ from game import Game
 
 class GameRunner:
     def __init__(self, game_body=None):
-        self.game_body = game_body if game_body else Game()
+        self.game_body = game_body if game_body else Game(self)
         self.main_screen = MAIN_DISPLAY
         self.font = DEFAULT_FONT
 
@@ -68,6 +68,7 @@ class GameRunner:
             # global_mouse.test()
             # Global.keyboard.test()
             display.update()
+            MAIN_DISPLAY.fill((0, 0, 0))
 
     @staticmethod
     def check_for_mouse_event(event):

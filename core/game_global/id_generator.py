@@ -8,6 +8,7 @@ class IdGenerator:
 
     def set_seed(self, seed):
         self.seed = seed
+        return self
 
     def get_id(self):
         seed, self.seed = str(self.seed), self.seed + 1
