@@ -17,6 +17,9 @@ class Attrs:
     PlaceInside = 'place_inside'
     AA = 'antialiasing'
     RawText = 'raw_text'
+    Text = 'text'
+    TextKwargs = 'text_kwargs'
+    Layer = 'layer'
 
     FontName = 'font_name'
     FontSize = 'font_size'

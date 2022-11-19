@@ -10,6 +10,12 @@ class Stages:
     def main_menu(self):
         self.change_current_stage(StagesConstants.MainMenu)
 
+    def solo_game_menu(self):
+        self.change_current_stage(StagesConstants.SoloGameMenu)
+
+    def close_game(self):
+        self.change_current_stage(StagesConstants.CloseGame)
+
     def set_prev_stage(self):
         self.change_current_stage(self.prev_stage)
 

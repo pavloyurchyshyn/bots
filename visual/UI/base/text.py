@@ -41,7 +41,7 @@ class Text(BaseUI, LocalizationMixin, GetSurfaceMixin):
         font_size = kwargs.get(Attrs.FontSize, DEFAULT_FONT_SIZE)
         self.font = get_custom_font(font_size, font_name)
 
-        self.antialiasing = kwargs.get(Attrs.AA, GraphicConfig.Antialiasing)
+        self.antialiasing = kwargs.get(Attrs.AA, GraphicConfig.AntialiasingText)
 
         self.build()
 

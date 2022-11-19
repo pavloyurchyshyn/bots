@@ -24,11 +24,13 @@ class BaseButton(BaseUI, GetSurfaceMixin, DrawBorderMixin):
         super(BaseButton, self).__init__(uid=uid,
                                          **kwargs)
 
+        raw_text = kwargs.pop(Attrs.RawText, True) and text_kwargs.pop(Attrs.RawText, True)
         self.text = Text(
             text_uid if text_uid else f'{text_uid}_txt',
             text,
             parent=self,
             auto_draw=True,
+            raw_text=raw_text,
             **text_kwargs,
         )
         self.text.build()
@@ -40,7 +42,8 @@ class BaseButton(BaseUI, GetSurfaceMixin, DrawBorderMixin):
 
 class Button(BaseButton):
     def init_shape(self) -> None:
-        self.shape = self.shape_class(self.x, self.y, self.h_size, self.v_size)
+        x, y = self.parent.x + self.x, self.parent.y + self.y
+        self.shape = self.shape_class(x, y, self.h_size, self.v_size)
 
     def build_position(self) -> None:
         self.default_build_position()

@@ -14,6 +14,7 @@ from visual.UI.settings import UIDefault
 class BaseUIAbs:
     colors = CommonColors
     uid: str
+    layer: int
     tags: tuple = ()
     shape: ShapeClasses or None
     position: Vector2DType
@@ -47,6 +48,7 @@ class BaseUI(BaseUIAbs, ABC):
                  parent: BaseUIAbs = None,
                  **kwargs):
         self.uid = uid
+        self.layer = kwargs.get(Attrs.Layer, 0)
 
         self.auto_draw = auto_draw
 

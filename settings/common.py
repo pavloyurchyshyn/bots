@@ -6,7 +6,7 @@ GLOBAL_SETTINGS = {
     'test_draw': 0,
     'slow_motion': 0,
     'slow_motion_value': 0.05,
-    'fps': get_from_common_config('fps_config', 10),
+    'fps': get_from_common_config('fps_config', 60),
     'language': get_from_common_config('language', 'eng'),
     'scroll_speed': 5,
 }
