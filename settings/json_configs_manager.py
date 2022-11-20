@@ -1,7 +1,9 @@
 import json
 from os.path import exists
 from settings.base import COMMON_CONFIG_PATH
-from global_obj.logger import LOGGER
+from global_obj.logger import get_logger
+
+LOGGER = get_logger()
 
 
 def load_json_config(path: str) -> dict:

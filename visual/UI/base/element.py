@@ -1,10 +1,13 @@
 from abc import abstractmethod, ABC
 from pygame import Surface, SRCALPHA
 from pygame.transform import smoothscale
-from pygame.draw import rect as draw_rect
+from pygame.draw import rect as draw_rect, circle as draw_circle
+
 from global_obj import Global
+
 from core.shape.constants import Vector2DType
 from core.shape import ShapeClasses, Rectangle
+
 from visual.UI.constants.colors import CommonColors
 from visual.UI.utils import get_surface
 from visual.UI.constants.attrs import Attrs
@@ -16,10 +19,11 @@ class BaseUIAbs:
     uid: str
     layer: int
     tags: tuple = ()
-    shape: ShapeClasses or None
+    shape: ShapeClasses
     position: Vector2DType
     real_position: Vector2DType
-
+    visible: bool
+    active: bool
     surface: Surface
     parent_surface: Surface = Global.display
 
@@ -46,15 +50,20 @@ class BaseUI(BaseUIAbs, ABC):
                  auto_draw=False,
                  postpone_render=False,
                  parent: BaseUIAbs = None,
+                 parent_surface=None,
                  **kwargs):
-        self.uid = uid
-        self.layer = kwargs.get(Attrs.Layer, 0)
+        self.uid: str = uid
+        self.layer: int = kwargs.get(Attrs.Layer, 0)
+        self.visible: bool = kwargs.get(Attrs.Visible, 1)
+        self.active: bool = kwargs.get(Attrs.Active, 1)
 
         self.auto_draw = auto_draw
 
         self.parent: BaseUIAbs = parent
         if parent:
-            self.parent_surface = parent.surface
+            self.parent_surface = parent_surface or parent.surface or Global.display
+        else:
+            self.parent_surface = parent_surface or Global.display
 
         self.x_k = x_k
         self.y_k = y_k
@@ -66,7 +75,6 @@ class BaseUI(BaseUIAbs, ABC):
         self.h_size = int(self.parent_surface.get_width() * h_size_k) if h_size_k is not None else None
         self.v_size = int(self.parent_surface.get_height() * v_size_k) if v_size_k is not None else None
 
-        self.surface = None
         self.surface_transparent = kwargs.get(Attrs.SurfaceTransparent, UIDefault.SurfaceTransparent)
         self.surface_flags = kwargs.get(Attrs.SurfaceFlags, UIDefault.SurfaceFlags)
         self.surface_color = kwargs.get(Attrs.SurfaceColor, UIDefault.SurfaceColor)
@@ -116,7 +124,7 @@ class BaseUI(BaseUIAbs, ABC):
         else:
             self.y = (pv_size - v_size) // 2
 
-    def build(self):
+    def build(self) -> None:
         self.render()
         self.build_position()
         if self.auto_draw:
@@ -129,23 +137,34 @@ class BaseUI(BaseUIAbs, ABC):
         else:
             return False
 
-    @abstractmethod
-    def init_shape(self) -> None:
-        raise NotImplementedError
-
     def draw(self):
-        self.parent_surface.blit(self.surface, self.position)
+        if self.visible:
+            self.parent_surface.blit(self.surface, self.position)
+            if self.shape and Global.test_draw:
+                for d in self.shape.dots:
+                    draw_circle(self.parent_surface, (0, 255, 0), d, 2)
 
-    @abstractmethod
-    def build_position(self) -> None:
-        raise NotImplementedError
+    def switch_active(self):
+        self.active = not self.active
+
+    def deactivate(self) -> None:
+        self.active = 0
+
+    def activate(self) -> None:
+        self.active = 1
+
+    def make_visible(self) -> None:
+        self.visible = 1
+
+    def make_invisible(self) -> None:
+        self.visible = 0
 
     @property
-    def position(self):
+    def position(self) -> tuple:
         return self.x, self.y
 
     @position.setter
-    def position(self, new_position):
+    def position(self, new_position) -> None:
         self.x, self.y = new_position
         self.render()
 
@@ -158,21 +177,34 @@ class BaseUI(BaseUIAbs, ABC):
         x, y = self.parent.real_position if self.parent else (0, 0)
         return x + self.x, y + self.y
 
+    @abstractmethod
+    def init_shape(self) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def build_position(self) -> None:
+        raise NotImplementedError
+
 
 class GetSurfaceMixin:
-    def get_rect_surface(self, h_size, v_size=None):
+    def get_rect_surface(self, h_size, v_size=None, transparent=None, color=None, flags=None):
+        flags = flags if flags is not None else getattr(self, Attrs.SurfaceFlags, SRCALPHA)
+        transparent = transparent if transparent is not None else getattr(self, Attrs.SurfaceTransparent, 0)
+        color = color if color is not None else getattr(self, Attrs.SurfaceColor, None)
         return get_surface(h_size, v_size,
-                           transparent=getattr(self, Attrs.SurfaceTransparent, 0),
-                           flags=getattr(self, Attrs.SurfaceFlags, SRCALPHA),
-                           color=getattr(self, Attrs.SurfaceColor, None),
+                           transparent=transparent,
+                           flags=flags,
+                           color=color,
                            )
 
 
 class DrawBorderMixin:
-    def draw_border(self: BaseUI):
-        draw_rect(self.surface,
-                  getattr(self, Attrs.BorderColor, CommonColors.white),
-                  ((0, 0), self.surface.get_size()),
+    def draw_border(self: BaseUI, surface=None, color=None):
+        surface = surface if surface else self.surface
+        color = color if color else getattr(self, Attrs.BorderColor, CommonColors.white)
+        draw_rect(surface,
+                  color,
+                  ((0, 0), surface.get_size()),
                   getattr(self, Attrs.BorderSize, UIDefault.BorderSize),
                   getattr(self, Attrs.BorderRadius, UIDefault.BorderRadius),
                   getattr(self, Attrs.BorderTopLeftRadius, UIDefault.BorderTopLeftRadius),

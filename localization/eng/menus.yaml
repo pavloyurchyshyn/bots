@@ -9,6 +9,7 @@ common:
 
 UI:
   main_menu:
+    new_game: New game
     menu_start: Start
     multiplayer: Join game
     settings: Settings

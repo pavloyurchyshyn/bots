@@ -19,4 +19,4 @@ for f in (LOGS_FOLDER, SETTINGS_PATH, SOUNDS_FOLDER, LOCALIZATIONS_FOLDER):
     if not os.path.exists(f):
         os.mkdir(f)
 # patterns
-LOG_FILE_PATTERN = os.path.join(LOGS_FOLDER, '{}_.txt')
+LOG_FILE_PATTERN = os.path.join(LOGS_FOLDER, '{}.txt')

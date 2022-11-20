@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from typing import List
 from visual.UI.manager import UIManager
 from visual.UI.base.button import Button
 from global_obj import Global
@@ -9,7 +10,7 @@ class Menu:
         self.x, self.y = 0, 0
         self.surface = surface if surface else Global.display
         self.UI_manager = UIManager()
-        self.buttons = self.create_button_from_data(buttons_data)
+        self.buttons: List[Button, ] = self.create_button_from_data(buttons_data)
 
     def create_button_from_data(self, buttons_data: dict):
         buttons = []
@@ -19,6 +20,7 @@ class Menu:
                        parent=self)
             buttons.append(b)
             setattr(self, button_name, b)
+            self.UI_manager.add_element(b)
 
         buttons.sort(key=lambda e: e.y, reverse=True)
         buttons.sort(key=lambda e: e.layer, reverse=True)

@@ -8,6 +8,9 @@ class Attrs:
     VSizeK = 'v_size_k'
     AutoDraw = 'auto_draw'
     Parent = 'parent'
+    ParentSurface = 'parent_surface'
+    Visible = 'visible'
+    Active = 'active'
 
     Color = 'color'
     TextBackColor = 'text_background_color'
@@ -19,6 +22,7 @@ class Attrs:
     RawText = 'raw_text'
     Text = 'text'
     TextKwargs = 'text_kwargs'
+    InacTextKwargs = 'inactive_text_kwargs'
     Layer = 'layer'
 
     FontName = 'font_name'
@@ -31,6 +35,7 @@ class Attrs:
     PostponeRender = 'postpone_render'
     BorderSize = 'border_size'
     BorderColor = 'border_color'
+    InacBorderColor = 'border_color'
     BorderRadius = 'border_radius'
     BorderTopLeftRadius = 'border_top_left_radius'
     BorderTopRightRadius = 'border_top_right_radius'

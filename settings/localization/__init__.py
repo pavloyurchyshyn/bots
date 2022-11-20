@@ -2,15 +2,20 @@ import yaml
 from os import listdir, path
 from settings.common import get_language
 from settings.base import LOCALIZATIONS_FOLDER
-from global_obj import Global
+from global_obj.logger import get_logger
 from utils.singleton import Singleton
 
-LOGGER = Global.logger
+LOGGER = get_logger()
 
 NO_TEXT_MSG = 'no text'
 
 TEXT_PATH_DELIMITER = '/./'
-__all__ = ['LocalizationLoader', 'LOCAL', 'TEXT_PATH_DELIMITER']
+PathSymbol = '@//'
+__all__ = ['LocalizationLoader', 'build_path', 'TEXT_PATH_DELIMITER']
+
+
+def build_path(*args: str):
+    return f'{PathSymbol if not args[0].startswith(PathSymbol) else ""}{TEXT_PATH_DELIMITER.join(args)}'
 
 
 class TextValue:
@@ -29,6 +34,7 @@ class LocalizationConfig:
 
     def __init__(self, language: str):
         self.country = language
+        self.localization = {}
         self.load()
 
     def load(self):
@@ -36,28 +42,7 @@ class LocalizationConfig:
         country = path.join(LOCALIZATIONS_FOLDER, self.country)
         for file in listdir(country):
             with open(path.join(country, file), encoding='utf8') as f:
-                local_ = yaml.safe_load(f)
-            if local_:
-                for k, val in local_.items():
-                    if type(val) is not dict:
-                        setattr(self, k, val)
-                    else:
-                        self.parse_dict(k, val, self)
-            else:
-                LOGGER.warn(f'Failed to load: {file} for {self.country}')
-
-    @staticmethod
-    def parse_dict(key, value: dict, prev_obj):
-        obj = TextValue(key)
-        setattr(prev_obj, key, obj)
-        for k, v in value.items():
-            if type(v) is not dict:
-                setattr(obj, k, v)
-            else:
-                LocalizationConfig.parse_dict(k, v, obj)
-
-    def __getattr__(self, name):
-        return NO_TEXT_MSG
+                self.localization[file.replace('.yaml', '')] = yaml.safe_load(f)
 
 
 class LocalizationLoader(metaclass=Singleton):
@@ -67,46 +52,54 @@ class LocalizationLoader(metaclass=Singleton):
         l_f = LOCALIZATIONS_FOLDER
         p_c = '__pycache__'
         self.available_langs = [l for l in listdir(l_f) if
-                                path.isdir(path.join(l_f, l)) and p_c not in path.join(l_f, l)]
+                                path.isdir(path.join(l_f, l)) and p_c not
+                                in path.join(l_f, l)]
         LOGGER.info(f'Available langs: {", ".join(self.available_langs)}')
-        self._current_language = get_language()
+        self.current_language: str = get_language()
+        self.loaded_languages = {
+
+        }
         self.load_lang('eng')
         self.load_current_lang()
 
     def change_language(self, lang):
-        self._current_language = lang
+        self.current_language = lang
 
     @property
-    def text(self):
-        return getattr(self, self._current_language)
+    def localization(self):
+        return self.loaded_languages[self.current_language].localization
 
     def load_lang(self, lang):
         LOGGER.info(f'Loading {lang} language')
-        setattr(self, lang, LocalizationConfig(lang))
+        self.loaded_languages[lang] = LocalizationConfig(lang)
         LOGGER.info(f'Language {lang} successfully loaded.')
 
     def load_current_lang(self):
-        self.load_lang(self._current_language)
+        self.load_lang(self.current_language)
 
-    def get_text(self, path):
-        # LOGGER.info(f'Searching localization for {path}')
-        key = (path, self._current_language)
+    def get_text(self, path: str):
+        return self.get_text_from_lang(path, self.current_language)
+
+    def get_text_from_lang(self, path: str, lang: str):
+        LOGGER.info(f'Searching localization for {path}')
+        key = (path, lang)
         if key not in LocalizationLoader.memory:
-            text = self.text
+            text = self.loaded_languages[lang].localization
             for attr in path.split(TEXT_PATH_DELIMITER):
-                text = getattr(text, attr)
-                if text == NO_TEXT_MSG:
-                    return text
+                text = text.get(attr, NO_TEXT_MSG)
+                if type(text) is str:
+                    break
 
             LocalizationLoader.memory[key] = text
 
         return LocalizationLoader.memory[key]
 
-    def __getattr__(self, name):
-        return NO_TEXT_MSG
+    def get_text_with_localization(self, text: str):
+        if text.startswith(PathSymbol):
+            return self.get_text(text.replace(PathSymbol, '', 1))
+        else:
+            return text
 
-
-LOCAL = LocalizationLoader()
 
 if __name__ == '__main__':
     l = LocalizationLoader()

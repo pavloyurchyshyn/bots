@@ -8,6 +8,7 @@ common:
 
 UI:
   main_menu:
+    new_game: Нова гра
     menu_start: Старт
     multiplayer: Приєднатись
     settings: Налаштування
