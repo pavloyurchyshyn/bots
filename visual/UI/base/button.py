@@ -1,24 +1,26 @@
 from typing import Iterable, Any
 from pygame import Surface
-from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorderMixin
+
 from visual.UI.base.text import Text
+from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorderMixin, BuildRectShapeMixin
+
 from visual.UI.constants.attrs import Attrs
-from core.shape import Circle
 from visual.UI.settings import UIDefault
 
 
-class BaseButton(BaseUI, GetSurfaceMixin, DrawBorderMixin):
+class BaseButton(BaseUI, GetSurfaceMixin, DrawBorderMixin, BuildRectShapeMixin):
     def __init__(self, uid,
                  text,
                  on_click_action: callable,
                  inactive_text: str = None,
-
                  text_uid=None,
                  text_kwargs: dict = None,
                  inactive_text_kwargs: dict = None,
                  **kwargs):
+
         text_kwargs = text_kwargs if text_kwargs is not None else {}
         inactive_text_kwargs = inactive_text_kwargs if inactive_text_kwargs is not None else {}
+        self.clicked = 0
         self.surface = None
         self.active_surface: Surface = None
         self.inactive_surface: Surface = None
@@ -74,8 +76,7 @@ class BaseButton(BaseUI, GetSurfaceMixin, DrawBorderMixin):
 
 class Button(BaseButton):
     def init_shape(self) -> None:
-        x, y = self.parent.x + self.x, self.parent.y + self.y
-        self.shape = self.shape_class(x, y, self.h_size, self.v_size)
+        self.init_rect_shape()
 
     def build_position(self) -> None:
         self.default_build_position()
@@ -91,6 +92,5 @@ class Button(BaseButton):
 
         self.surface = self.active_surface if self.active else self.inactive_surface
 
-    def move(self, xy):
-        self.x, self.y = xy
-        self.shape.move(xy)
+    def move(self, xy) -> None:
+        self.move_rect_shape(xy)

@@ -212,3 +212,22 @@ class DrawBorderMixin:
                   getattr(self, Attrs.BorderBottomLeftRadius, UIDefault.BorderBottomLeftRadius),
                   getattr(self, Attrs.BorderBottomRightRadius, UIDefault.BorderBottomRightRadius),
                   )
+
+
+class BuildRectShapeMixin:
+    def get_real_pos(self):
+        if self.parent:
+            x, y = self.parent.x + self.x, self.parent.y + self.y
+        else:
+            x, y = self.x, self.y
+        return x, y
+
+    def init_rect_shape(self) -> None:
+        self.shape = self.shape_class(*self.get_real_pos(), self.h_size, self.v_size)
+
+    def move_rect_shape(self, xy) -> None:
+        self.x, self.y = xy
+        self.shape.move(xy)
+
+    def reload_shape_position(self):
+        self.shape.move(*self.get_real_pos())

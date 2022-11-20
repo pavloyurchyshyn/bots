@@ -1,14 +1,35 @@
 from visual.UI.base.button import Button
 from visual.UI.constants.attrs import Attrs
+from visual.UI.manager import UIManager
+
 from core.game_global import GameGlobal
+
 from settings.screen.size import scaled_w
 from settings.localization.menus.UI import UI
+
+from game.stages.main_menu.settings.uids import UIDs
 
 mock_func = lambda b: print(f'TODO: Clicked {b.uid}')
 
 
 def test_func(b):
     b.parent.UI_manager.get_by_uid('solo_game_btn').switch_active()
+
+
+MENU_UIDS = (
+    UIDs.NewGame,
+    UIDs.LoadGame,
+    UIDs.HostGame,
+    UIDs.JoinGame,
+    UIDs.Settings,
+    UIDs.Exit,
+)
+
+
+def exit_btn_func(b):
+    ui_manager: UIManager = b.parent.UI_manager
+    for uid in MENU_UIDS:
+        ui_manager.get_by_uid(uid).deactivate()
 
 
 class MenuAbs:
@@ -23,6 +44,7 @@ class MenuAbs:
 main_menu_button_style = {
     Attrs.HSizeK: 0.1,
     Attrs.VSizeK: 0.05,
+    Attrs.RawText: False,
     Attrs.AutoDraw: False,
     Attrs.TextKwargs: {
         Attrs.FontSize: scaled_w(0.01),
@@ -38,7 +60,7 @@ BUTTONS_DATA = {
         'kwargs': {
             Attrs.YK: 0.2,
             Attrs.Text: UI.MainMenu.NewGame,
-            Attrs.UID: 'solo_game_btn',
+            Attrs.UID: UIDs.NewGame,
             Attrs.Active: False,
             Attrs.RawText: False,
             Attrs.OnClickAction: lambda b: GameGlobal.stages.solo_game_menu(),
@@ -49,7 +71,7 @@ BUTTONS_DATA = {
         'kwargs': {
             Attrs.YK: 0.3,
             Attrs.Text: 'Load Game',
-            Attrs.UID: 'load_solo_game_btn',
+            Attrs.UID: UIDs.LoadGame,
             Attrs.Active: False,
             Attrs.OnClickAction: lambda b: GameGlobal.stages.solo_game_menu(),
         }
@@ -58,8 +80,8 @@ BUTTONS_DATA = {
     'host_game': {
         'kwargs': {
             Attrs.YK: 0.4,
-            Attrs.Text: 'Host game',
-            Attrs.UID: 'host_game_btn',
+            Attrs.Text: UI.MainMenu.HostGame,
+            Attrs.UID: UIDs.HostGame,
             Attrs.OnClickAction: mock_func,
         }
     },
@@ -67,8 +89,8 @@ BUTTONS_DATA = {
     'join_game': {
         'kwargs': {
             Attrs.YK: 0.5,
-            Attrs.Text: 'Join game',
-            Attrs.UID: 'join_game_btn',
+            Attrs.Text: UI.MainMenu.Multiplayer,
+            Attrs.UID: UIDs.JoinGame,
             Attrs.OnClickAction: mock_func,
         }
     },
@@ -76,8 +98,8 @@ BUTTONS_DATA = {
     'settings': {
         'kwargs': {
             Attrs.YK: 0.6,
-            Attrs.Text: 'Settings',
-            Attrs.UID: 'settings_btn',
+            Attrs.Text: UI.MainMenu.Settings,
+            Attrs.UID: UIDs.Settings,
             Attrs.OnClickAction: test_func,
         }
     },
@@ -94,9 +116,9 @@ BUTTONS_DATA = {
     'exit': {
         'kwargs': {
             Attrs.YK: 0.7,
-            Attrs.Text: 'Exit',
-            Attrs.UID: 'exit_btn',
-            Attrs.OnClickAction: lambda b: GameGlobal.stages.close_game(),
+            Attrs.Text: UI.MainMenu.Exit,
+            Attrs.UID: UIDs.Exit,
+            Attrs.OnClickAction: exit_btn_func,
         }
     },
 }

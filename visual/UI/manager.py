@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Iterable, Union
 from visual.UI.base.element import BaseUI
 
 
@@ -39,5 +39,9 @@ class UIManager:
             raise NotUniqueID
         self.uid_to_element[element.uid] = element
 
-    def get_by_uid(self, uid: str) -> BaseUI or None:
+    def add_elements(self, elements: Iterable[BaseUI]) -> None:
+        for element in elements:
+            self.add_element(element)
+
+    def get_by_uid(self, uid: str) -> Union[BaseUI, None]:
         return self.uid_to_element.get(uid)
