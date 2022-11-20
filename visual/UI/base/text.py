@@ -1,40 +1,22 @@
 from pygame import Surface, SRCALPHA
 from settings.graphic import GraphicConfig
+
+from global_obj import Global
+from visual.UI.settings import UIDefault
 from visual.UI.base.element import BaseUI, GetSurfaceMixin
 from visual.UI.base.font import DEFAULT_FONT_NAME, get_custom_font, DEFAULT_FONT_SIZE
 from visual.UI.constants.attrs import Attrs
-from visual.UI.constants.colors import CommonColors
-from visual.UI.utils import get_surface
-
-from settings.localization import LocalizationLoader, TEXT_PATH_DELIMITER
 
 
-class LocalizationMixin:
-    Delimiter = TEXT_PATH_DELIMITER
-    PathSymbol = '@//'
-    __localization = LocalizationLoader()
-
-    @staticmethod
-    def get_text_with_localization(text: str):
-        if text.startswith(LocalizationMixin.PathSymbol):
-            return LocalizationMixin.__localization.get_text(text.replace(LocalizationMixin.PathSymbol, ''))
-        else:
-            return text
-
-    @classmethod
-    def build_path(cls, *args):
-        return f'{cls.PathSymbol}{cls.Delimiter.join(args)}'
-
-
-class Text(BaseUI, LocalizationMixin, GetSurfaceMixin):
+class Text(BaseUI, GetSurfaceMixin):
 
     def __init__(self, uid: str, text: str = '', **kwargs):
         super().__init__(uid=uid, postpone_render=kwargs.pop(Attrs.PostponeRender, True), **kwargs)
 
         self.raw_text = kwargs.get(Attrs.RawText, True)
-        self.str_text = self.__get_text_for_render(text, self.raw_text).replace('\t', '    ')
+        self.str_text = self.__get_text_for_render(str(text), self.raw_text).replace('\t', '    ')
 
-        self.color = kwargs.get(Attrs.Color, CommonColors.white)
+        self.color = kwargs.get(Attrs.Color, UIDefault.TextColor)
         self.text_back_color = kwargs.get(Attrs.TextBackColor)
 
         font_name = kwargs.get(Attrs.FontName, DEFAULT_FONT_NAME)
@@ -71,13 +53,15 @@ class Text(BaseUI, LocalizationMixin, GetSurfaceMixin):
         self.check_for_place_inside()
 
         self.h_size, self.v_size = self.surface.get_size()
-        # self.build_position()
 
     def get_rendered_text(self, text: str) -> Surface:
         return self.font.render(text, self.antialiasing, self.color, self.text_back_color)
 
-    def __get_text_for_render(self, text, raw) -> str:
-        return text if raw else self.get_text_with_localization(text)
+    def __get_text_for_render(self, text: str, raw: bool) -> str:
+        return text if raw else Global.localization.get_text_with_localization(text)
+
+    def reload_text(self) -> None:
+        self.str_text = self.__get_text_for_render(str(self.str_text), self.raw_text).replace('\t', '    ')
 
     def init_shape(self) -> None:
         self.shape = None

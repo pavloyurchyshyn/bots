@@ -1,8 +1,11 @@
 from math import cos
 from pygame.draw import rect as draw_rect
+
 from global_obj import Global
+
 from visual.UI.base.menu import Menu
 from visual.UI.base.button import Button
+
 from game.stages.main_menu.settings.buttons import BUTTONS_DATA, MenuAbs
 
 

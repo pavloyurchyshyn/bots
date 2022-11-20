@@ -29,7 +29,6 @@ main_menu_button_style = {
     },
     Attrs.InacTextKwargs: {
         Attrs.FontSize: scaled_w(0.01),
-        # Attrs.Color: (10, 10, 10),
     }
 }
 
@@ -52,7 +51,6 @@ BUTTONS_DATA = {
             Attrs.Text: 'Load Game',
             Attrs.UID: 'load_solo_game_btn',
             Attrs.Active: False,
-            # Attrs.Visible: False,
             Attrs.OnClickAction: lambda b: GameGlobal.stages.solo_game_menu(),
         }
     },
@@ -81,7 +79,6 @@ BUTTONS_DATA = {
             Attrs.Text: 'Settings',
             Attrs.UID: 'settings_btn',
             Attrs.OnClickAction: test_func,
-            # Attrs.Visible: False,
         }
     },
 
