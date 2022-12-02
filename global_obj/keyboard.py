@@ -3,7 +3,6 @@ import os
 from pygame import key as PG_KEYS
 from pygame import constants, locals
 from pygame.key import name as pg_get_key_name
-from pygame import KEYDOWN, KEYUP, TEXTINPUT
 from pygame.constants import K_F4, K_LALT
 
 from settings.json_configs_manager import load_json_config, save_json_config

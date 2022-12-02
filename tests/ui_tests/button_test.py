@@ -14,9 +14,18 @@ class Body:
                        h_size_k=0.1,
                        v_size_k=0.05,
                        from_left=False, from_bot=False, from_top=False,
-                       surface_color=(20 * i, 155, 20 * i),
+                       surface_color=(10 * i, 10, 10 * i),
                        )
             )
+
+        self.buttons.append(Button(f'button_{999}', 'AHAHHAH',
+                                   on_click_action=lambda button: print(f'Hello from {button.uid}!'),
+                                   x_k=0.3, y_k=0.5,
+                                   h_size_k=0.1,
+                                   v_size_k=0.05,
+                                   from_left=False, from_bot=False, from_top=False,
+                                   surface_color=(10, 10, 10),
+                                   ))
 
     def game_loop(self):
         for b in self.buttons:

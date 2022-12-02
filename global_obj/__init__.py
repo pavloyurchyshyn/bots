@@ -17,11 +17,11 @@ class Global:
     test_draw = False
 
     if VisualPygameOn:
-        from global_obj.mouse import Mouse
-        from global_obj.keyboard import Keyboard
-        from global_obj.display import MAIN_DISPLAY
-        from settings.localization import LocalizationLoader
-        display = MAIN_DISPLAY
-        keyboard = Keyboard(logger)
-        mouse = Mouse()
-        localization = LocalizationLoader()
+        from global_obj.mouse import Mouse as __mouse
+        from global_obj.keyboard import Keyboard as __keyboard
+        from global_obj.display import MAIN_DISPLAY as __display
+        from settings.localization import LocalizationLoader as __localization
+        display = __display
+        keyboard = __keyboard(logger)
+        mouse = __mouse()
+        localization = __localization()

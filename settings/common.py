@@ -3,7 +3,6 @@ from settings.json_configs_manager import get_from_common_config, save_to_common
 
 
 GLOBAL_SETTINGS = {
-    'test_draw': 0,
     'slow_motion': 0,
     'slow_motion_value': 0.05,
     'fps': get_from_common_config('fps_config', 60),
@@ -63,7 +62,3 @@ def pause_step():
 
 def change_test_draw_status():
     GLOBAL_SETTINGS['test_draw'] = not GLOBAL_SETTINGS['test_draw']
-
-
-def test_draw_status_is_on():
-    return GLOBAL_SETTINGS['test_draw']

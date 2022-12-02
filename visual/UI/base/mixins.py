@@ -11,7 +11,7 @@ class CreateButtonMixin:
             buttons.append(b)
             setattr(self, button_name, b)
 
-        buttons.sort(key=lambda e: e.y, reverse=True)
-        buttons.sort(key=lambda e: e.layer, reverse=True)
+        buttons.sort(key=lambda e: e.y)
+        buttons.sort(key=lambda e: e.layer)
 
         return buttons

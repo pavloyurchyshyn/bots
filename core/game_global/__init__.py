@@ -6,8 +6,9 @@ from core.game_global.in_game_settings import InGameSettings
 
 
 class GameGlobal:
+    logger = get_logger()
     id_generator = IdGenerator()
-    stages = Stages(get_logger())
+    stages = Stages(logger)
 
     steps_clock = StepsClock()
     settings = InGameSettings

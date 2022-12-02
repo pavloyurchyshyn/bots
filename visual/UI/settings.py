@@ -3,12 +3,22 @@ from visual.UI.constants.colors import CommonColors
 
 
 class UIDefault:
+    class CollidedElBorder:
+        r_0 = 0
+        g_0 = 0
+        b_0 = 200
+
+        r_1 = 100
+        g_1 = 100
+        b_1 = 56
+
     TextColor = CommonColors.white
+    TextBackColor = None
     InacTextColor = CommonColors.grey
     BorderColor = CommonColors.white
     InacBorderColor = CommonColors.grey
     BorderSize: int = 1
-    BorderRadius: int = 0
+    BorderRadius: int = 3
     BorderTopLeftRadius: int = -1
     BorderTopRightRadius: int = -1
     BorderBottomLeftRadius: int = -1

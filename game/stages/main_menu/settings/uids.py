@@ -5,3 +5,5 @@ class UIDs:
     JoinGame = 'join_game_btn'
     Settings = 'settings_btn'
     Exit = 'exit_btn'
+    ExitYes = 'exit_yes_btn'
+    ExitNo = 'exit_no_btn'

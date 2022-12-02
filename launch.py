@@ -1,5 +1,6 @@
 from os import environ
 from time import time
+
 environ['VisualPygameOn'] = 'on'
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
@@ -14,12 +15,25 @@ from visual.UI.constants.colors import WHITE
 from global_obj.display import MAIN_DISPLAY
 from visual.UI.base.font import DEFAULT_FONT
 from settings.common import get_fps
-from game import Game
+
+
+def close_game():
+    from pygame import quit as close_program_pygame
+    import sys
+
+    close_program_pygame()
+    sys.exit()
 
 
 class GameRunner:
     def __init__(self, game_body=None):
-        self.game_body = game_body if game_body else Game(self)
+        if game_body:
+            self.game_body = game_body
+        else:
+            from game import Game
+
+            self.game_body = Game(self)
+
         self.main_screen = MAIN_DISPLAY
         self.font = DEFAULT_FONT
 
@@ -51,7 +65,6 @@ class GameRunner:
 
             global_mouse.update()
             global_keyboard.update()
-
             # scroll up and scroll down update
             for event in events:
                 self.check_for_mouse_event(event)
@@ -69,6 +82,8 @@ class GameRunner:
             # Global.keyboard.test()
             display.update()
             MAIN_DISPLAY.fill((0, 0, 0))
+            if global_keyboard.alt_and_f4:
+                close_game()
 
     @staticmethod
     def check_for_mouse_event(event):

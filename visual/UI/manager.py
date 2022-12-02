@@ -45,3 +45,6 @@ class UIManager:
 
     def get_by_uid(self, uid: str) -> Union[BaseUI, None]:
         return self.uid_to_element.get(uid)
+
+    def get_elements_by_layer(self, layer) -> list:
+        return [el for el in self.uid_to_element.values() if el.layer == layer]
