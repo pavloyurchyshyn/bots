@@ -17,20 +17,12 @@ from visual.UI.base.font import DEFAULT_FONT
 from settings.common import get_fps
 
 
-def close_game():
-    from pygame import quit as close_program_pygame
-    import sys
-
-    close_program_pygame()
-    sys.exit()
-
-
 class GameRunner:
     def __init__(self, game_body=None):
         if game_body:
             self.game_body = game_body
         else:
-            from game import Game
+            from game_client import Game
 
             self.game_body = Game(self)
 
@@ -82,8 +74,6 @@ class GameRunner:
             # Global.keyboard.test()
             display.update()
             MAIN_DISPLAY.fill((0, 0, 0))
-            if global_keyboard.alt_and_f4:
-                close_game()
 
     @staticmethod
     def check_for_mouse_event(event):
@@ -171,6 +161,13 @@ class GameRunner:
             self.main_screen.blit(fps_text, (0, 90))
 
         return calc
+
+    def close_game(self):
+        from pygame import quit as close_program_pygame
+        import sys
+
+        close_program_pygame()
+        sys.exit()
 
 
 if __name__ == '__main__':

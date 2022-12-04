@@ -11,7 +11,7 @@ class Body:
         for i in range(1, 11):
             t = "\t" * (i - 1)
             text = text + f'\n {t} {i} line'
-            print(text)
+            # print(text)
 
             self.texts.append(
                 Text('test_text', text,

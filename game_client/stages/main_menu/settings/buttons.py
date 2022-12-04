@@ -2,13 +2,11 @@ from visual.UI.manager import UIManager
 from visual.UI.base.button import Button
 from visual.UI.constants.attrs import ButtonAttrs, TextAttrs
 
-from core.game_global import GameGlobal
-
-from settings.screen.size import scaled_w
 from settings.localization.menus.UI import UI
 
-from game.stages.main_menu.settings.uids import UIDs
+from game_client.stages.main_menu.settings.uids import UIDs
 from global_obj import Global
+from game_client.stages.styles import update_btn_style, update_btn_size
 
 MENU_UIDS = (
     UIDs.NewGame,
@@ -22,33 +20,6 @@ MENU_UIDS = (
 
 def mock_func(b):
     print(f'TODO: Clicked {b.uid}')
-
-
-def update_btn_style(b):
-    b['kwargs'].update({
-        TextAttrs.RawText: False,
-        ButtonAttrs.HSizeK: 0.1,
-        ButtonAttrs.VSizeK: 0.05,
-        ButtonAttrs.AutoDraw: False,
-        ButtonAttrs.SurfaceColor: (10, 10, 25),
-        ButtonAttrs.InacSurfaceColor: (5, 5, 10),
-    })
-
-    text_style = {
-        TextAttrs.FontSize: scaled_w(0.01),
-    }
-    if b['kwargs'].get(TextAttrs.TextKwargs):
-        b['kwargs'][TextAttrs.TextKwargs].update(text_style)
-    else:
-        b['kwargs'][TextAttrs.TextKwargs] = text_style
-
-    inactext_style = {
-        TextAttrs.FontSize: scaled_w(0.01),
-    }
-    if b['kwargs'].get(ButtonAttrs.InacTextKwargs):
-        b['kwargs'][ButtonAttrs.InacTextKwargs].update(inactext_style)
-    else:
-        b['kwargs'][ButtonAttrs.InacTextKwargs] = inactext_style
 
 
 def test_draw_btn(b: Button):
@@ -72,8 +43,8 @@ def exit_btn_func(b):
 
 
 def yes_btn_func(b):
-    GameGlobal.logger.info(f'Clicked Yes to exit in main menu.')
-    GameGlobal.stages.close_game()
+    Global.logger.info(f'Clicked Yes to exit in main menu.')
+    Global.stages.close_game()
 
 
 def no_btn_func(b):
@@ -84,24 +55,15 @@ def no_btn_func(b):
     ui_manager.get_by_uid(UIDs.ExitNo).make_inactive_and_invisible()
 
 
-class MenuAbs:
-    solo_game: Button
-    load_solo_game: Button
-    host_game: Button
-    join_game: Button
-    settings: Button
-    exit: Button
-
-
 BUTTONS_DATA = {
     'solo_game': {
         'kwargs': {
             ButtonAttrs.YK: 0.2,
             TextAttrs.Text: UI.MainMenu.NewGame,
             ButtonAttrs.UID: UIDs.NewGame,
-            ButtonAttrs.Active: False,
-            TextAttrs.RawText: False,
-            ButtonAttrs.OnClickAction: lambda b: GameGlobal.stages.solo_game_menu(),
+            # ButtonAttrs.Active: False,
+            # TextAttrs.RawText: False,
+            ButtonAttrs.OnClickAction: lambda b: Global.stages.solo_game_menu(),
         }
     },
 
@@ -110,8 +72,8 @@ BUTTONS_DATA = {
             ButtonAttrs.YK: 0.3,
             TextAttrs.Text: 'Load Game',
             ButtonAttrs.UID: UIDs.LoadGame,
-            ButtonAttrs.Active: False,
-            ButtonAttrs.OnClickAction: lambda b: GameGlobal.stages.solo_game_menu(),
+            # ButtonAttrs.Active: False,
+            ButtonAttrs.OnClickAction: lambda b: Global.stages.solo_game_menu(),
         }
     },
 
@@ -164,11 +126,10 @@ BUTTONS_DATA = {
 start_pos = 0.5
 
 for button in BUTTONS_DATA.values():
-    b_data = button['kwargs']
     update_btn_style(button)
-
-    b_data[ButtonAttrs.YK] = start_pos
-    start_pos += b_data[ButtonAttrs.VSizeK] + b_data[ButtonAttrs.VSizeK] * 0.15
+    update_btn_size(button)
+    button['kwargs'][ButtonAttrs.YK] = start_pos
+    start_pos += button['kwargs'][ButtonAttrs.VSizeK] + button['kwargs'][ButtonAttrs.VSizeK] * 0.15
 
 BUTTONS_DATA['exit_yes'] = {
     "kwargs": {
@@ -201,7 +162,9 @@ BUTTONS_DATA['exit_no'] = {
 }
 
 update_btn_style(BUTTONS_DATA['exit_yes'])
+update_btn_size(BUTTONS_DATA['exit_yes'])
 update_btn_style(BUTTONS_DATA['exit_no'])
+update_btn_size(BUTTONS_DATA['exit_no'])
 
 BUTTONS_DATA['test_draw'] = {
     "kwargs": {

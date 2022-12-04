@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from core.game_global import GameGlobal
+# from core.game_logic.game_data import GameGlobal
 from core.mech.base.skills.constants import Targets
 from core.mech.base.exceptions import SpellWithoutName, TargetsTypeNotDefined
 
@@ -9,7 +9,7 @@ class BaseSkill:
     Just logic without visual, description etc.
     """
     Targets = Targets
-    StepsClock = GameGlobal.steps_clock
+    # StepsClock = GameGlobal.steps_clock
     name = None
     targets = None
 

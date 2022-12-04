@@ -7,7 +7,8 @@ from visual.UI.base.menu import Menu
 from visual.UI.settings import UIDefault
 from visual.UI.base.button import Button
 
-from game.stages.main_menu.settings.buttons import BUTTONS_DATA, MenuAbs
+from game_client.stages.main_menu.settings.buttons import BUTTONS_DATA
+from game_client.stages.main_menu.settings.menu_abs import MenuAbs
 
 
 class MainMenu(Menu, MenuAbs):
@@ -23,7 +24,6 @@ class MainMenu(Menu, MenuAbs):
                     b.do_action()
 
     def draw_border(self, element: Button):
-        # color = 256 * abs(cos(Global.clock.time))
         r_c = UIDefault.CollidedElBorder.r_0 + UIDefault.CollidedElBorder.r_1 * abs(cos(Global.clock.time))
         g_c = UIDefault.CollidedElBorder.g_0 + UIDefault.CollidedElBorder.g_1 * abs(cos(Global.clock.time))
         b_c = UIDefault.CollidedElBorder.b_0 + UIDefault.CollidedElBorder.b_1 * abs(cos(Global.clock.time))

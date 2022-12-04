@@ -4,19 +4,20 @@ from core.mech import details as details_module
 from core.mech.base.details.detail import BaseDetail
 from core.mech.base.pools.skills_pool import SkillsPool
 from core.mech.base.exceptions import ThisDetailClassDoesntExist
-from core.game_global import GameGlobal
+from core.game_logic.game_data.id_generator import IdGenerator
+# from core.game_logic.game_data import GameGlobal
 
 
 class DetailsPool:
     logger = Global.logger
 
-    def __init__(self, skills_pool: SkillsPool, seed: int = None):
+    def __init__(self, skills_pool: SkillsPool, id_generator: IdGenerator):
         self.skills_pool: SkillsPool = skills_pool
         self.details = []
         self.id_to_detail: dict = {}
         self.classes_dict: dict = {}
         self.collect_details_classes()
-        self.id_generator = GameGlobal.id_generator.set_seed(seed=seed)
+        self.id_generator = id_generator
 
     def get_default_details(self, details_set, players_number) -> dict:
         default_details = {}

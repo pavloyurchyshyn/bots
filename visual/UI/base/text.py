@@ -1,7 +1,6 @@
 from pygame import Surface
 from pygame.transform import smoothscale
 from settings.graphic import GraphicConfig
-
 from global_obj import Global
 from visual.UI.settings import UIDefault
 from visual.UI.base.element import BaseUI, GetSurfaceMixin
@@ -12,8 +11,9 @@ from visual.UI.utils import get_surface
 
 class Text(BaseUI):
     TAB_VALUE = '  '
+    MAX_SPEED = 4
 
-    def __init__(self, uid: str, text: str = '', **kwargs):
+    def __init__(self, uid: str, text: str = '', color=None, **kwargs):
 
         self.raw_text = kwargs.get(TextAttrs.RawText, True)
         self.str_text = self.get_localization_text(str(text), self.raw_text)
@@ -21,7 +21,7 @@ class Text(BaseUI):
         self.unlimited_h_size = kwargs.get(TextAttrs.UnlimitedHSize, False)
         self.unlimited_v_size = kwargs.get(TextAttrs.UnlimitedVSize, False)
 
-        self.color = kwargs.get(TextAttrs.Color, UIDefault.TextColor)
+        self.color = color if color else UIDefault.TextColor
         self.text_back_color = kwargs.get(Attrs.TextBackColor, UIDefault.TextBackColor)
 
         self.font_size = kwargs.get(TextAttrs.FontSize, DEFAULT_FONT_SIZE)
@@ -33,6 +33,9 @@ class Text(BaseUI):
 
         self.antialiasing = kwargs.get(Attrs.AA, GraphicConfig.AntialiasingText)
         self.auto_draw = kwargs.get(Attrs.AutoDraw, True)
+
+        self.speed_increase = 0.2
+        self.current_speed = 1
 
         super().__init__(uid=uid, **kwargs, build_surface=True)
         if not self.postpone_build:
@@ -108,7 +111,7 @@ class Text(BaseUI):
                 for word in line.split(' '):
                     h_s = self.font.size(word)[0]
 
-                    if x + h_s > self.h_size:
+                    if x + h_s + space_size >= self.h_size:
                         x = 0
                         lines_to_render.append(' '.join(new_line))
                         new_line.clear()
@@ -140,7 +143,10 @@ class Text(BaseUI):
 
     def simple_render(self, font=None, lines=None):
         lines = lines if lines else [line for line in self.str_text.splitlines() if line]
+        if not lines:
+            return get_surface(1, 1, 1)
         font = font if font else self.font
+        # print(lines)
         h_size, v_size = font.size(max(lines, key=len))
         if not self.unlimited_h_size and h_size < self.h_size:
             h_size = self.h_size
@@ -181,7 +187,7 @@ class Text(BaseUI):
 
     def change_text(self, text: str) -> None:
         self.str_text = self.get_localization_text(text, self.raw_text)
-        self.build()
+        self.render()
 
     def get_rendered_text(self, text: str, font=None) -> Surface:
         font = font if font else self.font

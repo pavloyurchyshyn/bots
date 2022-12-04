@@ -10,6 +10,7 @@ common:
 UI:
   main_menu:
     new_game: New game
+    load_game: Load game
     menu_start: Start
     multiplayer: Join game
     settings: Settings
@@ -21,6 +22,12 @@ UI:
       Better to restart the game
       to accept changes
   # ----------------------------------
+  new_game_menu:
+    start: Start
+    back: X
+
+  # ----------------------------------
+
   round:
     exit_pop_up:
       exit_pop_text: 'You want to close game?'

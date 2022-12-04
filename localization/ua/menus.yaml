@@ -10,6 +10,7 @@ UI:
   main_menu:
     new_game: Нова гра
     menu_start: Старт
+    load_game: Збереження
     multiplayer: Приєднатись
     settings: Налаштування
     exit: Вихід
@@ -19,6 +20,11 @@ UI:
     lang_disapp_msg: |
       Краще перезайти в гру
       для зміни мови
+  # ----------------------------------
+  new_game_menu:
+    back: X
+    start: Start
+
   # ----------------------------------
   round:
     exit_pop_up:

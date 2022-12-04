@@ -1,6 +1,7 @@
 import os
 from global_obj.clock import Clock
 from global_obj.logger import get_logger
+from global_obj.stages import Stages
 
 __all__ = 'Global',
 
@@ -13,8 +14,9 @@ class Global:
     """
     logger = get_logger()
     clock = Clock()
+    stages = Stages(logger)
     round_clock = Clock()
-    test_draw = False
+    test_draw = True
 
     if VisualPygameOn:
         from global_obj.mouse import Mouse as __mouse

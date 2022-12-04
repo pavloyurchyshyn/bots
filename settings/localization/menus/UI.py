@@ -16,3 +16,9 @@ class UI:
         HostGame = build_path(menu, 'host_game')
         LangDisappMsg = build_path(menu, 'lang_disapp_msg')
         NewGame = build_path(menu, 'new_game')
+        LoadGame = build_path(menu, 'load_game')
+
+    class NewGameMenu:
+        new_game_menu = build_path(UI_path, 'new_game_menu')
+        start = build_path(new_game_menu, 'start')
+        back = build_path(new_game_menu, 'back')

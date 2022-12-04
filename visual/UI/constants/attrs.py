@@ -4,6 +4,10 @@ class Attrs:
     XK = 'x_k'
     YK = 'y_k'
     Layer = 'layer'
+    Text = 'text'
+    TextData = 'text_data'
+    TextKwargs = 'text_kwargs'
+
     CollideAble = 'collideable'
 
     PostponeBuild = 'postpone_build'
@@ -43,14 +47,18 @@ class Attrs:
 
 
 class TextAttrs(Attrs):
-    Text = 'text'
     Color = 'color'
     FontSize = 'font_size'
     FontName = 'font_name'
     ScaleFont = 'scale_font'
     RawText = 'raw_text'
-    TextKwargs = 'text_kwargs'
     SplitLines = 'split_lines'
+
+
+class InputAttr(Attrs):
+    OnEnterAction = 'on_enter_action'
+    DefaultText = 'default_text'
+    DefaultTextColor = 'default_text_color'
 
 
 class ButtonAttrs(Attrs):

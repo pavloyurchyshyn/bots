@@ -127,6 +127,12 @@ class BaseUI(BaseUIAbs, ABC):
         self.surface = self.get_surface() if build_surface else None
         self.postpone_build = kwargs.get(Attrs.PostponeBuild, False)
 
+    def default_get_x(self) -> int:
+        return int(self.x_k * self.parent_surface.get_width())
+
+    def default_get_y(self) -> int:
+        return int(self.y_k * self.parent_surface.get_height())
+
     def default_get_surface(self, h_size=None, v_size=None,
                             transparent=None, color=None,
                             flags=None,
