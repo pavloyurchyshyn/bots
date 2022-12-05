@@ -1,4 +1,5 @@
 import os
+from logging import Logger
 from global_obj.clock import Clock
 from global_obj.logger import get_logger
 from global_obj.stages import Stages
@@ -12,10 +13,10 @@ class Global:
     """
     Object for global ingame parameters.
     """
-    logger = get_logger()
-    clock = Clock()
-    stages = Stages(logger)
-    round_clock = Clock()
+    logger: Logger = get_logger()
+    clock: Clock = Clock()  # global for all game
+    stages: Stages = Stages(logger)
+    round_clock: Clock = Clock()  # not counting on pause etc.
     test_draw = True
 
     if VisualPygameOn:
