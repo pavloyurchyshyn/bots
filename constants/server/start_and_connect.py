@@ -19,8 +19,6 @@ class LoginArgs:
     BadPassword = 'bad_password'
     SuccLogin = 'succ_login'
 
-
-
 # class ActionsToPlayer:
 #     MessagesToAll = 'global_messages'
 #     Disconnect = 'disconnect'
