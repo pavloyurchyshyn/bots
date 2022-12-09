@@ -1,8 +1,11 @@
 from pygame import SRCALPHA
 from visual.UI.constants.colors import CommonColors
+from settings.graphic import GraphicConfig
 
 
 class UIDefault:
+    Color = (255, 255, 255)
+
     class CollidedElBorder:
         r_0 = 0
         g_0 = 0
@@ -28,3 +31,8 @@ class UIDefault:
     SurfaceFlags = SRCALPHA
     SurfaceColor = (0, 0, 0, 0)
     InacSurfaceColor = (0, 0, 0, 0)
+    FromLeft: bool = False
+    FromBot: bool = False
+    FromTop: bool = False
+    AA = GraphicConfig.Antialiasing
+    AAText = GraphicConfig.AntialiasingText

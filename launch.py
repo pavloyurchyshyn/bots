@@ -1,7 +1,6 @@
 from os import environ
 from time import time
 
-environ['VisualPygameOn'] = 'on'
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
 from pygame import init
@@ -72,6 +71,9 @@ class GameRunner:
 
             # global_mouse.test()
             # Global.keyboard.test()
+            if global_keyboard.alt_and_f4:
+                self.close_game()
+
             display.update()
             MAIN_DISPLAY.fill((0, 0, 0))
 

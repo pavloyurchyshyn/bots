@@ -4,7 +4,7 @@ from settings.localization.menus.common import CommonText
 UI_path = build_path('menus', 'UI')
 
 
-class UI:
+class UILocal:
     class MainMenu:
         menu = build_path(UI_path, 'main_menu')
         MenuStart = build_path(menu, 'menu_start')

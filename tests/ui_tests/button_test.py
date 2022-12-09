@@ -1,6 +1,7 @@
 from launch import GameRunner
 from global_obj import Global
 from visual.UI.base.button import Button
+from visual.UI.base.style import ButtonStyle
 
 
 class Body:
@@ -13,8 +14,10 @@ class Body:
                        x_k=0.1 * i, y_k=0.1 * i,
                        h_size_k=0.1,
                        v_size_k=0.05,
-                       from_left=False, from_bot=False, from_top=False,
-                       surface_color=(10 * i, 10, 10 * i),
+                       style=ButtonStyle(
+                           from_left=False, from_bot=False, from_top=False,
+                           surface_color=(10 * i, 10, 10 * i),
+                       ),
                        )
             )
 

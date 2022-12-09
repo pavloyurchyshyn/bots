@@ -1,5 +1,6 @@
 from launch import GameRunner
 from visual.UI.base.text import Text
+from visual.UI.base.style import Style
 from global_obj import Global
 
 
@@ -14,15 +15,12 @@ class Body:
             # print(text)
 
             self.texts.append(
-                Text('test_text', text,
+                Text(f'test_text_{i}', text,
                      x_k=i / 10 - 0.1, y_k=i / 20,
-                      # from_left=True,
-                     #  from_bot=True,
-                     #  from_top=True,
+                     style=Style(surface_color=(255 / i, 255 / i, 255 / i)),
                      h_size_k=0.1,
                      v_size_k=0.1,
                      color=(20 * i, 155, 20 * i),
-                     surface_color=(255 / i, 255 / i, 255 / i)
                      )
             )
         self.texts.append(Text('test_text',
@@ -31,8 +29,9 @@ class Body:
                                "\t\t\tThis function doesn't check if the text is too high to fit on the height of the surface though, so sometimes " \
                                "text will disappear underneath the surface",
                                x_k=0.0001, y_k=0.5,
+                               style=Style(surface_color=(25, 25, 25),
+                               from_left=True),
                                # scale_font=True,
-                               from_left=True,
                                # from_bot=False,
                                # from_top=False,
                                unlimited_h_size=True,
@@ -47,9 +46,13 @@ class Body:
                  #  from_left=True, from_bot=True, from_top=True,
                  h_size_k=0.1,
                  v_size_k=0.1,
-                 color=(255, 255, 255),
-                 surface_color=(50, 50, 50)
+                 style=Style(surface_color=(50, 50, 50),
+                             color=(255, 155, 255),
+                             ),
+
+                 # color=(255, 155, 255),
                  )
+
         )
 
     def game_loop(self):

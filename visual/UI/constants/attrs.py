@@ -1,3 +1,6 @@
+from enum import Enum
+
+
 class Attrs:
     Shape = 'shape_class'
     UID = 'uid'
@@ -7,6 +10,9 @@ class Attrs:
     Text = 'text'
     TextData = 'text_data'
     TextKwargs = 'text_kwargs'
+    ButtonKwargs = 'button_kwargs'
+
+    Style = 'style'
 
     CollideAble = 'collideable'
 
@@ -19,31 +25,35 @@ class Attrs:
     UnlimitedVSize = 'unlimited_v_size'
     Parent = 'parent'
     ParentSurface = 'parent_surface'
-    Visible = 'visible'
     Active = 'active'
-
-    TextBackColor = 'text_background_color'
-    FromLeft = 'from_left'
-    FromBot = 'from_bot'
-    FromTop = 'from_top'
-    # InCenter = 'keep_in_center'
-    # PlaceInside = 'place_inside'
-    AA = 'antialiasing'
+    Visible = 'visible'
 
     AutoDraw = 'auto_draw'
+    BuildSurface = 'build_surface'
 
-    SurfaceTransparent = 'surface_transparent'
-    SurfaceColor = 'surface_color'
-    SurfaceFlags = 'surface_flags'
 
-    BorderColor = 'border_color'
-    InacBorderColor = 'inacborder_color'
-    BorderSize = 'border_size'
-    BorderRadius = 'border_radius'
-    BorderTopLeftRadius = 'border_top_left_radius'
-    BorderTopRightRadius = 'border_top_right_radius'
-    BorderBottomLeftRadius = 'border_bottom_left_radius'
-    BorderBottomRightRadius = 'border_bottom_right_radius'
+class StyleAttrs(Enum):
+    Color: str = 'color'
+    FromLeft: str = 'from_left'
+    FromBot: str = 'from_bot'
+    FromTop: str = 'from_top'
+
+    TextBackColor: str = 'text_back_color'
+
+    SurfaceTransparent: str = 'surface_transparent'
+    SurfaceColor: str = 'surface_color'
+    SurfaceFlags: str = 'surface_flags'
+    AA: str = 'antialiasing'
+    AAText: str = 'antialiasing_text'
+
+    BorderColor: str = 'border_color'
+    InacBorderColor: str = 'inacborder_color'
+    BorderSize: str = 'border_size'
+    BorderRadius: str = 'border_radius'
+    BorderTopLeftRadius: str = 'border_top_left_radius'
+    BorderTopRightRadius: str = 'border_top_right_radius'
+    BorderBottomLeftRadius: str = 'border_bottom_left_radius'
+    BorderBottomRightRadius: str = 'border_bottom_right_radius'
 
 
 class TextAttrs(Attrs):
@@ -64,13 +74,15 @@ class InputAttr(Attrs):
 class ButtonAttrs(Attrs):
     InacTextKwargs = 'inactive_text_kwargs'
 
-    InacSurfaceTransparent = 'inac_surface_transparent'
-    InacSurfaceColor = 'inac_surface_color'
-    InacSurfaceFlags = 'inac_surface_flags'
-
     OnClickAction = 'on_click_action'
     OnClickActionArgs = 'on_click_action_args'
     OnClickActionKwargs = 'on_click_action_kwargs'
 
     InactiveAfterClick = 'inactive_after_click'
     InvisAfterClick = 'invisible_after_click'
+
+
+class ButtonStyleAttrs(Enum):
+    InacSurfaceTransparent: str = 'inac_surface_transparent'
+    InacSurfaceColor: str = 'inac_surface_color'
+    InacSurfaceFlags: str = 'inac_surface_flags'

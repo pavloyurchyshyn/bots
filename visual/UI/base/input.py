@@ -4,14 +4,14 @@ from global_obj import Global
 from visual.UI.base.text import Text
 from visual.UI.settings import UIDefault
 from visual.UI.constants.attrs import Attrs, InputAttr
-from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorder, BuildRectShapeMixin, ShapeAbs
+from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorderMixin, BuildRectShapeMixin, ShapeAbs
 
 
-class InputBase(BaseUI, DrawBorder, BuildRectShapeMixin, GetSurfaceMixin, ShapeAbs):
+class InputBase(BaseUI, DrawBorderMixin, BuildRectShapeMixin, GetSurfaceMixin, ShapeAbs):
     def __init__(self, uid, default_text='', **kwargs):
 
         super(InputBase, self).__init__(uid=uid, **kwargs)
-        DrawBorder.__init__(self, **kwargs)
+        DrawBorderMixin.__init__(self, **kwargs)
         ShapeAbs.__init__(self, **kwargs)
 
         txt_data = kwargs.get(Attrs.TextKwargs, {})

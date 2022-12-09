@@ -1,86 +1,27 @@
 from abc import abstractmethod, ABC
 from pygame import Surface, SRCALPHA
-from pygame.draw import rect as draw_rect, circle as draw_circle
+from pygame.draw import rect as draw_rect
 
 from global_obj import Global
-
 from core.shape.constants import Vector2DType
-from core.shape import ShapeClasses, Rectangle
 
-from visual.UI.constants.colors import CommonColors
 from visual.UI.utils import get_surface
-from visual.UI.constants.attrs import Attrs
+from visual.UI.base.style import Style
+from visual.UI.base.abs import BaseUIAbs
 from visual.UI.settings import UIDefault
-
-
-class BaseUIAbs:
-    Colors = CommonColors
-    uid: str
-    layer: int
-    tags: tuple = ()
-    shape: ShapeClasses
-    position: Vector2DType
-    real_position: Vector2DType
-    visible: bool
-    active: bool
-    surface: Surface
-    parent_surface: Surface = Global.display
-    size: tuple
-
-    @abstractmethod
-    def draw(self):
-        raise NotImplementedError
-
-    @abstractmethod
-    def get_x(self) -> int:
-        raise NotImplementedError
-
-    @abstractmethod
-    def get_y(self) -> int:
-        raise NotImplementedError
-
-    @abstractmethod
-    def build(self, **kwargs):
-        """
-        Steps to completely build  element.
-        """
-        raise NotImplementedError
-
-    @abstractmethod
-    def render(self, **kwargs):
-        """
-        Render exactly surface.
-        """
-        raise NotImplementedError
-
-    @abstractmethod
-    def move(self, xy):
-        raise NotImplementedError
-
-    @abstractmethod
-    def get_surface(self, **kwargs) -> Surface:
-        """
-        Returns base surface
-        """
-        raise NotImplementedError
-
-    @abstractmethod
-    def fill_surface(self, surface=None, color=None) -> None:
-        # color = getattr(self, Attrs.SurfaceColor, UIDefault.SurfaceColor) if color is None else color
-        # surface = surface if surface else self.surface
-        raise NotImplementedError
-    # @abstractmethod
-    # def build_position(self) -> None:
-    #     raise NotImplementedError
+from visual.UI.constants.attrs import Attrs, StyleAttrs
 
 
 class BaseUI(BaseUIAbs, ABC):
+    default_style = Style()
+
     def __init__(self, uid,
                  x_k=None, y_k=None,
                  h_size_k=1, v_size_k=1,
                  parent: BaseUIAbs = None,
                  parent_surface=None,
                  build_surface=True,
+                 style: Style = None,
                  **kwargs):
         self.uid: str = uid
         self.layer: int = kwargs.get(Attrs.Layer, 0)
@@ -94,14 +35,11 @@ class BaseUI(BaseUIAbs, ABC):
         else:
             self.parent_surface = parent_surface or Global.display
 
-        self.from_left = kwargs.get(Attrs.FromLeft, False)
-        self.from_bot = kwargs.get(Attrs.FromBot, False)
-        self.from_top = kwargs.get(Attrs.FromTop, False)
-        # self.keep_in_center = kwargs.get(Attrs.InCenter, False)
-        # self.place_inside = kwargs.get(Attrs.PlaceInside, True)
+        self.style: Style = self.default_style if style is None else style
 
         self.h_size_k = h_size_k
         self.v_size_k = v_size_k
+
         self.h_size = int(self.parent_surface.get_width() * h_size_k)
         if kwargs.get(Attrs.RectSize, False):
             self.v_size = self.h_size
@@ -121,11 +59,7 @@ class BaseUI(BaseUIAbs, ABC):
         self.x = self.get_x()
         self.y = self.get_y()
 
-        self.surface_transparent = kwargs.get(Attrs.SurfaceTransparent, UIDefault.SurfaceTransparent)
-        self.surface_flags = kwargs.get(Attrs.SurfaceFlags, UIDefault.SurfaceFlags)
-        self.surface_color = kwargs.get(Attrs.SurfaceColor, UIDefault.SurfaceColor)
         self.surface = self.get_surface() if build_surface else None
-        self.postpone_build = kwargs.get(Attrs.PostponeBuild, False)
 
     def default_get_x(self) -> int:
         return int(self.x_k * self.parent_surface.get_width())
@@ -139,9 +73,10 @@ class BaseUI(BaseUIAbs, ABC):
                             fill=True) -> Surface:
         h_size = self.h_size if h_size is None else h_size
         v_size = self.v_size if v_size is None else v_size
-        flags = getattr(self, Attrs.SurfaceFlags, UIDefault.SurfaceFlags) if flags is None else flags
-        transparent = getattr(self, Attrs.SurfaceTransparent,
-                              UIDefault.SurfaceTransparent) if transparent is None else transparent
+        flags = self.style.dict.get(StyleAttrs.SurfaceFlags.value, UIDefault.SurfaceFlags) if flags is None else flags
+        if transparent is None:
+            transparent = self.style.dict.get(StyleAttrs.SurfaceTransparent.value, UIDefault.SurfaceTransparent)
+
         surface = get_surface(h_size, v_size,
                               transparent=transparent,
                               flags=flags,
@@ -153,7 +88,7 @@ class BaseUI(BaseUIAbs, ABC):
 
     def default_fill_surface(self, surface: Surface = None, color=None) -> None:
         surface = self.surface if surface is None else surface
-        color = color if color else getattr(self, Attrs.SurfaceColor, CommonColors.white)
+        color = color if color else self.style.dict.get(StyleAttrs.SurfaceColor.value, self.Colors.white)
 
         surface.fill(color)
 
@@ -170,19 +105,27 @@ class BaseUI(BaseUIAbs, ABC):
     def activate(self) -> None:
         self.active = 1
 
+    @property
+    def inactive(self) -> bool:
+        return not self.active
+
     def make_visible(self) -> None:
         self.visible = 1
 
     def make_invisible(self) -> None:
         self.visible = 0
 
+    @property
+    def invisible(self) -> bool:
+        return not self.visible
+
     def make_inactive_and_invisible(self) -> None:
         self.deactivate()
-        self.visible = 0
+        self.make_invisible()
 
     def make_active_and_visible(self) -> None:
         self.activate()
-        self.visible = 1
+        self.make_visible()
 
     @property
     def position(self) -> tuple:
@@ -212,35 +155,13 @@ class UpdateInterface:
         raise NotImplementedError
 
 
-class ShapeAbs:
-    def __init__(self, shape_class: ShapeClasses = Rectangle,
-                 **kwargs):
-        self.shape_class: ShapeClasses = shape_class
-        self.shape: ShapeClasses or None = None
-        self.collideable = kwargs.get(Attrs.CollideAble, True)
-
-    def collide_point(self, point: Vector2DType) -> bool:
-        if self.shape:
-            return self.shape.collide_point(point)
-        else:
-            return False
-
-    @abstractmethod
-    def init_shape(self) -> None:
-        raise NotImplementedError
-
-    def shape_test_draw(self) -> None:
-        if self.shape and Global.test_draw:
-            for d in self.shape.dots:
-                draw_circle(self.parent_surface, (0, 255, 0), d, 2)
-
-
 class GetSurfaceMixin:
+    style: Style
 
     def get_rect_surface(self, h_size, v_size=None, transparent=None, color=None, flags=None):
-        flags = flags if flags is not None else getattr(self, Attrs.SurfaceFlags, SRCALPHA)
-        transparent = transparent if transparent is not None else getattr(self, Attrs.SurfaceTransparent, 0)
-        color = color if color is not None else getattr(self, Attrs.SurfaceColor, None)
+        flags = flags if flags is not None else self.style.dict.get(StyleAttrs.SurfaceFlags.value, SRCALPHA)
+        transparent = transparent if transparent is not None else self.style.dict.get(
+            StyleAttrs.SurfaceTransparent.value, 0)
         return get_surface(h_size, v_size,
                            transparent=transparent,
                            flags=flags,
@@ -248,52 +169,45 @@ class GetSurfaceMixin:
                            )
 
 
-class DrawBorder:
-    def __init__(self, **kwargs):
-        self.border_size = kwargs.get(Attrs.BorderSize, UIDefault.BorderSize)
-        self.border_color = kwargs.get(Attrs.BorderColor, UIDefault.BorderColor)
-        self.inacborder_color = kwargs.get(Attrs.InacBorderColor, UIDefault.InacBorderColor)
-
-        self.border_radius = kwargs.get(Attrs.BorderRadius, UIDefault.BorderRadius)
-        self.border_top_left_radius = kwargs.get(Attrs.BorderTopLeftRadius, UIDefault.BorderTopLeftRadius)
-        self.border_top_right_radius = kwargs.get(Attrs.BorderTopRightRadius, UIDefault.BorderTopRightRadius)
-        self.border_bottom_left_radius = kwargs.get(Attrs.BorderBottomLeftRadius, UIDefault.BorderBottomLeftRadius)
-        self.border_bottom_right_radius = kwargs.get(Attrs.BorderBottomRightRadius, UIDefault.BorderBottomRightRadius)
+class DrawBorderMixin:
+    style: Style
 
     @property
     def border_round_attrs(self) -> tuple:
-        return self.border_radius, \
-               self.border_top_left_radius, self.border_top_right_radius, \
-               self.border_bottom_left_radius, self.border_bottom_right_radius
+        return self.style.border_radius, \
+               self.style.border_top_left_radius, self.style.border_top_right_radius, \
+               self.style.border_bottom_left_radius, self.style.border_bottom_right_radius
 
     def draw_border(self: BaseUI, surface=None, color=None, rect=None):
         surface = surface if surface else self.surface
-        color = color if color else getattr(self, Attrs.BorderColor, CommonColors.white)
+        color = color if color else self.style.dict.get(StyleAttrs.BorderColor.value, self.Colors.white)
         rect = rect if rect else surface.get_rect()
         draw_rect(surface,
                   color,
                   rect,
-                  getattr(self, Attrs.BorderSize, UIDefault.BorderSize),
-                  getattr(self, Attrs.BorderRadius, UIDefault.BorderRadius),
-                  getattr(self, Attrs.BorderTopLeftRadius, UIDefault.BorderTopLeftRadius),
-                  getattr(self, Attrs.BorderTopRightRadius, UIDefault.BorderTopRightRadius),
-                  getattr(self, Attrs.BorderBottomLeftRadius, UIDefault.BorderBottomLeftRadius),
-                  getattr(self, Attrs.BorderBottomRightRadius, UIDefault.BorderBottomRightRadius),
+                  self.style.dict.get(StyleAttrs.BorderSize.value, UIDefault.BorderSize),
+                  self.style.dict.get(StyleAttrs.BorderRadius.value, UIDefault.BorderRadius),
+                  self.style.dict.get(StyleAttrs.BorderTopLeftRadius.value, UIDefault.BorderTopLeftRadius),
+                  self.style.dict.get(StyleAttrs.BorderTopRightRadius.value, UIDefault.BorderTopRightRadius),
+                  self.style.dict.get(StyleAttrs.BorderBottomLeftRadius.value, UIDefault.BorderBottomLeftRadius),
+                  self.style.dict.get(StyleAttrs.BorderBottomRightRadius.value, UIDefault.BorderBottomRightRadius),
                   )
 
-    def fill_surface_due_to_border_attrs(self, surface=None, color=None):
+    def fill_surface_due_to_border_attrs(self, surface: Surface = None, color: tuple = None, rect=None):
         surface = surface if surface else self.surface
-        color = color if color else getattr(self, Attrs.SurfaceColor, UIDefault.SurfaceColor)
-        draw_rect(
-            surface,
-            color,
-            ((0, 0), surface.get_size()),
-            0,
-            getattr(self, Attrs.BorderTopLeftRadius, UIDefault.BorderTopLeftRadius),
-            getattr(self, Attrs.BorderTopRightRadius, UIDefault.BorderTopRightRadius),
-            getattr(self, Attrs.BorderBottomLeftRadius, UIDefault.BorderBottomLeftRadius),
-            getattr(self, Attrs.BorderBottomRightRadius, UIDefault.BorderBottomRightRadius),
-        )
+        color = color if color else self.style.dict.get(StyleAttrs.SurfaceColor.value, UIDefault.SurfaceColor)
+        rect = rect if rect else surface.get_rect()
+
+        draw_rect(surface,
+                  color,
+                  rect,
+                  0,
+                  self.style.dict.get(StyleAttrs.BorderRadius.value, UIDefault.BorderRadius),
+                  self.style.dict.get(StyleAttrs.BorderTopLeftRadius.value, UIDefault.BorderTopLeftRadius),
+                  self.style.dict.get(StyleAttrs.BorderTopRightRadius.value, UIDefault.BorderTopRightRadius),
+                  self.style.dict.get(StyleAttrs.BorderBottomLeftRadius.value, UIDefault.BorderBottomLeftRadius),
+                  self.style.dict.get(StyleAttrs.BorderBottomRightRadius.value, UIDefault.BorderBottomRightRadius),
+                  )
 
 
 class BuildRectShapeMixin:

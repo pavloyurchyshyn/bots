@@ -1,11 +1,12 @@
-from visual.UI.constants.attrs import ButtonAttrs
 
 from global_obj import Global
 
-from settings.localization.menus.UI import UI as UILoc
+from visual.UI.constants.attrs import ButtonAttrs
 
-from game_client.stages.new_game.settings.uids import UIDs
-from game_client.stages.styles import update_btn_style, update_btn_size
+from settings.localization.menus.UI import UILocal
+
+from game_client.stages.match_settings.settings.uids import UIDs
+from game_client.stages.styles import get_default_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
 
 
 def back_func(b: ButtonAttrs):
@@ -17,9 +18,12 @@ BUTTONS_DATA = {
         'kwargs': {
             ButtonAttrs.XK: 0.9,
             ButtonAttrs.YK: 0.945,
+            ButtonAttrs.HSizeK: DEFAULT_H_SIZE,
+            ButtonAttrs.VSizeK: DEFAULT_V_SIZE,
             ButtonAttrs.UID: UIDs.Start,
-            ButtonAttrs.Text: UILoc.NewGameMenu.start,
+            ButtonAttrs.Text: UILocal.NewGameMenu.start,
             ButtonAttrs.OnClickAction: lambda b: b,
+            ButtonAttrs.Style: get_default_btn_style(),
         }
     },
     'back': {
@@ -29,13 +33,10 @@ BUTTONS_DATA = {
             ButtonAttrs.HSizeK: 0.02,
             ButtonAttrs.RectSize: True,
             ButtonAttrs.UID: UIDs.Back,
-            ButtonAttrs.Text: UILoc.NewGameMenu.back,
+            ButtonAttrs.Text: UILocal.NewGameMenu.back,
             ButtonAttrs.OnClickAction: back_func,
+            ButtonAttrs.Style: get_default_btn_style(),
         }
     },
 }
 
-# for b in BUTTONS_DATA.values():
-update_btn_style(BUTTONS_DATA['back'])
-update_btn_style(BUTTONS_DATA['new_game'])
-update_btn_size(BUTTONS_DATA['new_game'])

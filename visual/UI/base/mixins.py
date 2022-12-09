@@ -2,6 +2,8 @@ from visual.UI.base.button import Button
 
 
 class CreateButtonMixin:
+    buttons: list[Button]
+
     def create_button_from_data(self, buttons_data: dict):
         buttons = []
         for button_name, button_data in buttons_data.items():

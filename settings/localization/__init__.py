@@ -81,7 +81,6 @@ class LocalizationLoader(metaclass=Singleton):
         return self.get_text_from_lang(path, self.current_language)
 
     def get_text_from_lang(self, path: str, lang: str):
-        LOGGER.info(f'Searching localization for {path}')
         key = (path, lang)
         if key not in LocalizationLoader.memory:
             text = self.loaded_languages[lang].localization
@@ -91,6 +90,7 @@ class LocalizationLoader(metaclass=Singleton):
                     break
 
             LocalizationLoader.memory[key] = text
+        LOGGER.info(f'Path {path} localization result: {LocalizationLoader.memory[key]}')
 
         return LocalizationLoader.memory[key]
 

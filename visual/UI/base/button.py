@@ -5,17 +5,23 @@ from pygame import Surface
 from global_obj import Global
 
 from visual.UI.base.text import Text
-from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorder, BuildRectShapeMixin, ShapeAbs
+from visual.UI.base.abs import ShapeAbs
+from visual.UI.base.style import ButtonStyle
+from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorderMixin, BuildRectShapeMixin
 
 from visual.UI.settings import UIDefault
 from visual.UI.constants.attrs import ButtonAttrs, TextAttrs
 
+import inspect
 
-class BaseButton(BaseUI, DrawBorder, BuildRectShapeMixin, ShapeAbs, GetSurfaceMixin, ABC):
+
+class BaseButton(BaseUI, DrawBorderMixin, BuildRectShapeMixin, ShapeAbs, GetSurfaceMixin, ABC):
+    style: ButtonStyle
+    default_style = ButtonStyle()
 
     def __init__(self, uid,
                  text,
-                 on_click_action: callable,
+                 on_click_action: callable = None,
                  inactive_text: str = None,
                  text_uid=None,
                  text_kwargs: dict = None,
@@ -29,24 +35,19 @@ class BaseButton(BaseUI, DrawBorder, BuildRectShapeMixin, ShapeAbs, GetSurfaceMi
         self.inactive_after_click = kwargs.get(ButtonAttrs.InactiveAfterClick, False)
         self.invisible_after_click = kwargs.get(ButtonAttrs.InvisAfterClick, False)
 
-        self.inac_surface_transparent = kwargs.get(ButtonAttrs.InacSurfaceTransparent, UIDefault.SurfaceTransparent)
-        self.inac_surface_color = kwargs.get(ButtonAttrs.InacSurfaceColor, UIDefault.InacSurfaceColor)
-        self.inac_surface_flags = kwargs.get(ButtonAttrs.InacSurfaceFlags, UIDefault.SurfaceFlags)
-
         self.on_click_action: callable = on_click_action
         self.on_click_action_args: Iterable = kwargs.pop(ButtonAttrs.OnClickAction, ())
         self.on_click_action_kwargs: dict = kwargs.pop(ButtonAttrs.OnClickAction, {})
         super(BaseButton, self).__init__(uid=uid, **kwargs)
-        DrawBorder.__init__(self, **kwargs)
         ShapeAbs.__init__(self, **kwargs)
 
         self.active_surface: Surface = self.get_rect_surface(self.h_size, self.v_size,
-                                                             transparent=self.surface_transparent,
-                                                             flags=self.surface_flags,
+                                                             transparent=self.style.surface_transparent,
+                                                             flags=self.style.surface_flags,
                                                              )
         self.inactive_surface: Surface = self.get_rect_surface(self.h_size, self.v_size,
-                                                               transparent=self.inac_surface_transparent,
-                                                               flags=self.inac_surface_flags,
+                                                               transparent=self.style.inac_surface_transparent,
+                                                               flags=self.style.inac_surface_flags,
                                                                )
 
         raw_text_ = kwargs.pop(TextAttrs.RawText, True)
@@ -74,14 +75,18 @@ class BaseButton(BaseUI, DrawBorder, BuildRectShapeMixin, ShapeAbs, GetSurfaceMi
             color=inactive_text_kwargs.pop(TextAttrs.Color, UIDefault.InacTextColor),
             **inactive_text_kwargs,
         )
-        self.build()
+        if not kwargs.get(ButtonAttrs.PostponeBuild, False):
+            self.build()
 
     def do_action(self) -> Any:
-        res = self.on_click_action(self, *self.on_click_action_args, **self.on_click_action_kwargs)
+        if self.on_click_action:
+            res = self.on_click_action(self, *self.on_click_action_args, **self.on_click_action_kwargs)
+        else:
+            res = None
         if self.inactive_after_click:
             self.deactivate()
         if self.invisible_after_click:
-            self.visible = False
+            self.make_invisible()
 
         return res
 
@@ -135,16 +140,15 @@ class Button(BaseButton):
         self.init_shape()
 
     def render(self):
-
-        self.fill_surface(self.active_surface, self.surface_color)
+        self.fill_surface(self.active_surface, self.style.surface_color)
         self.text.render()
         self.text.draw()
-        self.draw_border(self.active_surface, self.border_color)
+        self.draw_border(self.active_surface, self.style.border_color)
 
-        self.fill_surface(self.inactive_surface, self.inac_surface_color)
+        self.fill_surface(self.inactive_surface, self.style.inac_surface_color)
         self.inactive_text.render()
         self.inactive_text.draw()
-        self.draw_border(self.inactive_surface, self.inacborder_color)
+        self.draw_border(self.inactive_surface, self.style.inacborder_color)
 
         self.surface = self.active_surface if self.active else self.inactive_surface
 

@@ -6,7 +6,7 @@ from global_obj.stages import Stages
 
 __all__ = 'Global',
 
-VisualPygameOn = os.environ.get('VisualPygameOn', 'off') == 'on'
+VisualPygameOn = os.environ.get('VisualPygameOn', 'on') == 'on'
 
 
 class Global:

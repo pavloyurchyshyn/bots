@@ -7,8 +7,8 @@ from visual.UI.base.menu import Menu
 from visual.UI.settings import UIDefault
 from visual.UI.base.button import Button
 
-from game_client.stages.new_game.settings.buttons import BUTTONS_DATA
-from game_client.stages.new_game.settings.menu_abs import NewGameAbs
+from game_client.stages.match_settings.settings.buttons import BUTTONS_DATA
+from game_client.stages.match_settings.settings.menu_abs import NewGameAbs
 
 
 class NewGame(Menu, NewGameAbs):

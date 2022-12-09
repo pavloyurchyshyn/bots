@@ -2,11 +2,11 @@ from visual.UI.manager import UIManager
 from visual.UI.base.button import Button
 from visual.UI.constants.attrs import ButtonAttrs, TextAttrs
 
-from settings.localization.menus.UI import UI
+from settings.localization.menus.UI import UILocal
 
 from game_client.stages.main_menu.settings.uids import UIDs
 from global_obj import Global
-from game_client.stages.styles import update_btn_style, update_btn_size
+from game_client.stages.styles import get_default_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
 
 MENU_UIDS = (
     UIDs.NewGame,
@@ -31,7 +31,7 @@ def test_draw_btn(b: Button):
 
 
 def test_func(b):
-    b.parent.UI_manager.get_by_uid('solo_game_btn').switch_active()
+    b.parent.UI_manager.get_by_uid(UIDs.NewGame).switch_active()
 
 
 def exit_btn_func(b):
@@ -59,7 +59,7 @@ BUTTONS_DATA = {
     'solo_game': {
         'kwargs': {
             ButtonAttrs.YK: 0.2,
-            TextAttrs.Text: UI.MainMenu.NewGame,
+            TextAttrs.Text: UILocal.MainMenu.NewGame,
             ButtonAttrs.UID: UIDs.NewGame,
             # ButtonAttrs.Active: False,
             # TextAttrs.RawText: False,
@@ -80,7 +80,7 @@ BUTTONS_DATA = {
     'host_game': {
         'kwargs': {
             ButtonAttrs.YK: 0.4,
-            TextAttrs.Text: UI.MainMenu.HostGame,
+            TextAttrs.Text: UILocal.MainMenu.HostGame,
             ButtonAttrs.UID: UIDs.HostGame,
             ButtonAttrs.OnClickAction: mock_func,
         }
@@ -89,7 +89,7 @@ BUTTONS_DATA = {
     'join_game': {
         'kwargs': {
             ButtonAttrs.YK: 0.5,
-            TextAttrs.Text: UI.MainMenu.Multiplayer,
+            TextAttrs.Text: UILocal.MainMenu.Multiplayer,
             ButtonAttrs.UID: UIDs.JoinGame,
             ButtonAttrs.OnClickAction: mock_func,
         }
@@ -98,7 +98,7 @@ BUTTONS_DATA = {
     'settings': {
         'kwargs': {
             ButtonAttrs.YK: 0.6,
-            TextAttrs.Text: UI.MainMenu.Settings,
+            TextAttrs.Text: UILocal.MainMenu.Settings,
             ButtonAttrs.UID: UIDs.Settings,
             ButtonAttrs.OnClickAction: test_func,
         }
@@ -116,7 +116,7 @@ BUTTONS_DATA = {
     'exit': {
         'kwargs': {
             ButtonAttrs.YK: 0.7,
-            TextAttrs.Text: UI.MainMenu.Exit,
+            TextAttrs.Text: UILocal.MainMenu.Exit,
             ButtonAttrs.UID: UIDs.Exit,
             ButtonAttrs.OnClickAction: exit_btn_func,
         }
@@ -124,16 +124,21 @@ BUTTONS_DATA = {
 }
 
 start_pos = 0.5
+default_style = get_default_btn_style()
 
 for button in BUTTONS_DATA.values():
-    update_btn_style(button)
-    update_btn_size(button)
+    button['kwargs'][ButtonAttrs.HSizeK] = DEFAULT_H_SIZE
+    button['kwargs'][ButtonAttrs.VSizeK] = DEFAULT_V_SIZE
     button['kwargs'][ButtonAttrs.YK] = start_pos
+    button['kwargs'][ButtonAttrs.Style] = default_style
     start_pos += button['kwargs'][ButtonAttrs.VSizeK] + button['kwargs'][ButtonAttrs.VSizeK] * 0.15
 
 BUTTONS_DATA['exit_yes'] = {
     "kwargs": {
-        TextAttrs.Text: UI.MainMenu.ExitYes,
+        ButtonAttrs.Style: default_style,
+        ButtonAttrs.HSizeK: 0.1,
+        ButtonAttrs.VSizeK: 0.05,
+        TextAttrs.Text: UILocal.MainMenu.ExitYes,
         ButtonAttrs.Layer: 1,
         ButtonAttrs.UID: UIDs.ExitYes,
         ButtonAttrs.XK: 0.39,
@@ -148,7 +153,10 @@ BUTTONS_DATA['exit_yes'] = {
 
 BUTTONS_DATA['exit_no'] = {
     "kwargs": {
-        TextAttrs.Text: UI.MainMenu.ExitNo,
+        ButtonAttrs.Style: default_style,
+        ButtonAttrs.HSizeK: 0.1,
+        ButtonAttrs.VSizeK: 0.05,
+        TextAttrs.Text: UILocal.MainMenu.ExitNo,
         ButtonAttrs.Layer: 1,
         ButtonAttrs.UID: UIDs.ExitNo,
         ButtonAttrs.XK: 0.51,
@@ -161,11 +169,6 @@ BUTTONS_DATA['exit_no'] = {
     }
 }
 
-update_btn_style(BUTTONS_DATA['exit_yes'])
-update_btn_size(BUTTONS_DATA['exit_yes'])
-update_btn_style(BUTTONS_DATA['exit_no'])
-update_btn_size(BUTTONS_DATA['exit_no'])
-
 BUTTONS_DATA['test_draw'] = {
     "kwargs": {
         TextAttrs.Text: '+',
@@ -175,7 +178,6 @@ BUTTONS_DATA['test_draw'] = {
         ButtonAttrs.YK: 0.01,
         ButtonAttrs.HSizeK: 0.02,
         ButtonAttrs.RectSize: 1,
-        # ButtonAttrs.VSizeK: 0.04,
         ButtonAttrs.Active: Global.test_draw,
         ButtonAttrs.Visible: Global.test_draw,
         ButtonAttrs.OnClickAction: test_draw_btn,
