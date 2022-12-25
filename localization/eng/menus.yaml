@@ -13,6 +13,7 @@ UI:
     load_game: Load game
     menu_start: Start
     multiplayer: Join game
+    map_editor: Map editor
     settings: Settings
     exit: Exit
     exit_yes: 'Yes'

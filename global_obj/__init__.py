@@ -17,14 +17,15 @@ class Global:
     clock: Clock = Clock()  # global for all game
     stages: Stages = Stages(logger)
     round_clock: Clock = Clock()  # not counting on pause etc.
-    test_draw = True
+    test_draw = False
 
     if VisualPygameOn:
         from global_obj.mouse import Mouse as __mouse
         from global_obj.keyboard import Keyboard as __keyboard
         from global_obj.display import MAIN_DISPLAY as __display
         from settings.localization import LocalizationLoader as __localization
-        display = __display
+        from pygame import Surface as __Surface
+        display: __Surface = __display
         keyboard = __keyboard(logger)
         mouse = __mouse()
         localization = __localization()

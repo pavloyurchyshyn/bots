@@ -10,6 +10,7 @@ class UILocal:
         MenuStart = build_path(menu, 'menu_start')
         Multiplayer = build_path(menu, 'multiplayer')
         Settings = build_path(menu, 'settings')
+        MapEditor = build_path(menu, 'map_editor')
         Exit = build_path(menu, 'exit')
         ExitYes = CommonText.Yes
         ExitNo = CommonText.No

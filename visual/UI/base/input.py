@@ -3,8 +3,9 @@ from pygame import Surface
 from global_obj import Global
 from visual.UI.base.text import Text
 from visual.UI.settings import UIDefault
+from visual.UI.base.abs import ShapeAbs
 from visual.UI.constants.attrs import Attrs, InputAttr
-from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorderMixin, BuildRectShapeMixin, ShapeAbs
+from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorderMixin, BuildRectShapeMixin
 
 
 class InputBase(BaseUI, DrawBorderMixin, BuildRectShapeMixin, GetSurfaceMixin, ShapeAbs):

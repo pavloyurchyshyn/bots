@@ -109,3 +109,6 @@ class Keyboard:
 
     def test(self):
         print(self.__dict__)
+
+    def __getattr__(self, item: str):
+        return item.replace('_', '', 1) in self.text

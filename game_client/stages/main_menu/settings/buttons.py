@@ -13,6 +13,7 @@ MENU_UIDS = (
     UIDs.LoadGame,
     UIDs.HostGame,
     UIDs.JoinGame,
+    UIDs.MapEditor,
     UIDs.Settings,
     UIDs.Exit,
 )
@@ -94,28 +95,36 @@ BUTTONS_DATA = {
             ButtonAttrs.OnClickAction: mock_func,
         }
     },
-
-    'settings': {
+    'map_editor': {
         'kwargs': {
             ButtonAttrs.YK: 0.6,
+            TextAttrs.Text: UILocal.MainMenu.MapEditor,
+            ButtonAttrs.UID: UIDs.MapEditor,
+            ButtonAttrs.OnClickAction: test_func,
+        }
+    },
+    'settings': {
+        'kwargs': {
+            ButtonAttrs.YK: 0.7,
             TextAttrs.Text: UILocal.MainMenu.Settings,
             ButtonAttrs.UID: UIDs.Settings,
             ButtonAttrs.OnClickAction: test_func,
         }
     },
 
-    # 'about': {
-    #     'kwargs': {
-    #         ButtonAttrs.YK: 0.6,
-    #         ButtonAttrs.Text: 'About',
-    #         ButtonAttrs.UID: 'about_btn',
-    #         ButtonAttrs.OnClickAction: lambda b: 1,
-    #     }
-    # },
+    'about': {
+        'kwargs': {
+            ButtonAttrs.YK: 0.8,
+            ButtonAttrs.Text: 'About',
+            ButtonAttrs.UID: 'about_btn',
+            ButtonAttrs.Active: False,
+            ButtonAttrs.OnClickAction: lambda b: 1,
+        }
+    },
 
     'exit': {
         'kwargs': {
-            ButtonAttrs.YK: 0.7,
+            ButtonAttrs.YK: 0.9,
             TextAttrs.Text: UILocal.MainMenu.Exit,
             ButtonAttrs.UID: UIDs.Exit,
             ButtonAttrs.OnClickAction: exit_btn_func,
@@ -179,7 +188,7 @@ BUTTONS_DATA['test_draw'] = {
         ButtonAttrs.HSizeK: 0.02,
         ButtonAttrs.RectSize: 1,
         ButtonAttrs.Active: Global.test_draw,
-        ButtonAttrs.Visible: Global.test_draw,
+        # ButtonAttrs.Visible: Global.test_draw,
         ButtonAttrs.OnClickAction: test_draw_btn,
     }
 }

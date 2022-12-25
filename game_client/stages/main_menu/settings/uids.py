@@ -3,6 +3,7 @@ class UIDs:
     LoadGame = 'load_solo_game_btn'
     HostGame = 'host_game_btn'
     JoinGame = 'join_game_btn'
+    MapEditor = 'map_editor'
     Settings = 'settings_btn'
     Exit = 'exit_btn'
     ExitYes = 'exit_yes_btn'

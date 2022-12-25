@@ -12,6 +12,7 @@ UI:
     menu_start: Старт
     load_game: Збереження
     multiplayer: Приєднатись
+    map_editor: Редактор мап
     settings: Налаштування
     exit: Вихід
     exit_yes: Так

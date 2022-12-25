@@ -9,13 +9,13 @@ class Circle(CircleAbs):
     """
     SHAPE_TYPE = ShapeType.Circle
 
-    def __init__(self, x: int, y: int, r: int, angle=0) -> None:
+    def __init__(self, x: int, y: int, r: int, angle=0, collide_able=True) -> None:
         self.angle = angle
         self.radius = r
         self.diameter: int = 2 * r  # radius
         self.size = self.diameter, self.diameter
         self.center: Vector2DType = [x, y]
-        self.collide_able = True
+        self.collide_able = collide_able
         self._dots = []
         self.build_dots()
 

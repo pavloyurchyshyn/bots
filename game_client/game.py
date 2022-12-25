@@ -1,6 +1,6 @@
 from global_obj import Global
 from constants.stages import StagesConstants
-from game_client.stages import MainMenu, NewGame
+from game_client.stages import *
 
 
 class Game:
@@ -13,13 +13,15 @@ class Game:
 
         self.stages_dict = {
             StagesConstants.MainMenu: self.update_main_menu,
-            StagesConstants.CloseGame: self.close_game,
             StagesConstants.SoloGameMenu: self.update_new_game_menu,
+            StagesConstants.MapEditor: self.update_map_editor,
+            StagesConstants.CloseGame: self.close_game,
 
         }
 
         self.main_menu = MainMenu()
         self.new_game_menu = NewGame()
+        self.map_editor = MapEditor()
 
     def game_loop(self):
         self.stages_dict[Global.stages.current_stage]()
@@ -32,8 +34,10 @@ class Game:
     def update_new_game_menu(self):
         self.new_game_menu.update()
 
+    def update_map_editor(self):
+        self.map_editor.update()
+
     def close_game(self):
-        pass
         self.launch_obj.close_game()
 
     def check_alt_and_f4(self):

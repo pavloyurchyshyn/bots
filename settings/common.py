@@ -5,7 +5,7 @@ from settings.json_configs_manager import get_from_common_config, save_to_common
 GLOBAL_SETTINGS = {
     'slow_motion': 0,
     'slow_motion_value': 0.05,
-    'fps': get_from_common_config('fps_config', 60),
+    'fps': get_from_common_config('fps_config', 600),
     'language': get_from_common_config('language', 'eng'),
     'scroll_speed': 5,
 }

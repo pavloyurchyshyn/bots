@@ -41,6 +41,7 @@ class Mouse:
     @property
     def m_hold(self):
         return self._pressed[1] and not self.m_down
+
     @property
     def l_hold(self):
         return self._pressed[0] and not self.l_down
@@ -64,6 +65,14 @@ class Mouse:
     @r_pressed.setter
     def r_pressed(self, val):
         self._pressed[2] = val
+
+    @property
+    def m_pressed(self):
+        return self._pressed[1]
+
+    @m_pressed.setter
+    def m_pressed(self, val):
+        self._pressed[1] = val
 
     @property
     def scroll(self):
@@ -95,3 +104,4 @@ class Mouse:
 
     def test(self):
         print('up', self.l_up, self.r_up, '| down', self.l_down, self.r_down, '| hold', self.l_hold, self.r_hold)
+
