@@ -9,12 +9,12 @@ class HexMathAbs:
 
     @classmethod
     def normalize_coordinates(cls, x, y, r, odd=None) -> tuple[int, int]:
-        return cls.get_center(*cls.get_indexes_from_coordinates(x, y, r, odd), r, odd)
+        return cls.get_center_by_xy_id(*cls.get_indexes_from_coordinates(x, y, r, odd), r, odd)
 
     @classmethod
     def get_dots_by_xy(cls, x, y, r, dx=0, dy=0, odd=None):
         odd = cls.DEFAULT_ODD if odd is None else odd
-        x, y = cls.get_center(x, y, r, odd=odd)
+        x, y = cls.get_center_by_xy_id(x, y, r, odd=odd)
         return cls.get_dots(x, y, r, dx=dx, dy=dy)
 
     @classmethod
@@ -48,7 +48,7 @@ class HexMathAbs:
 
     @classmethod
     @abstractmethod
-    def get_center(cls, x, y, r, dx=0, dy=0, odd=None):
+    def get_center_by_xy_id(cls, x, y, r, dx=0, dy=0, odd=None):
         raise NotImplementedError
 
     @staticmethod
@@ -70,8 +70,19 @@ class HexMathAbs:
     def get_map_size(cls, x, y, r):
         return cls.get_horizontal_size(x, r), cls.get_vertical_size(y, r)
 
+    @classmethod
+    @abstractmethod
+    def get_tile_size_from_map_size(cls, h_size, v_size, tiles_x_count, tiles_y_count):
+        raise NotImplementedError
+
 
 class PointTopHex(HexMathAbs):
+    @classmethod
+    def get_tile_size_from_map_size(cls, h_size, v_size, tiles_x_count, tiles_y_count):
+        h_radius = h_size / tiles_x_count / math.sqrt(3)  # horizontal spacing
+        v_radius = v_size / tiles_y_count / 0.75 / 2  # vertical spacing
+        return h_radius if h_radius < v_radius else v_radius
+
     @classmethod
     def get_horizontal_size(cls, x, r) -> int:
         return int(cls.horizontal_spacing(r) * x + cls.get_width(r) / 2) + 1
@@ -90,10 +101,10 @@ class PointTopHex(HexMathAbs):
         x0 = x * PointTopHex.horizontal_spacing(r)
         y0 = y * PointTopHex.vertical_spacing(r)
 
-        return int(x0), int(y0)
+        return int(x0) + dx, int(y0) + dy
 
     @classmethod
-    def get_center(cls, x, y, r, dx=0, dy=0, odd=None):
+    def get_center_by_xy_id(cls, x, y, r, dx=0, dy=0, odd=None):
         x0, y0 = cls.get_lt_by_id(x, y, r, dx, dy, odd)
         x0 += PointTopHex.get_width(r) / 2
         y0 += PointTopHex.get_height(r) / 2
@@ -128,6 +139,13 @@ class PointTopHex(HexMathAbs):
 
 
 class FlatTopHex(HexMathAbs):
+
+    @classmethod
+    def get_tile_size_from_map_size(cls, h_size, v_size, tiles_x_count, tiles_y_count):
+        h_radius = h_size / tiles_x_count / 0.75 / 2  # horizontal spacing
+        v_radius = v_size / tiles_y_count / math.sqrt(3)  # vertical spacing
+        return h_radius if h_radius < v_radius else v_radius
+
     @classmethod
     def get_horizontal_size(cls, x, r) -> int:
         return int(cls.horizontal_spacing(r) * x + cls.get_width(r) * 0.25) + 1
@@ -145,7 +163,7 @@ class FlatTopHex(HexMathAbs):
         return int(x0), int(y0)
 
     @classmethod
-    def get_center(cls, x, y, r, dx=0, dy=0, odd=None):
+    def get_center_by_xy_id(cls, x, y, r, dx=0, dy=0, odd=None):
         x0, y0 = cls.get_lt_by_id(x, y, r, dx, dy, odd)
         x0 += FlatTopHex.get_width(r) / 2
         y0 += FlatTopHex.get_height(r) / 2

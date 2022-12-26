@@ -6,7 +6,7 @@ from settings.localization.menus.UI import UILocal
 
 from game_client.stages.main_menu.settings.uids import UIDs
 from global_obj import Global
-from game_client.stages.styles import get_default_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
+from game_client.stages.styles import get_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
 
 MENU_UIDS = (
     UIDs.NewGame,
@@ -100,7 +100,7 @@ BUTTONS_DATA = {
             ButtonAttrs.YK: 0.6,
             TextAttrs.Text: UILocal.MainMenu.MapEditor,
             ButtonAttrs.UID: UIDs.MapEditor,
-            ButtonAttrs.OnClickAction: test_func,
+            ButtonAttrs.OnClickAction: lambda b: Global.stages.map_editor(),
         }
     },
     'settings': {
@@ -133,7 +133,7 @@ BUTTONS_DATA = {
 }
 
 start_pos = 0.5
-default_style = get_default_btn_style()
+default_style = get_btn_style()
 
 for button in BUTTONS_DATA.values():
     button['kwargs'][ButtonAttrs.HSizeK] = DEFAULT_H_SIZE

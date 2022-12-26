@@ -102,6 +102,14 @@ class Mouse:
     def pressed(self):
         return self._pressed
 
+    @property
+    def rel_x(self):
+        return self.rel[0]
+
+    @property
+    def rel_y(self):
+        return self.rel[1]
+
     def test(self):
         print('up', self.l_up, self.r_up, '| down', self.l_down, self.r_down, '| hold', self.l_hold, self.r_hold)
 

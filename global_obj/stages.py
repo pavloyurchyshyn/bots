@@ -13,6 +13,9 @@ class Stages:
     def solo_game_menu(self):
         self.change_current_stage(StagesConstants.SoloGameMenu)
 
+    def map_editor(self):
+        self.change_current_stage(StagesConstants.MapEditor)
+
     def close_game(self):
         self.change_current_stage(StagesConstants.CloseGame)
 

@@ -75,7 +75,6 @@ class GameRunner:
                 self.close_game()
 
             display.update()
-            MAIN_DISPLAY.fill((0, 0, 0))
 
     @staticmethod
     def check_for_mouse_event(event):

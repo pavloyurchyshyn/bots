@@ -5,7 +5,7 @@ from visual.UI.base.button import Button
 from visual.UI.base.pop_up import PopUpBase
 from visual.UI.constants.attrs import Attrs
 from settings.localization.menus.common import CommonText
-from game_client.stages.styles import get_default_btn_style
+from game_client.stages.styles import get_btn_style
 
 
 class OkPopUp(PopUpBase):
@@ -17,7 +17,7 @@ class OkPopUp(PopUpBase):
         self.on_click_action = on_click_action
         ok_uid = ok_uid if ok_uid else f'{self.uid}_ok_btn'
         button_data = kwargs.pop(Attrs.ButtonKwargs, {})
-        button_data[Attrs.Style] = button_data.get(Attrs.Style, get_default_btn_style())
+        button_data[Attrs.Style] = button_data.get(Attrs.Style, get_btn_style())
         button_data[Attrs.HSizeK] = button_data.get(Attrs.HSizeK, 0.4)
         button_data[Attrs.VSizeK] = button_data.get(Attrs.VSizeK, 0.25)
         button_data[Attrs.YK] = button_data.get(Attrs.YK, 1 - button_data[Attrs.VSizeK]*1.1)

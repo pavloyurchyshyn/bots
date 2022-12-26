@@ -36,6 +36,7 @@ class Game:
 
     def update_map_editor(self):
         self.map_editor.update()
+        self.map_editor.draw()
 
     def close_game(self):
         self.launch_obj.close_game()

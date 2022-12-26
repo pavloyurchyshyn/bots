@@ -6,7 +6,7 @@ from visual.UI.constants.attrs import ButtonAttrs
 from settings.localization.menus.UI import UILocal
 
 from game_client.stages.match_settings.settings.uids import UIDs
-from game_client.stages.styles import get_default_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
+from game_client.stages.styles import get_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
 
 
 def back_func(b: ButtonAttrs):
@@ -23,7 +23,7 @@ BUTTONS_DATA = {
             ButtonAttrs.UID: UIDs.Start,
             ButtonAttrs.Text: UILocal.NewGameMenu.start,
             ButtonAttrs.OnClickAction: lambda b: b,
-            ButtonAttrs.Style: get_default_btn_style(),
+            ButtonAttrs.Style: get_btn_style(),
         }
     },
     'back': {
@@ -35,7 +35,7 @@ BUTTONS_DATA = {
             ButtonAttrs.UID: UIDs.Back,
             ButtonAttrs.Text: UILocal.NewGameMenu.back,
             ButtonAttrs.OnClickAction: back_func,
-            ButtonAttrs.Style: get_default_btn_style(),
+            ButtonAttrs.Style: get_btn_style(),
         }
     },
 }
