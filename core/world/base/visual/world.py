@@ -41,7 +41,7 @@ class VisualWorld(LogicWorld):
     def scaled_tile_size(self):
         return self.tile_size * self.scale
 
-    def scale_surface(self):
+    def reload_surface(self):
         w, h = self.big_surface.get_size()
         self.surface = transform.smoothscale(self.big_surface, (int(w * self.scale), int(h * self.scale)))
 
@@ -67,14 +67,22 @@ class VisualWorld(LogicWorld):
             (Global.mouse.y - self.y - self.dy) / self.scale,
             self.tile_size)
 
+    def get_tile_under_mouse(self) -> LogicTile:
+        return self.xy_to_tile.get(self.get_mouse_to_xy())
+
     def render(self):
         self.big_surface.fill((0, 0, 0))
         for tile in self.tiles:
-            self.render_tile(self.big_surface, tile)
+            if tile.name != EmptyTile.name:
+                self.render_tile(self.big_surface, tile)
         self.surface = self.big_surface.copy()
 
     def render_tile_by_xy(self, xy: tuple[int, int]):
-        self.render_tile(self.surface, self.xy_to_tile[xy])
+        self.render_tile(self.big_surface, self.xy_to_tile[xy])
+
+    def rerender_tile(self, xy: tuple[int, int]):
+        self.render_tile(self.big_surface, self.xy_to_tile[xy])
+        self.reload_surface()
 
     def render_tile(self, surface, tile: VisualTile):
         # pos = self.hex_math.get_lt_by_id(tile.id_x, tile.id_y, self.tile_size)
@@ -116,6 +124,7 @@ class VisualWorld(LogicWorld):
                                      (self.x, self.y),
                                      (0 - self.dx, 0 - self.dy, self.win_x_size, self.win_y_size))
 
+
 # TODO clear all unneeded
 if __name__ == '__main__':
     from launch import GameRunner
@@ -128,7 +137,8 @@ if __name__ == '__main__':
     class B:
         def __init__(self):
             self.w = VisualWorld((110, 20, 900, 500))
-            self.map_data = [[random.choice(tuple((*TileTypes.types_dict.values(), EmptyTile)))() for x in range(1)] for y in
+            self.map_data = [[random.choice(tuple((*TileTypes.types_dict.values(), EmptyTile)))() for x in range(1)] for
+                             y in
                              range(2)]
             self.w.build_map(True, True, self.map_data)
             self.tile_dir = 0
@@ -155,7 +165,7 @@ if __name__ == '__main__':
 
             if Global.mouse.scroll:
                 self.w.scale = self.w.scale + Global.mouse.scroll * Global.clock.d_time * 2
-                self.w.scale_surface()
+                self.w.reload_surface()
             if Global.mouse.m_hold:
                 self.w.dx += Global.mouse.rel_x
                 self.w.dy += Global.mouse.rel_y

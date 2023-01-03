@@ -60,7 +60,7 @@ class BaseUIAbs:
     style: StyleBaseAbs
 
     @abstractmethod
-    def draw(self):
+    def draw(self) -> 'BaseUIAbs':
         raise NotImplementedError
 
     @abstractmethod

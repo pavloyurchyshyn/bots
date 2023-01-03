@@ -31,7 +31,6 @@ class BaseButton(BaseUI, DrawBorderMixin, BuildRectShapeMixin, ShapeAbs, GetSurf
         inactive_text_kwargs = inactive_text_kwargs if inactive_text_kwargs is not None else {}
         self.clicked = 0
         self.surface = None
-
         self.inactive_after_click = kwargs.get(ButtonAttrs.InactiveAfterClick, False)
         self.invisible_after_click = kwargs.get(ButtonAttrs.InvisAfterClick, False)
 
@@ -135,9 +134,10 @@ class Button(BaseButton):
     def fill_surface(self, surface: Surface = None, color=None) -> None:
         self.fill_surface_due_to_border_attrs(surface, color)
 
-    def build(self) -> None:
+    def build(self) -> BaseUI:
         self.render()
         self.init_shape()
+        return self
 
     def render(self):
         self.fill_surface(self.active_surface, self.style.surface_color)

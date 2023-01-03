@@ -15,11 +15,11 @@ class TileDataAbs:
         for attr, value in kwargs.items():
             setattr(self, attr, value)
 
-    def get_data_dict(self):
+    def get_data_dict(self) -> dict:
         return self.parameters_to_dict(self)
 
     @staticmethod
-    def parameters_to_dict(self):
+    def parameters_to_dict(self) -> dict:
         des_type = None
         if self.destroyed_type:
             des_type = self.destroyed_type if type(self.destroyed_type) is str else self.destroyed_type.name

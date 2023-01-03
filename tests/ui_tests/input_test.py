@@ -4,8 +4,6 @@ from visual.UI.constants.attrs import Attrs
 from global_obj import Global
 
 text_data = {
-    Attrs.XK: 0.5,
-    Attrs.YK: 0.5,
     Attrs.HSizeK: 0.5,
     Attrs.VSizeK: 0.5,
 }
@@ -25,6 +23,7 @@ class Body:
                                )
 
     def game_loop(self):
+        Global.display.fill((0, 0, 0))
         if Global.mouse.l_up and self.input.collide_point(Global.mouse.pos):
             self.input.focus()
         self.input.update()

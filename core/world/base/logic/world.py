@@ -33,7 +33,7 @@ class LogicWorld:
                 if tile_data:
                     self.add_tile(self.get_tile_from_data(x, y, tile_data))
                 else:
-                    self.add_tile(self.get_tile_from_data(x, y, EmptyTile))
+                    self.add_tile(self.get_tile_from_data(x, y, EmptyTile()))
 
     def clear(self):
         self.tiles.clear()

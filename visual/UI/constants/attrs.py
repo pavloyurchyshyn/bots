@@ -8,7 +8,6 @@ class Attrs:
     YK = 'y_k'
     Layer = 'layer'
     Text = 'text'
-    TextData = 'text_data'
     TextKwargs = 'text_kwargs'
     ButtonKwargs = 'button_kwargs'
 

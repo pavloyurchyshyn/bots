@@ -32,6 +32,7 @@ class Text(BaseUI):
 
         self.speed_increase = 0.2
         self.current_speed = 1
+        self.from_left = kwargs.get('from_left', False)
 
         if not kwargs.get(Attrs.PostponeBuild):
             self.build()
@@ -45,9 +46,8 @@ class Text(BaseUI):
         rendered_text = self.render_text()
         if self.unlimited_v_size or self.unlimited_h_size:
             self.surface = rendered_text.copy()
-
-        if self.style.from_left:
-            x = 0
+        if self.style.from_left or self.from_left:
+            x = int(self.parent_surface.get_width() * 0.02)
         else:
             x = (self.surface.get_width() - rendered_text.get_width()) // 2
 
@@ -155,7 +155,7 @@ class Text(BaseUI):
         y = 0
         for line in lines:
             text = self.get_rendered_text(line, font)
-            if self.style.from_left:
+            if self.style.from_left or self.from_left:
                 x = 0
             elif h_size > text.get_width():
                 x = (h_size - text.get_width()) // 2
@@ -189,7 +189,8 @@ class Text(BaseUI):
         return font.render(text.replace('\t', self.TAB_VALUE),
                            self.style.antialiasing_text,
                            self.color,
-                           self.style.text_back_color)
+                           self.style.text_back_color,
+                           )
 
     @staticmethod
     def get_localization_text(text: str, raw: bool) -> str:
