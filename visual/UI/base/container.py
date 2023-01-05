@@ -1,11 +1,11 @@
-from pygame import Surface
 from typing import List
-from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorderMixin, BuildRectShapeMixin
+from pygame import Surface
 from visual.UI.base.abs import ShapeAbs
+from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorderMixin, BuildRectShapeMixin
 
 
 class Container(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBorderMixin):
-    def __init__(self, uid, draw_elements=False, **kwargs):
+    def __init__(self, uid, draw_elements=False, scroll_k=0.24, **kwargs):
         super(Container, self).__init__(uid=uid, **kwargs)
         ShapeAbs.__init__(self, **kwargs)
 
@@ -13,34 +13,62 @@ class Container(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBord
         self.__elements: List[BaseUI] = []
         self.__elements_dict = {}
         self.draw_elems = draw_elements
+
+        self.summary_els_height = 0
         self.dy = 0
+        self.scroll_speed = 0
+        self.scroll_k = scroll_k
+        self.update_scroll_speed()
+
+    def update_scroll_speed(self):
+        if self.__elements:
+            self.scroll_speed = self.summary_els_height / len(self.__elements) * self.scroll_k
+        else:
+            self.scroll_speed = 0
 
     @property
-    def elements(self):
+    def elements(self) -> List[BaseUI]:
         return self.__elements.copy()
+
+    def clear(self):
+        self.__elements.clear()
+
+    def change_dx(self, ddx):
+        if self.summary_els_height > self.height:
+            self.dy += ddx * self.summary_els_height / len(self.__elements) * 0.25
+            self.calculate_elements_position()
+            self.render()
 
     def add_element(self, element: BaseUI):
         self.__elements.append(element)
         self.__elements_dict[element.uid] = element
+        self.summary_els_height += element.height
         self.calculate_elements_position()
         self.render()
+        self.update_scroll_speed()
 
     def delete_element(self, element: BaseUI):
         if element in self.__elements:
             self.__elements.remove(element)
+        self.summary_els_height -= element.height
         self.__elements_dict.pop(element.uid, None)
         self.calculate_elements_position()
         self.render()
+        self.update_scroll_speed()
 
     def calculate_elements_position(self):
         step = self.v_size * 0.01
-        y = self.v_size * 0.01 + self.dy
-        if y < step:
+        y = step + self.dy
+        if step + self.dy > step:
             self.dy = 0
             y = step
+        elif (self.summary_els_height > self.height) and self.summary_els_height + self.dy + step < self.height:
+            y = self.height - self.summary_els_height - step
+            self.dy = self.height - self.summary_els_height - step
 
         for el in self.__elements:
-            el.y = y
+            el.move((el.x, y))
+            # el.y = y
             y += step + el.v_size
 
     def get_x(self) -> int:
@@ -87,6 +115,5 @@ class Container(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBord
             self.draw_border(self.parent_surface, rect=self.shape.get_rect())
 
     def draw_elements(self):
-        print(self.__elements)
         for el in self.__elements:
             el.draw()

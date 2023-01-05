@@ -48,18 +48,22 @@ class PopUpsController:
     def __init__(self):
         self.popups: List[PopUpBase] = []
 
-    def update(self):
+    def default_update_popups(self):
         if self.popups:
             self.popups[0].update()
             if self.popups[0].inactive:
                 self.popups.remove(self.popups[0])
 
-    def draw(self):
+    def draw_popups(self):
         if self.popups:
             self.popups[0].draw()
+
+    def remove_popup(self, pop_up: PopUpBase):
+        if pop_up in self.popups:
+            self.popups.remove(pop_up)
 
     def add_popup(self, pop_up: PopUpBase):
         self.popups.append(pop_up)
 
-    def clear(self):
+    def clear_popups(self):
         self.popups.clear()

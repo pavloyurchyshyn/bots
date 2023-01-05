@@ -3,6 +3,7 @@ from pygame.draw import rect as draw_rect
 from global_obj import Global
 from visual.UI.base.button import Button
 from visual.UI.settings import UIDefault
+from visual.UI.utils import normalize_color
 
 
 class CreateButtonMixin:
@@ -29,4 +30,4 @@ class DrawElementBorderMixin:
         r_c = UIDefault.CollidedElBorder.r_0 + UIDefault.CollidedElBorder.r_1 * abs(cos(Global.clock.time))
         g_c = UIDefault.CollidedElBorder.g_0 + UIDefault.CollidedElBorder.g_1 * abs(cos(Global.clock.time))
         b_c = UIDefault.CollidedElBorder.b_0 + UIDefault.CollidedElBorder.b_1 * abs(cos(Global.clock.time))
-        draw_rect(Global.display, (r_c, g_c, b_c), element.shape.get_rect(), 2, *element.border_round_attrs)
+        draw_rect(Global.display, normalize_color((r_c, g_c, b_c)), element.shape.get_rect(), 2, *element.border_round_attrs)

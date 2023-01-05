@@ -1,6 +1,6 @@
 from typing import List, Tuple, Dict, Type
 from core.world.base.logic.tile import LogicTile, TileDataAbs
-from core.world.base.constants import EmptyTile
+from core.world.base.logic.tiles_data import EmptyTile
 
 
 class LogicWorld:
@@ -28,6 +28,7 @@ class LogicWorld:
         self.odd = odd
         self.y_size = len(data)
         self.x_size = len(max(data, key=len))
+
         for y, line in enumerate(data):
             for x, tile_data in enumerate(line):
                 if tile_data:
@@ -41,14 +42,3 @@ class LogicWorld:
 
     def get_tile_from_data(self, x, y, tile_data: TileDataAbs, **extra_data) -> LogicTile:
         return self.tile_class(xy_id=(x, y), tile_data=tile_data, **extra_data)
-
-    # def get_map_data(self) -> List[List[Type[TileDataAbs]]]:
-    #     map_data = []
-    #     for y in range(self.y_size):
-    #         line = []
-    #         map_data.append(line)
-    #         for x in range(self.x_size):
-    #             if (x, y) in self.xy_to_tile:
-    #                 line.append(self.xy_to_tile[x, y].get_data_dict())
-    #
-    #     return map_data

@@ -1,10 +1,11 @@
 import json
 import os
+import copy
 import datetime
 from typing import List
 from settings.base import MAPS_SAVES
 from core.world.base.logic.world import LogicWorld
-from core.world.base.constants import TileDataAbs, EmptyTile, TileTypes
+from core.world.base.logic.tiles_data import TileDataAbs, EmptyTile, TileTypes, TileAttrs
 
 
 def get_world_dict_structure(name: str, tiles_data: List[List[dict]], created: str) -> dict:
@@ -18,30 +19,49 @@ def get_world_dict_structure(name: str, tiles_data: List[List[dict]], created: s
 
 
 class MapSave:
+    default = False
+
     def __init__(self, name: str = '', path: str = '',
                  tiles_data: List[List[TileDataAbs]] = None,
-                 can_be_deleted: bool = True,
-                 can_be_saved: bool = True,
-                 dict_tiles_data: List[List[dict]] = None):
+                 odd: bool = True, flat: bool = True,
+                 dict_tiles_data: List[List[dict | int | None]] = None, ):
+        self.__odd = odd
+        self.__flat = flat
         self.__name: str = name
-        self.__path = path if path else self.get_map_path(name) if name else ''
+        if self.default:
+            self.__path = ''
+        else:
+            self.__path = path if path else self.get_map_path(name) if name else ''
         self.__tiles_data: List[List[TileDataAbs]] = tiles_data
-        self.__json_tiles_data: List[List[dict]] = [[]] if dict_tiles_data is None else dict_tiles_data
-        self.__can_be_deleted = can_be_deleted
-        self.__can_be_saved = can_be_saved
 
-    def get_tiles_data(self):
+        self.__dict_tiles_data: List[List[dict]] = [[]] if dict_tiles_data is None else dict_tiles_data
+
+    @property
+    def size(self):
+        return len(self.__dict_tiles_data[0]), len(self.__dict_tiles_data),
+
+    def load_save_from_file(self, path: str):
+        data = self.load_json_data_from_file(path)
+        self.__name = data['name']
+        self.__path = path
+        self.__dict_tiles_data = data['tiles_data']
+
+    @property
+    def json_tiles_data(self):
+        return self.__dict_tiles_data
+
+    def get_tiles_data(self) -> List[List[TileDataAbs]]:
         if not self.__tiles_data:
-            self.__tiles_data = self.json_data_to_tiles_data(self.__json_tiles_data)
+            self.__tiles_data = self.json_data_to_tiles_data(self.__dict_tiles_data)
         return self.__tiles_data
 
     def load(self):
         data = self.load_json_data_from_file(self.__path)
         self.__name = data['name']
-        self.__json_tiles_data = data['tiles_data']
+        self.__dict_tiles_data = data['tiles_data']
 
     def save(self, forced=False):
-        if not self.can_be_saved:
+        if self.default:
             return
 
         if os.path.exists(self.__path):
@@ -52,12 +72,8 @@ class MapSave:
         self.save_json_data_to_file(self.__path, self.get_save_dict())
 
     def delete(self):
-        if self.can_be_deleted:
+        if not self.default:
             self.delete_map(self.__path)
-
-    @property
-    def can_be_saved(self):
-        return self.can_be_saved
 
     @staticmethod
     def delete_map(map_path: str) -> None:
@@ -66,10 +82,6 @@ class MapSave:
     @property
     def name(self):
         return self.__name
-
-    @property
-    def can_be_deleted(self) -> bool:
-        return self.__can_be_deleted
 
     @staticmethod
     def get_map_path(map_name: str) -> str:
@@ -95,16 +107,19 @@ class MapSave:
             json.dump(data, f)
 
     def get_save_dict(self) -> dict:
-        if not self.__name or not self.__json_tiles_data:
+        if not self.__name or not self.__dict_tiles_data:
             raise Exception
 
         return get_world_dict_structure(self.__name,
-                                        self.__json_tiles_data,
+                                        self.__dict_tiles_data,
                                         created=str(datetime.datetime.now()))
 
     def save_as_raw_text(self):
         with open(self.__path.replace('.json', '.txt'), 'w') as f:
             f.write(str(self.get_save_dict()))
+
+    def set_world_to_json_data(self, world):
+        self.__dict_tiles_data = self.world_to_json_data(world)
 
     @staticmethod
     def json_data_to_tiles_data(data: List[List[dict]]) -> List[List[TileDataAbs]]:
@@ -142,4 +157,47 @@ class MapSave:
 
     @staticmethod
     def get_tile_type(data: dict) -> TileDataAbs:
-        return TileTypes.types_dict.get(data['name'])(**data)
+        return TileTypes.types_dict.get(data[TileAttrs.Name])(**data)
+
+    @property
+    def odd(self) -> bool:
+        return self.__odd
+
+    @property
+    def flat(self) -> bool:
+        return self.__flat
+
+    @property
+    def path(self) -> str:
+        return self.__path
+
+    def copy(self):
+        s = MapSave(name=f'{self.__name} copy',
+                    odd=self.odd,
+                    flat=self.flat,
+                    dict_tiles_data=copy.deepcopy(self.__dict_tiles_data),
+                    )
+        s.default = False
+        return s
+
+    def set_name(self, name: str):
+        self.__name = name
+        self.__path = self.get_map_path(name)
+
+    def __eq__(self, other):
+        if other:
+            return self.__dict__ == other.__dict__
+        else:
+            return False
+
+
+if __name__ == '__main__':
+    s = MapSave(path='Forest')
+    new_s = copy.deepcopy(s)
+    print(s, new_s)
+    print(s.__dict__)
+    print(new_s.__dict__)
+    assert s.__dict__ == new_s.__dict__
+    assert s == s.copy()
+    new_s._MapSave__name = '1'
+    assert s != new_s

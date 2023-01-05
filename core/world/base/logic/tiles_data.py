@@ -1,50 +1,20 @@
-IMPASSABLE_VALUE = float('inf')
-
-
-class TileDataAbs:
-    name: str
-    verbose_name: str
-    hp: int = 0.
-    move_energy_coeff: float = 0.
-    eternal: bool = False
-    destroyed_type = None
-    direction: int = 0
-    height: int
-
-    def __init__(self, **kwargs):
-        for attr, value in kwargs.items():
-            setattr(self, attr, value)
-
-    def get_data_dict(self) -> dict:
-        return self.parameters_to_dict(self)
-
-    @staticmethod
-    def parameters_to_dict(self) -> dict:
-        des_type = None
-        if self.destroyed_type:
-            des_type = self.destroyed_type if type(self.destroyed_type) is str else self.destroyed_type.name
-        return {
-            'name': self.name,
-            'hp': self.hp,
-            'move_energy_coeff': self.move_energy_coeff,
-            'eternal': self.eternal,
-            'destroyed_type': des_type,
-            # 'verbose_name': self.verbose_name,#TODO localization path in the future
-            'direction': self.direction,
-            'height': self.height,
-        }
+from core.world.base.logic.tile_data.tile_abs import TileDataAbs
+from core.world.base.logic.tile_data.const import IMPASSABLE_VALUE, TileAttrs
 
 
 class EmptyTile(TileDataAbs):
     name = 'empty'
-    verbose_name = 'empty'
+    verbose_name = 'Empty'
     hp = 0
-    move_energy_coeff: float = IMPASSABLE_VALUE
+    move_energy_k: float = IMPASSABLE_VALUE
     eternal: bool = True
     destroyed_type = None
     direction: int = 0
     height: int = 0
     color = (0, 0, 20, 0)
+
+    def __init__(self, **kwargs):
+        super().__init__()
 
 
 class TileData(TileDataAbs):
@@ -58,7 +28,7 @@ class EternalTileData(TileDataAbs):
 
 class TilesNames:
     Ruins = 'ruins'
-    Field = 'filed'
+    Field = 'field'
     Hole = 'hole'
     PrivateHouse = 'privath'
     Forest = 'forest'
@@ -75,7 +45,7 @@ class TileTypes:
     class Hole(EternalTileData):
         verbose_name = 'Hole'
         name = TilesNames.Hole
-        move_energy_coeff = 0.2
+        move_energy_k = 0.2
         color = (50, 100, 50)
         height = 0
 
@@ -84,25 +54,27 @@ class TileTypes:
         name = TilesNames.Field
         hp = 50
         destroyed_type = TilesNames.Hole
-        color = (20, 235, 20)
+        color = (170, 235, 20)
         height = 0
 
     class Ruins(EternalTileData):
         verbose_name = 'Ruins'
         name = TilesNames.Ruins
-        move_energy_coeff = 0.2
+        move_energy_k = 0.2
         color = (50, 50, 50)
         height = 3
 
     class PrivateHouse(TileData):
         name = TilesNames.PrivateHouse
+        verbose_name = 'Private house'
         hp = 50
-        move_energy_coeff = 0.5
+        move_energy_k = 0.5
         destroyed_type = TilesNames.Ruins
         height = 3
         color = (150, 150, 50)
 
     class Forest(TileData):
+        verbose_name = 'Forest'
         name = TilesNames.Forest
         hp = 10
         color = (0, 150, 50)
@@ -110,55 +82,62 @@ class TileTypes:
 
     class Road(TileData):
         name = TilesNames.Road
+        verbose_name = 'Road'
         hp = 0
-        move_energy_coeff = -0.1
+        move_energy_k = -0.1
         color = (10, 10, 10)
         height = 0
 
     class HighRise(TileData):
         name = TilesNames.HighRise
+        verbose_name = 'High rise'
         hp = 200
-        move_energy_coeff = IMPASSABLE_VALUE
+        move_energy_k = IMPASSABLE_VALUE
         color = (150, 150, 150)
         height = 20
 
     class DeepRiver(EternalTileData):
         name = TilesNames.DeepWater
+        verbose_name = 'Deep river'
         hp = 0
         eternal = True
-        move_energy_coeff = 1.
+        move_energy_k = 1.
         color = (50, 50, 150)
         height = 0
 
     class Water(TileData):
         name = TilesNames.Water
+        verbose_name = 'Water'
         hp = 0
         eternal = True
-        move_energy_coeff = 0.5
+        move_energy_k = 0.5
         destroyed_type = TilesNames.DeepWater
         color = (50, 50, 250)
         height = 0
 
     class Bridge(TileData):
         name = TilesNames.Bridge
+        verbose_name = 'Bridge'
         hp = 100
-        move_energy_coeff = -0.1
+        move_energy_k = -0.1
         destroyed_type = TilesNames.Water
         color = (50, 50, 150)
         height = 0
 
     class HighBridge(TileData):
         name = TilesNames.HighBridge
+        verbose_name = 'High bridge'
         hp = 200
-        move_energy_coeff = -0.3
+        move_energy_k = -0.3
         destroyed_type = TilesNames.Water
         color = (50, 50, 150)
         height = 0
 
     class Wall(TileData):
         name = TilesNames.Wall
+        verbose_name = 'Wall'
         hp = 50
-        move_energy_coeff = IMPASSABLE_VALUE
+        move_energy_k = IMPASSABLE_VALUE
         destroyed_type = TilesNames.Ruins
         color = (50, 50, 150)
         height = 10
@@ -179,5 +158,16 @@ class TileTypes:
     }
 
 
+def get_tile_from_dict_data(data: dict) -> TileDataAbs:
+    return TileTypes.types_dict.get(data[TileAttrs.Name], TileData)(**data)
+
+
 if __name__ == '__main__':
-    pass
+    w = TileTypes.Wall()
+    print(w.get_data_dict())
+    w.hp -= 100
+    new_tile = TileData(**w.get_data_dict())
+    print(new_tile.get_data_dict())
+    assert w.get_data_dict() == new_tile.get_data_dict()
+    assert w.get_data_dict() == get_tile_from_dict_data(w.get_data_dict()).get_data_dict()
+    print(EmptyTile.name)

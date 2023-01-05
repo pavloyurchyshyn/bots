@@ -93,6 +93,10 @@ class BaseButton(BaseUI, DrawBorderMixin, BuildRectShapeMixin, ShapeAbs, GetSurf
         super(BaseButton, self).switch_active()
         self.surface = self.active_surface if self.active else self.inactive_surface
 
+    def set_active(self, state: bool):
+        super(BaseButton, self).set_active(state)
+        self.surface = self.active_surface if self.active else self.inactive_surface
+
     def activate(self) -> None:
         super().activate()
         self.surface = self.active_surface

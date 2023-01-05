@@ -96,6 +96,9 @@ class BaseUI(BaseUIAbs, ABC):
         if self.visible:
             self.parent_surface.blit(self.surface, self.position)
 
+    def set_active(self, state: bool):
+        self.active = state
+
     def switch_active(self):
         self.active = not self.active
 
@@ -213,7 +216,8 @@ class DrawBorderMixin:
 class BuildRectShapeMixin:
     def get_real_pos(self):
         if self.parent:
-            x, y = self.parent.x + self.x, self.parent.y + self.y
+            px, py = self.parent.real_position
+            x, y = px + self.x, py + self.y
         else:
             x, y = self.x, self.y
         return x, y

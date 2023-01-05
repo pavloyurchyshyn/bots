@@ -1,6 +1,6 @@
 from typing import Union, List, Tuple
 from core.world.base.logic.tile import LogicTile
-from core.world.base.constants import TileDataAbs, IMPASSABLE_VALUE, TileTypes
+from core.world.base.logic.tiles_data import TileDataAbs, TileTypes
 
 
 class VisualTile(LogicTile):

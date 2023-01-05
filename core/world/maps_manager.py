@@ -1,26 +1,29 @@
-import json
 import os
 import datetime
-from typing import List, Dict
+from typing import List
 from settings.base import MAPS_SAVES
-from core.world.base.logic.world import LogicWorld
-from core.world.base.constants import TileDataAbs, EmptyTile, TileTypes
 from core.world.base.map_save import MapSave
 from core.world.classic_maps.forest import ForestMap
+from core.world.classic_maps.empty import Empty
 
 
 class MapsManager:
     def __init__(self):
         self.maps: List[MapSave] = []
-        self.maps.append(ForestMap())
-        self.load_maps()
-        self.sort()
 
     def load_maps(self):
+        self.maps.clear()
         for map_save in os.listdir(MAPS_SAVES):
-            save = MapSave(path=os.path.join(MAPS_SAVES, map_save))
+            save = MapSave()
+            save.load_save_from_file(os.path.join(MAPS_SAVES, map_save))
             save.set_name_from_path()
             self.maps.append(save)
+        self.load_default_maps()
+        self.sort()
+
+    def load_default_maps(self):
+        self.maps.append(ForestMap())
+        self.maps.append(Empty())
 
     def add_map(self, map_save: MapSave):
         self.maps.append(map_save)

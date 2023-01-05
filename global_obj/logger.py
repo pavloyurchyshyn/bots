@@ -9,7 +9,7 @@ VisualPygameOn = os.environ.get('VisualPygameOn', 'off') == 'on'
 def __remember_logger(func):
     logger = []
 
-    def wrap(level=logging.DEBUG, log_file=None, std_out=True) -> logging.Logger:
+    def wrap(level=logging.WARNING, log_file=None, std_out=True) -> logging.Logger:
         if not logger:
             logger.append(func(level, log_file, std_out))
         return logger[0]

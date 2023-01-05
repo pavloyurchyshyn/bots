@@ -26,8 +26,8 @@ class Body:
         if Global.mouse.l_up and not self.popups.popups:
             raise Exception
 
-        self.popups.update()
-        self.popups.draw()
+        self.popups.default_update_popups()
+        self.popups.draw_popups()
 
 
 if __name__ == '__main__':

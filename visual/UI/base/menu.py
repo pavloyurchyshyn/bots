@@ -1,9 +1,9 @@
 from abc import abstractmethod
 from typing import List
+from global_obj import Global
 from visual.UI.manager import UIManager
 from visual.UI.base.button import Button
 from visual.UI.base.mixins import CreateButtonMixin
-from global_obj import Global
 
 
 class Menu(CreateButtonMixin):
@@ -11,8 +11,12 @@ class Menu(CreateButtonMixin):
         self.x, self.y = 0, 0
         self.surface = surface if surface else Global.display
         self.UI_manager = UIManager()
-        self.buttons: List[Button, ] = self.create_button_from_data(buttons_data)
+        self.buttons: List[Button] = self.create_button_from_data(buttons_data)
         self.UI_manager.add_elements(self.buttons)
+
+    @property
+    def real_position(self) -> (int, int):
+        return self.x, self.y
 
     @abstractmethod
     def update(self):

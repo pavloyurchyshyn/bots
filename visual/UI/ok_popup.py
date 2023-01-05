@@ -51,7 +51,7 @@ class OkPopUp(PopUpBase):
     def render(self, **kwargs):
         self.fill_surface_due_to_border_attrs()
         self.text.render()
-        self.text.draw()
+        self.text.draw_popups()
         self.draw_border()
         self.ok.render()
         self.ok.build()

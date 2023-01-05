@@ -1,18 +1,19 @@
 if __name__ == '__main__':
     from launch import GameRunner
+from pygame.rect import Rect
 from typing import List, Type
 from pygame import draw, Surface, transform
 from global_obj import Global
+from visual.UI.utils import get_surface
+from visual.UI.base.font import get_custom_font
+from settings.tile_settings import TileSettings
 from core.world.base.logic.tile import LogicTile
 from core.world.base.visual.tile import VisualTile
 from core.world.base.logic.world import LogicWorld
+from core.world.base.logic.tiles_data import TileDataAbs
 from core.world.base.hex_utils import get_hex_math, HexMathAbs
-from core.world.base.constants import TileDataAbs, IMPASSABLE_VALUE, TileTypes, EmptyTile
 from core.world.base.visual.tiles_textures import TilesTextures
-from settings.tile_settings import TileSettings
-from visual.UI.utils import get_surface
-from visual.UI.base.font import get_custom_font
-from pygame.rect import Rect
+from core.world.base.logic.tiles_data import EmptyTile
 
 
 class VisualWorld(LogicWorld):
@@ -47,6 +48,7 @@ class VisualWorld(LogicWorld):
 
     def build_map(self, flat, odd, data: List[List[TileDataAbs]]):
         self.hex_math = get_hex_math(flat, odd)
+        self.clear()
         super().build_map(flat, odd, data)
         self.big_surface = get_surface(*self.hex_math.get_map_size(self.x_size, self.y_size, self.tile_size))
         self.reference_hex = VisualTile((None, None), self.hex_math.get_dots_by_xy(0, 0, self.tile_size), '')
@@ -86,6 +88,11 @@ class VisualWorld(LogicWorld):
 
     def render_tile(self, surface, tile: VisualTile):
         # pos = self.hex_math.get_lt_by_id(tile.id_x, tile.id_y, self.tile_size)
+        if tile.tile_data == EmptyTile:
+            draw.polygon(surface, (0, 0, 0), tile.dots)
+            draw.lines(surface, (0, 0, 0), True, points=tile.dots)
+            return
+
         draw.polygon(surface, tile.tile_data.color, tile.dots)
         draw.lines(surface, (50, 50, 50), True, points=tile.dots)
 
@@ -124,56 +131,3 @@ class VisualWorld(LogicWorld):
                                      (self.x, self.y),
                                      (0 - self.dx, 0 - self.dy, self.win_x_size, self.win_y_size))
 
-
-# TODO clear all unneeded
-if __name__ == '__main__':
-    from launch import GameRunner
-    import pprint
-    from visual.hex_stuff import get_colored_hex, draw_hex_border, rotate_hex
-    import random
-    from core.world.base.logic.save_and_load_map import *
-
-
-    class B:
-        def __init__(self):
-            self.w = VisualWorld((110, 20, 900, 500))
-            self.map_data = [[random.choice(tuple((*TileTypes.types_dict.values(), EmptyTile)))() for x in range(1)] for
-                             y in
-                             range(2)]
-            self.w.build_map(True, True, self.map_data)
-            self.tile_dir = 0
-            data = []
-            for line in self.map_data:
-                data.append([l.get_data_dict() if l else EmptyTile() for l in line])
-            list_data = world_to_list(self.w)
-            pprint.pp(list_data == data)
-            print()
-
-        def game_loop(self):
-            raise Exception
-            Global.display.fill((0, 0, 0))
-            self.w.draw()
-            if self.w.window_rect.collidepoint(Global.mouse.pos):
-                pos = self.w.get_mouse_to_xy()
-                if pos in self.w.xy_to_tile:
-                    draw.circle(Global.display, (255, 0, 255),
-                                self.w.get_normalized_mouse_pos(),
-                                5)
-
-                    dots = self.w.get_dots_due_to_map_pos(*pos)
-                    self.w.draw_tile_border(Global.display, dots, color=(255, 255, 255))
-
-            if Global.mouse.scroll:
-                self.w.scale = self.w.scale + Global.mouse.scroll * Global.clock.d_time * 2
-                self.w.reload_surface()
-            if Global.mouse.m_hold:
-                self.w.dx += Global.mouse.rel_x
-                self.w.dy += Global.mouse.rel_y
-
-        def get_hexs(self):
-            H = get_colored_hex((100, 255, 100))
-            draw_hex_border(H, (255, 255, 255))
-            return rotate_hex(H, self.tile_dir)
-
-
-    GameRunner(B()).run()
