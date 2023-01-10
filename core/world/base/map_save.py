@@ -3,6 +3,7 @@ import os
 import copy
 import datetime
 from typing import List
+from global_obj import Global
 from settings.base import MAPS_SAVES
 from core.world.base.logic.world import LogicWorld
 from core.world.base.logic.tiles_data import TileDataAbs, EmptyTile, TileTypes, TileAttrs
@@ -19,12 +20,12 @@ def get_world_dict_structure(name: str, tiles_data: List[List[dict]], created: s
 
 
 class MapSave:
-    default = False
-
     def __init__(self, name: str = '', path: str = '',
                  tiles_data: List[List[TileDataAbs]] = None,
                  odd: bool = True, flat: bool = True,
-                 dict_tiles_data: List[List[dict | int | None]] = None, ):
+                 dict_tiles_data: List[List[dict | int | None]] = None,
+                 default=False):
+        self.default = default
         self.__odd = odd
         self.__flat = flat
         self.__name: str = name
@@ -176,8 +177,8 @@ class MapSave:
                     odd=self.odd,
                     flat=self.flat,
                     dict_tiles_data=copy.deepcopy(self.__dict_tiles_data),
+                    default=False
                     )
-        s.default = False
         return s
 
     def set_name(self, name: str):

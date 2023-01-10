@@ -1,25 +1,30 @@
 import os
+
 os.environ['VisualPygameOn'] = 'off'
 
 import time
 import socket
 from _thread import start_new_thread
 from global_obj.logger import get_logger
-from server.server_config import ServerConfig
-from constants.server.start_and_connect import LoginArgs
-from server.gameserver import GameServer
-from server.connection_wrapper import SocketConnectionWrapper
 
 LOGGER = get_logger()
+from server_stuff.server_config import ServerConfig
+from server_stuff.constants.start_and_connect import LoginArgs
+from server_stuff.gameserver import GameServer
+from game_client.server_interactions.network.connection_wrapper import SocketConnectionWrapper
 
 
 class Server(ServerConfig):
+    """
+    This part responsible about login, reconnect, etc.
+    """
+
     def __init__(self):
         super(Server, self).__init__()
         self.accepting_connection = True
         self.socket_opened = True
         self.socket = None
-        self.address = socket.gethostbyname(socket.gethostname())
+        self.address = ''  # socket.gethostbyname(socket.gethostname())
         self.game_server = GameServer(self)
 
     def run(self):
@@ -55,16 +60,29 @@ class Server(ServerConfig):
                 client_data = SocketConnectionWrapper.recv_from_connection(player_connection)
                 client_data = SocketConnectionWrapper.recv_to_json(client_data)
                 LOGGER.info(f'Client data: {client_data}')
-                if client_data.get(LoginArgs.Token) == self.game_server.connected_before:
-                    self.game_server.reconnect(SocketConnectionWrapper(player_connection, client_data[LoginArgs.Token]))
-                elif self.password is None or client_data.get(LoginArgs.Password) == self.password:
-                    token = str(hash(str((addr, port))))
+                if client_data.get(LoginArgs.Token) in self.game_server.connected_before:
+                    token = client_data[LoginArgs.Token]
                     connection = SocketConnectionWrapper(player_connection, token)
-                    connection.send_json({LoginArgs.Connected: True,
-                                          LoginArgs.Msg: LoginArgs.SuccLogin,
-                                          LoginArgs.Token: token,
-                                          })
-                    self.game_server.star_player_thread(connection=connection)
+                    response = {LoginArgs.Connected: True,
+                                LoginArgs.Msg: LoginArgs.SuccLogin,
+                                LoginArgs.Token: token,
+                                LoginArgs.IsAdmin: self.admin_token == token,
+                                }
+                    self.game_server.connect(response, connection)
+
+                elif self.password is None or client_data.get(LoginArgs.Password) == self.password:
+                    if client_data[LoginArgs.Token] == self.admin_token:
+                        token = client_data[LoginArgs.Token]
+                    else:
+                        token = str(hash(str((addr, port))))
+                    connection = SocketConnectionWrapper(player_connection, token)
+                    response = {LoginArgs.Connected: True,
+                                LoginArgs.Msg: LoginArgs.SuccLogin,
+                                LoginArgs.Token: token,
+                                LoginArgs.IsAdmin: self.admin_token == token,
+                                }
+                    self.game_server.connect(response, connection)
+
                 else:
                     response = {LoginArgs.Connected: False, LoginArgs.Msg: LoginArgs.BadPassword}
                     SocketConnectionWrapper(connection=player_connection).send_json(response)
@@ -76,5 +94,8 @@ class Server(ServerConfig):
 
 
 if __name__ == '__main__':
-    s = Server()
-    s.run()
+    try:
+        s = Server()
+        s.run()
+    except Exception as e:
+        LOGGER.critical(str(e))

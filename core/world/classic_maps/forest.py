@@ -2,8 +2,6 @@ from core.world.base.map_save import MapSave
 
 
 class ForestMap(MapSave):
-    default = True
-
     def __init__(self):
         dict_tiles_data = [
             [None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
@@ -652,6 +650,7 @@ class ForestMap(MapSave):
                                         dict_tiles_data=dict_tiles_data,
                                         odd=True,
                                         flat=True,
+                                        default=True,
                                         )
 
 

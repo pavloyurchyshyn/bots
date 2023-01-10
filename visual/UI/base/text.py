@@ -11,11 +11,11 @@ class Text(BaseUI):
     TAB_VALUE = '  '
     MAX_SPEED = 4
 
-    def __init__(self, uid: str, text: str = '', color=None, **kwargs):
+    def __init__(self, uid: str, text: str = '', raw_text=True, color=None, **kwargs):
 
         super().__init__(uid=uid, **kwargs, build_surface=True)
         self.color = color if color else self.style.color
-        self.raw_text = kwargs.get(TextAttrs.RawText, True)
+        self.raw_text = raw_text
         self.str_text = self.get_localization_text(str(text), self.raw_text)
 
         self.unlimited_h_size = kwargs.get(TextAttrs.UnlimitedHSize, False)

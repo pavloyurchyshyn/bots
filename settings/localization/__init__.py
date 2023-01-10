@@ -1,6 +1,6 @@
 import yaml
 from os import listdir, path
-from settings.common import get_language
+from settings.common import get_language, set_language
 from settings.base import LOCALIZATIONS_FOLDER
 from global_obj.logger import get_logger
 from utils.singleton import Singleton
@@ -64,15 +64,24 @@ class LocalizationLoader(metaclass=Singleton):
 
     def change_language(self, lang):
         self.current_language = lang
+        set_language(lang)
 
     @property
     def localization(self):
         return self.loaded_languages[self.current_language].localization
 
     def load_lang(self, lang):
+        if lang in self.loaded_languages:
+            return
+
         LOGGER.info(f'Loading {lang} language')
         self.loaded_languages[lang] = LocalizationConfig(lang)
         LOGGER.info(f'Language {lang} successfully loaded.')
+
+    def reload_lang(self, lang):
+        LOGGER.info(f'Reloading {lang} language')
+        self.loaded_languages[lang] = LocalizationConfig(lang)
+        LOGGER.info(f'Language {lang} successfully reloaded.')
 
     def load_current_lang(self):
         self.load_lang(self.current_language)
@@ -90,7 +99,7 @@ class LocalizationLoader(metaclass=Singleton):
                     break
 
             LocalizationLoader.memory[key] = text
-        LOGGER.info(f'Path {path} localization result: {LocalizationLoader.memory[key]}')
+            LOGGER.info(f'Path {path} localization result: {LocalizationLoader.memory[key]}')
 
         return LocalizationLoader.memory[key]
 

@@ -6,6 +6,7 @@ class StartArgs:
     DefaultRecvSize = 2048
 
     Password = 'password'
+    AdminToken = 'admin_token'
 
     Solo = 'solo'
     DefaultSolo = True
@@ -13,6 +14,7 @@ class StartArgs:
 
 class LoginArgs:
     Token = 'token'
+    IsAdmin = 'is_admin'
     Password = 'password'
     Connected = 'connected'
     Msg = 'msg'

@@ -54,3 +54,7 @@ UI:
 
     players_number: "Players number"
     go_button: Lets go!
+
+errors:
+  unknown: Unknown error
+  connection_lost: 'Connection lost'

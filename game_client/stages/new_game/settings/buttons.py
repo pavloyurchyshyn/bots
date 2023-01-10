@@ -5,7 +5,7 @@ from visual.UI.constants.attrs import ButtonAttrs
 
 from settings.localization.menus.UI import UILocal
 
-from game_client.stages.match_settings.settings.uids import UIDs
+from game_client.stages.new_game.settings.uids import UIDs
 from game_client.stages.styles import get_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
 
 

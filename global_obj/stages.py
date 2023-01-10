@@ -16,14 +16,26 @@ class Stages:
     def map_editor(self):
         self.change_current_stage(StagesConstants.MapEditor)
 
+    def join_menu(self):
+        self.change_current_stage(StagesConstants.JoinGameMenu)
+
+    def load_host_game(self):
+        self.change_current_stage(StagesConstants.LoadGame)
+
+    def game(self):
+        self.change_current_stage(StagesConstants.Game)
+
     def close_game(self):
         self.change_current_stage(StagesConstants.CloseGame)
+
+    def exit_game(self):
+        self.change_current_stage(StagesConstants.ExitGame)
 
     def set_prev_stage(self):
         self.change_current_stage(self.prev_stage)
 
     def change_current_stage(self, stage: str):
-        self.logger.info(f'Stage {self.current_stage} changed to {stage}')
+        self.logger.info(f'Stage "{self.current_stage}" changed to "{stage}"')
         self.__prev_stage = self.current_stage
         self.current_stage = stage
 

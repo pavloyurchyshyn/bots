@@ -112,7 +112,7 @@ class MapFuncUI(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBord
                 self.load_save()
 
     def load_save(self):
-        s = self.save
+        s = self.save.copy()
         self.editor_ui.load_save(s)
         self.editor_ui.unsaved_edit = False
 

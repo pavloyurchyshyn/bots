@@ -1,3 +1,2 @@
-
 class GameMenu:
     pass

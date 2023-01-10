@@ -12,8 +12,6 @@ from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorderMixin, Bui
 from visual.UI.settings import UIDefault
 from visual.UI.constants.attrs import ButtonAttrs, TextAttrs
 
-import inspect
-
 
 class BaseButton(BaseUI, DrawBorderMixin, BuildRectShapeMixin, ShapeAbs, GetSurfaceMixin, ABC):
     style: ButtonStyle
@@ -78,6 +76,7 @@ class BaseButton(BaseUI, DrawBorderMixin, BuildRectShapeMixin, ShapeAbs, GetSurf
             self.build()
 
     def do_action(self) -> Any:
+        Global.logger.info(f'Button "{self.uid}" do action on stage "{Global.stages.current_stage}".')
         if self.on_click_action:
             res = self.on_click_action(self, *self.on_click_action_args, **self.on_click_action_kwargs)
         else:

@@ -24,13 +24,15 @@ class PopUpBase(BaseUI, GetSurfaceMixin, DrawBorderMixin, BuildRectShapeMixin, U
 
         text_kwargs = kwargs.pop(Attrs.TextKwargs, {})
         text = kwargs.pop(Attrs.Text, text_kwargs.pop(Attrs.Text, ''))
+        raw_text = kwargs.pop(TextAttrs.RawText, text_kwargs.pop(TextAttrs.RawText, False))
         text_uid = text_kwargs.pop(Attrs.UID, f'{self.uid}_txt')
         text_kwargs[Attrs.Style] = text_kwargs.get(Attrs.Style, self.default_text_style)
         text_kwargs[Attrs.HSizeK] = text_kwargs.get(Attrs.HSizeK, 0.98)
         text_kwargs[Attrs.VSizeK] = text_kwargs.get(Attrs.VSizeK, 0.65)
         text_kwargs[Attrs.YK] = text_kwargs.get(Attrs.YK, 0.05)
         text_kwargs[TextAttrs.SplitLines] = text_kwargs.get(TextAttrs.SplitLines, True)
-        self.text = Text(uid=text_uid, text=text, **text_kwargs, parent=self, postpone_build=True)
+
+        self.text = Text(uid=text_uid, text=text, raw_text=raw_text, **text_kwargs, parent=self, postpone_build=True)
         self.buttons = []
 
     def make_inactive_and_invisible(self) -> None:

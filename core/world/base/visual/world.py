@@ -38,6 +38,13 @@ class VisualWorld(LogicWorld):
 
         self.scale = 1
 
+    def adapt_scale_to_win_size(self):
+        h_size, v_size = self.hex_math.get_map_size(self.x_size, self.y_size, self.tile_size)
+        h_k = self.window_rect[2] / h_size
+        v_k = self.window_rect[3] / v_size
+        self.scale = h_k if h_k < v_k else v_k
+        self.reload_surface()
+
     @property
     def scaled_tile_size(self):
         return self.tile_size * self.scale
@@ -53,6 +60,9 @@ class VisualWorld(LogicWorld):
         self.big_surface = get_surface(*self.hex_math.get_map_size(self.x_size, self.y_size, self.tile_size))
         self.reference_hex = VisualTile((None, None), self.hex_math.get_dots_by_xy(0, 0, self.tile_size), '')
         self.render()
+
+    def build_map_from_save(self, save):
+        self.build_map(save.flat, save.odd, save.get_tiles_data())
 
     def init_hex_math(self, flat=True, odd=True):
         self.hex_math = get_hex_math(flat, odd)
@@ -130,4 +140,3 @@ class VisualWorld(LogicWorld):
             self.parent_surface.blit(self.surface,
                                      (self.x, self.y),
                                      (0 - self.dx, 0 - self.dy, self.win_x_size, self.win_y_size))
-

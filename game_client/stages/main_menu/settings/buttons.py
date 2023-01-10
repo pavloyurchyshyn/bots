@@ -9,12 +9,12 @@ from global_obj import Global
 from game_client.stages.styles import get_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
 
 MENU_UIDS = (
-    UIDs.NewGame,
-    UIDs.LoadGame,
+    # UIDs.NewGame,
+    # UIDs.LoadGame,
     UIDs.HostGame,
     UIDs.JoinGame,
     UIDs.MapEditor,
-    UIDs.Settings,
+    # UIDs.Settings,
     UIDs.Exit,
 )
 
@@ -43,9 +43,13 @@ def exit_btn_func(b):
     ui_manager.get_by_uid(UIDs.ExitNo).make_active_and_visible()
 
 
+def join_menu(b):
+    Global.stages.join_menu()
+
+
 def yes_btn_func(b):
     Global.logger.info(f'Clicked Yes to exit in main menu.')
-    Global.stages.close_game()
+    Global.stages.exit_game()
 
 
 def no_btn_func(b):
@@ -56,13 +60,17 @@ def no_btn_func(b):
     ui_manager.get_by_uid(UIDs.ExitNo).make_inactive_and_invisible()
 
 
+def set_host_game(b: Button):
+    Global.stages.load_host_game()
+
+
 BUTTONS_DATA = {
     'solo_game': {
         'kwargs': {
             ButtonAttrs.YK: 0.2,
             TextAttrs.Text: UILocal.MainMenu.NewGame,
             ButtonAttrs.UID: UIDs.NewGame,
-            # ButtonAttrs.Active: False,
+            ButtonAttrs.Active: False,
             # TextAttrs.RawText: False,
             ButtonAttrs.OnClickAction: lambda b: Global.stages.solo_game_menu(),
         }
@@ -73,7 +81,7 @@ BUTTONS_DATA = {
             ButtonAttrs.YK: 0.3,
             TextAttrs.Text: 'Load Game',
             ButtonAttrs.UID: UIDs.LoadGame,
-            # ButtonAttrs.Active: False,
+            ButtonAttrs.Active: False,
             ButtonAttrs.OnClickAction: lambda b: Global.stages.solo_game_menu(),
         }
     },
@@ -83,7 +91,7 @@ BUTTONS_DATA = {
             ButtonAttrs.YK: 0.4,
             TextAttrs.Text: UILocal.MainMenu.HostGame,
             ButtonAttrs.UID: UIDs.HostGame,
-            ButtonAttrs.OnClickAction: mock_func,
+            ButtonAttrs.OnClickAction: set_host_game,
         }
     },
 
@@ -92,7 +100,7 @@ BUTTONS_DATA = {
             ButtonAttrs.YK: 0.5,
             TextAttrs.Text: UILocal.MainMenu.Multiplayer,
             ButtonAttrs.UID: UIDs.JoinGame,
-            ButtonAttrs.OnClickAction: mock_func,
+            ButtonAttrs.OnClickAction: join_menu,
         }
     },
     'map_editor': {
@@ -108,7 +116,7 @@ BUTTONS_DATA = {
             ButtonAttrs.YK: 0.7,
             TextAttrs.Text: UILocal.MainMenu.Settings,
             ButtonAttrs.UID: UIDs.Settings,
-            ButtonAttrs.OnClickAction: test_func,
+            ButtonAttrs.Active: False,
         }
     },
 

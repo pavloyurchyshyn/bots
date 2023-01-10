@@ -1,6 +1,6 @@
 import socket
-from constants.server.player import PlayerAttrs
-from constants.server.start_and_connect import LoginArgs, StartArgs
+from core.player.constants import PlayerAttrs
+from server_stuff.constants.start_and_connect import LoginArgs
 from settings.json_configs_manager import get_from_common_config, save_to_common_config
 
 DEFAULT_PORT = 8002
@@ -13,6 +13,12 @@ class NetworkData:
         self._nickname = get_from_common_config(PlayerAttrs.Nickname, 'NoNickname?:(')
         self._password = None
         self._token = get_from_common_config(LoginArgs.Token)
+
+        self._is_admin: bool = False
+
+    @property
+    def is_admin(self) -> bool:
+        return self._is_admin
 
     @property
     def credentials(self) -> dict:

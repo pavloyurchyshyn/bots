@@ -5,5 +5,6 @@ __pycache__
 python_env
 .idea
 settings/keyboard_config.json
+settings/common_config.json
 some_code
 maps

@@ -1,6 +1,6 @@
 from os import environ
 from time import time
-
+environ['VisualPygameOn'] = 'on'
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
 from pygame import init
@@ -21,9 +21,9 @@ class GameRunner:
         if game_body:
             self.game_body = game_body
         else:
-            from game_client import Game
+            from game_client.game_body import GameBody
 
-            self.game_body = Game(self)
+            self.game_body = GameBody(self)
 
         self.main_screen = MAIN_DISPLAY
         self.font = DEFAULT_FONT

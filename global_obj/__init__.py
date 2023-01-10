@@ -11,7 +11,7 @@ VisualPygameOn = os.environ.get('VisualPygameOn', 'on') == 'on'
 
 class Global:
     """
-    Object for global ingame parameters.
+    Object for global in-game parameters.
     """
     logger: Logger = get_logger()
     clock: Clock = Clock()  # global for all game
@@ -29,3 +29,4 @@ class Global:
         keyboard = __keyboard(logger)
         mouse = __mouse()
         localization = __localization()
+        # add sound

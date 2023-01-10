@@ -2,10 +2,10 @@ import time
 import socket
 
 from abc import abstractmethod
-from settings.network import NetworkData
 from global_obj.logger import get_logger
-from constants.server.start_and_connect import LoginArgs
-from server.connection_wrapper import SocketConnectionWrapper, ConnectionWrapperAbs
+from settings.network import NetworkData
+from server_stuff.constants.start_and_connect import LoginArgs
+from game_client.server_interactions.network.connection_wrapper import SocketConnectionWrapper, ConnectionWrapperAbs
 
 
 LOGGER = get_logger()
@@ -30,23 +30,20 @@ class SocketConnectionNetwork(NetworkData, NetworkAbs):
         self.connection: SocketConnectionWrapper = None
         self.connected = False
 
-    def connect(self):
+    def connect(self) -> dict:
         if self.connection:
             self.connection.close()
             self.connection = None
-        connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        socket_conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         LOGGER.info(f'Connecting to {self.anon_host}')
-        connection.connect(self.server_addr)
-        self.connection = SocketConnectionWrapper(connection)
-
+        socket_conn.connect(self.server_addr)
+        self.connection = SocketConnectionWrapper(socket_conn)
+        LOGGER.info(f'Sending creds: {self.credentials}')
         self.connection.send_json(self.credentials)
         response = self.connection.recv_json()
-        LOGGER.info(f"Connection server response {response}")
-        self.connection.token = response.get(LoginArgs.Token)
-
-        while not self.connection.recv_json().get('ready'):
-            time.sleep(0.1)
-        LOGGER.info('Player thread is ready')
+        LOGGER.info(f"Connection server response: {response}")
+        self.token = self.connection.token = response.get(LoginArgs.Token)
+        return response
 
     def disconnect(self):
         try:

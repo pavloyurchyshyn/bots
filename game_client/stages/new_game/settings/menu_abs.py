@@ -8,3 +8,4 @@ class NewGameAbs:
     # join_game: Button
     # settings: Button
     # exit: Button
+    # TODO delete

@@ -6,6 +6,7 @@ from core.world.base.map_save import MapSave
 from core.world.base.visual.world import VisualWorld
 from global_obj import Global
 from pygame.draw import rect as draw_rect
+from core.world.classic_maps.empty import Empty
 
 from visual.UI.base.input import InputBase
 from visual.UI.base.container import Container
@@ -17,7 +18,6 @@ from core.world.maps_manager import MapsManager
 from visual.UI.base.mixins import DrawElementBorderMixin
 from visual.UI.base.pop_up import PopUpsController
 from visual.UI.base.text import Text
-Global.stages.map_editor()
 
 
 class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
@@ -59,15 +59,13 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
                                    v_size_k=MapsButtonsContainer.V_size)
         self.fill_container()
 
-
-
         self.unsaved_edit = False
 
         self.current_pencil_type = 'forest'
 
     def load_save(self, map_save: MapSave):
         self.current_save: MapSave = map_save
-        self.init_map(map_save)
+        self.init_map(map_save, )
 
     def fill_container(self):
         self.maps_mngr.load_maps()
@@ -75,6 +73,9 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         for map_save in self.maps_mngr.maps:
             self.maps_cont.add_element(MapFuncUI(uid=map_save.name, map_save=map_save,
                                                  parent=self.maps_cont, editor_ui=self))
+
+        self.maps_cont.add_element(MapFuncUI(uid=Empty.name, map_save=Empty(),
+                                             parent=self.maps_cont, editor_ui=self))
         self.maps_cont.build()
 
     def init_map(self, map_save: MapSave):
@@ -91,8 +92,10 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
             map_tiles_data = map_save.get_tiles_data()
 
         self.w.build_map(flat, odd, map_tiles_data)
+        self.w.adapt_scale_to_win_size()
+
         self.define_map_position()
-        self.size_txt.change_text(f'{self.w.x_size}X{self.w.y_size}   {self.w.y_size*self.w.x_size}')
+        self.size_txt.change_text(f'{self.w.x_size}X{self.w.y_size}   {self.w.y_size * self.w.x_size}')
 
     def update(self):
         Global.display.fill((0, 0, 0))
@@ -121,8 +124,8 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
                             if self.popups[0].on_click_action:
                                 self.popups[0].on_click_action(self.popups[0], btn)
                             break
-                    if self.popups and self.popups[0].inactive:
-                        self.popups.remove(self.popups[0])
+                if self.popups and self.popups[0].inactive:
+                    self.popups.remove(self.popups[0])
             Global.mouse.l_up = False
             Global.mouse._pos = -10, -10
         return collided_popup_btn
