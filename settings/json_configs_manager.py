@@ -18,7 +18,7 @@ def change_parameter_in_json_config(key, value, path):
     j = load_json_config(path)
     j[key] = value
     save_json_config(j, path)
-    LOGGER.info(f'Parameter {key} changed to {value} in {path}')
+    LOGGER.debug(f'Parameter {key} changed to {value} in {path}')
 
 
 def get_parameter_from_json_config(key, path, def_value=None):

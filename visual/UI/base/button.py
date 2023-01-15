@@ -2,7 +2,7 @@ from abc import ABC
 from typing import Iterable, Any
 from pygame import Surface
 
-from global_obj import Global
+from global_obj.main import Global
 
 from visual.UI.base.text import Text
 from visual.UI.base.abs import ShapeAbs
@@ -76,7 +76,7 @@ class BaseButton(BaseUI, DrawBorderMixin, BuildRectShapeMixin, ShapeAbs, GetSurf
             self.build()
 
     def do_action(self) -> Any:
-        Global.logger.info(f'Button "{self.uid}" do action on stage "{Global.stages.current_stage}".')
+        Global.logger.debug(f'Button "{self.uid}" do action on stage "{Global.stages.current_stage}".')
         if self.on_click_action:
             res = self.on_click_action(self, *self.on_click_action_args, **self.on_click_action_kwargs)
         else:

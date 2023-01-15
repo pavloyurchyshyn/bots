@@ -19,8 +19,11 @@ class Stages:
     def join_menu(self):
         self.change_current_stage(StagesConstants.JoinGameMenu)
 
-    def load_host_game(self):
+    def load_join_game(self):
         self.change_current_stage(StagesConstants.LoadGame)
+
+    def host_game(self):
+        self.change_current_stage(StagesConstants.Host_Stage)
 
     def game(self):
         self.change_current_stage(StagesConstants.Game)

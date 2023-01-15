@@ -4,7 +4,7 @@ import math
 import collections
 from launch import GameRunner
 from visual.UI.utils import get_surface
-from global_obj import Global
+from global_obj.main import Global
 from pygame.draw import lines as draw_lines, circle as draw_circle, rect as draw_rect, line as draw_line, \
     polygon as draw_pol
 from visual.UI.base.font import get_custom_font

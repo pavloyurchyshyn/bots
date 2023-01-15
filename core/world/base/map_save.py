@@ -3,19 +3,19 @@ import os
 import copy
 import datetime
 from typing import List
-from global_obj import Global
+from global_obj.main import Global
 from settings.base import MAPS_SAVES
 from core.world.base.logic.world import LogicWorld
 from core.world.base.logic.tiles_data import TileDataAbs, EmptyTile, TileTypes, TileAttrs
 
 
-def get_world_dict_structure(name: str, tiles_data: List[List[dict]], created: str) -> dict:
+def get_world_dict_structure(name: str, dict_tiles_data: List[List[dict]], created: str) -> dict:
     return {
         'name': name,
         'metadata': {
             'created': created
         },
-        'tiles_data': tiles_data,
+        'dict_tiles_data': dict_tiles_data,
     }
 
 
@@ -24,11 +24,13 @@ class MapSave:
                  tiles_data: List[List[TileDataAbs]] = None,
                  odd: bool = True, flat: bool = True,
                  dict_tiles_data: List[List[dict | int | None]] = None,
+                 created: str = None,
                  default=False):
         self.default = default
         self.__odd = odd
         self.__flat = flat
         self.__name: str = name
+        self.__created = created
         if self.default:
             self.__path = ''
         else:
@@ -45,7 +47,7 @@ class MapSave:
         data = self.load_json_data_from_file(path)
         self.__name = data['name']
         self.__path = path
-        self.__dict_tiles_data = data['tiles_data']
+        self.__dict_tiles_data = data['dict_tiles_data']
 
     @property
     def json_tiles_data(self):
@@ -59,7 +61,7 @@ class MapSave:
     def load(self):
         data = self.load_json_data_from_file(self.__path)
         self.__name = data['name']
-        self.__dict_tiles_data = data['tiles_data']
+        self.__dict_tiles_data = data['dict_tiles_data']
 
     def save(self, forced=False):
         if self.default:
@@ -112,8 +114,8 @@ class MapSave:
             raise Exception
 
         return get_world_dict_structure(self.__name,
-                                        self.__dict_tiles_data,
-                                        created=str(datetime.datetime.now()))
+                                        dict_tiles_data=self.__dict_tiles_data,
+                                        created=self.__created if self.__created else str(datetime.datetime.now()))
 
     def save_as_raw_text(self):
         with open(self.__path.replace('.json', '.txt'), 'w') as f:

@@ -1,6 +1,7 @@
 from abc import abstractmethod
-from game_client.server_interactions.network.connection_wrapper import ConnectionWrapperAbs
+from core.player import Player
 from core.game_logic.game_components.game_data.game_settings import GameSettings
+from game_client.server_interactions.network.socket_connection import ConnectionWrapperAbs
 
 
 class LogicStageAbs:
@@ -15,7 +16,7 @@ class LogicStageAbs:
         raise NotImplementedError
 
     @abstractmethod
-    def process_request(self, request: dict, connection: ConnectionWrapperAbs):
+    def process_request(self, request: dict, connection: ConnectionWrapperAbs, player_obj: Player):
         raise NotImplementedError
 
     @abstractmethod

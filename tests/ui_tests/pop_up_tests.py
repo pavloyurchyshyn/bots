@@ -2,7 +2,7 @@ from launch import GameRunner
 from visual.UI.ok_popup import OkPopUp
 from visual.UI.yes_no_popup import YesNoPopUp
 from visual.UI.base.pop_up import PopUpsController
-from global_obj import Global
+from global_obj.main import Global
 
 
 class Body:

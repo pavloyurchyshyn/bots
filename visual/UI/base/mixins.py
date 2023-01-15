@@ -1,6 +1,6 @@
 from math import cos
 from pygame.draw import rect as draw_rect
-from global_obj import Global
+from global_obj.main import Global
 from visual.UI.base.button import Button
 from visual.UI.settings import UIDefault
 from visual.UI.utils import normalize_color

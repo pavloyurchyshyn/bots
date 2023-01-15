@@ -5,13 +5,18 @@ from visual.UI.constants.attrs import ButtonAttrs, TextAttrs
 from game_client.stages.join_menu.settings.uids import UIDs
 from game_client.stages.maps_editor.settings.menu_abs import MenuAbs
 from visual.UI.yes_no_popup import YesNoPopUp
-from global_obj import Global
+from global_obj.main import Global
 from game_client.stages.styles import get_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
 from settings.localization.menus.UI import UILocal
+
 
 # TODO clean it
 def exit_to_main_menu(b):
     Global.stages.main_menu()
+
+
+def join_game(b):
+    Global.stages.load_join_game()
 
 
 BUTTONS_DATA = {
@@ -34,7 +39,7 @@ BUTTONS_DATA = {
             ButtonAttrs.VSizeK: DEFAULT_V_SIZE,
             ButtonAttrs.UID: UIDs.Join,
             ButtonAttrs.Text: UILocal.JoinMenu.join,
-            ButtonAttrs.OnClickAction: lambda b: b,
+            ButtonAttrs.OnClickAction: join_game,
             ButtonAttrs.Style: get_btn_style(),
         }
     },

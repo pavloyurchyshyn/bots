@@ -10,7 +10,8 @@ class NetworkData:
     def __init__(self):
         self.address = socket.gethostbyname(socket.gethostname())
         self.port = DEFAULT_PORT
-        self._nickname = get_from_common_config(PlayerAttrs.Nickname, 'NoNickname?:(')
+        self._nickname = ''
+        self.nickname = get_from_common_config(PlayerAttrs.Nickname, 'NoNickname?:(')
         self._password = None
         self._token = get_from_common_config(LoginArgs.Token)
 
@@ -40,6 +41,15 @@ class NetworkData:
     def password(self, password):
         self._password = password
         save_to_common_config(LoginArgs.Password, password)
+
+    @property
+    def nickname(self) -> str:
+        return self._nickname
+
+    @nickname.setter
+    def nickname(self, name: str):
+        self._nickname = name
+        save_to_common_config(LoginArgs.NickName, name)
 
     @property
     def token(self):

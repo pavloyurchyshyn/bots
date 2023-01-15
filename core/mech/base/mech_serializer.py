@@ -3,7 +3,7 @@ from core.mech.base.details.body import BaseBody
 from core.mech.base.pools.details_pool import DetailsPool
 from core.mech.base.details.constants import MechSerializeConst, DetailsTypes, MechAttrs
 
-from global_obj import Global
+from global_obj.main import Global
 
 
 class MechSerializer:

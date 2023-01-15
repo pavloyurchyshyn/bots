@@ -1,6 +1,6 @@
 from pygame import Surface
 
-from global_obj import Global
+from global_obj.main import Global
 from visual.UI.base.text import Text
 from visual.UI.settings import UIDefault
 from visual.UI.base.abs import ShapeAbs
@@ -59,6 +59,10 @@ class InputBase(BaseUI, DrawBorderMixin, BuildRectShapeMixin, GetSurfaceMixin, S
                 new_text = self.text.str_text[:-1]
                 self.text.change_text(new_text)
                 self.render()
+
+    def change_text(self, text: str):
+        self.text.str_text = text
+        self.render()
 
     def build(self, **kwargs):
         self.text.build()

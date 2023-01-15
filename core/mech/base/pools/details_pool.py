@@ -1,5 +1,5 @@
 import inspect
-from global_obj import Global
+from global_obj.main import Global
 from core.mech import details as details_module
 from core.mech.base.details.detail import BaseDetail
 from core.mech.base.pools.skills_pool import SkillsPool

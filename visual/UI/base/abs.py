@@ -3,7 +3,7 @@ from visual.UI.constants.colors import CommonColors
 from core.shape import ShapeClasses, Rectangle
 from core.shape.constants import Vector2DType
 from pygame import Surface
-from global_obj import Global
+from global_obj.main import Global
 from pygame.draw import circle as draw_circle
 from typing import Union, Tuple
 from visual.UI.constants.attrs import Attrs

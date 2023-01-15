@@ -1,6 +1,6 @@
 from pygame import Surface
 from pygame.transform import smoothscale
-from global_obj import Global
+from global_obj.main import Global
 from visual.UI.base.element import BaseUI
 from visual.UI.base.font import DEFAULT_FONT_NAME, get_custom_font, DEFAULT_FONT_SIZE
 from visual.UI.constants.attrs import Attrs, TextAttrs

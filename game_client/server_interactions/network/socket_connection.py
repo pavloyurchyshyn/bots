@@ -1,11 +1,6 @@
 import json
-from socket import socket
+import socket
 from abc import abstractmethod, ABC
-
-from global_obj.logger import get_logger
-
-
-LOGGER = get_logger()
 
 
 class ConnectionAbs(ABC):
@@ -25,7 +20,6 @@ class ConnectionAbs(ABC):
 class ConnectionWrapperAbs:
     alive: bool
     connection: ConnectionAbs
-    token: str
 
     @abstractmethod
     def recv_json(self) -> dict:
@@ -46,12 +40,7 @@ class ConnectionWrapperAbs:
         raise NotImplementedError
 
     def close(self) -> None:
-        try:
-            self.connection.close()
-        except Exception as e:
-            LOGGER.error(f'Failed to disconnect {self.token}: {e}')
-        else:
-            LOGGER.info(f'{self.token} disconnected!')
+        raise NotImplementedError
 
     def __del__(self):
         try:
@@ -60,28 +49,41 @@ class ConnectionWrapperAbs:
             pass
 
 
-class SocketConnectionWrapper(ConnectionWrapperAbs):
+class SocketConnection(ConnectionWrapperAbs):
     START_OF_REQUEST = b'\x00\x00\x00'
     END_OF_REQUEST = b'\x00\x00'
 
-    def __init__(self, connection: socket, token: str = None):
-        self.connection: socket = connection
-        self.token = token
+    def __init__(self, logger, family=socket.AF_INET, type_=socket.SOCK_STREAM):
+        self.connection: socket.socket = None
+        self.family = family
+        self.type = type_
+        self.alive = False
+        self.logger = logger
+
+    def connect(self, addr: str):
+        self.connection: socket.socket = socket.socket(self.family, self.type)
+        self.connection.connect(addr)
         self.alive = True
 
+    def set_connection(self, connection: socket.socket) -> 'SocketConnection':
+        self.connection = connection
+        self.alive = True
+        return self
+
     def recv_json(self, size=2048) -> dict:
-        return self.recv_to_json(self.recv(size=2048))
+        return self.recv_to_json(self.recv(size=size))
 
     def recv(self, size=2048) -> bytes:
         recv = b''
-        while not recv.endswith(SocketConnectionWrapper.END_OF_REQUEST):
+        while not recv.endswith(SocketConnection.END_OF_REQUEST):
             recv += self.recv_from_connection(self.connection, size)
+        self.logger.debug(f'Received: {recv}')
         return recv
 
     @staticmethod
     def recv_to_json(data: bytes) -> dict:
-        recv = data.split(SocketConnectionWrapper.START_OF_REQUEST)[-1]
-        recv = recv.replace(SocketConnectionWrapper.END_OF_REQUEST, b'')
+        recv = data.split(SocketConnection.START_OF_REQUEST)[-1]
+        recv = recv.replace(SocketConnection.END_OF_REQUEST, b'')
         recv = recv.decode()
 
         if recv == '{}':
@@ -90,17 +92,21 @@ class SocketConnectionWrapper(ConnectionWrapperAbs):
         return json.loads(recv)
 
     def send_json(self, data: dict) -> None:
+
         try:
-            self.send(SocketConnectionWrapper.START_OF_REQUEST + json.dumps(
-                data).encode() + SocketConnectionWrapper.END_OF_REQUEST)
+            self.send(SocketConnection.START_OF_REQUEST
+                      + json.dumps(data).encode()
+                      + SocketConnection.END_OF_REQUEST)
         except Exception as e:
-            LOGGER.critical(e)
+            self.logger.critical(e)
             self.close()
 
     def change_connection(self, connection: socket):
         self.connection: socket = connection
 
     def send(self, data: bytes):
+        self.logger.debug(f'Sending: {data}')
+
         self.connection.send(data)
 
     @staticmethod
@@ -108,25 +114,13 @@ class SocketConnectionWrapper(ConnectionWrapperAbs):
         return connection.recv(size)
 
     def close(self):
+        self.alive = False
         if self.connection:
             try:
                 self.connection.close()
-
             except Exception as e:
-                LOGGER.error(f'Failed to disconnect {self.token}: {e}')
+                self.logger.error(f'Failed to disconnect: {e}')
             else:
-                LOGGER.info(f'{self.token} disconnected!')
-        self.alive = False
+                self.logger.info(f'Successfully disconnected!')
         self.connection = None
 
-    def __del__(self):
-        try:
-            self.close()
-        except:
-            pass
-
-
-if __name__ == '__main__':
-    data = {'a': 1}
-    r = SocketConnectionWrapper.START_OF_REQUEST + json.dumps(data).encode() + SocketConnectionWrapper.END_OF_REQUEST
-    print(r)

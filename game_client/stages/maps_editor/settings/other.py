@@ -1,5 +1,5 @@
 from pygame import Surface
-from global_obj import Global
+from global_obj.main import Global
 from visual.UI.base.text import Text
 from visual.UI.base.abs import ShapeAbs
 from visual.UI.base.button import Button
@@ -7,8 +7,8 @@ from visual.UI.base.container import Container
 from visual.UI.yes_no_popup import YesNoPopUp
 from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorderMixin, BuildRectShapeMixin
 from core.world.base.map_save import MapSave
-from settings.screen.size import scaled_w, scaled_h
 from game_client.stages.styles import get_green_btn_style, get_red_btn_style
+from settings.screen.size import scaled_w, scaled_h
 
 
 class MapRect:
@@ -53,12 +53,17 @@ class MapFuncElCons:
 class MapFuncUI(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBorderMixin):
     parent: Container
 
-    def __init__(self, uid, map_save: MapSave, editor_ui, **kwargs):
+    def __init__(self, uid, map_save: MapSave, editor_ui,
+                 x_k=MapFuncElCons.X,
+                 y_k=MapFuncElCons.Y,
+                 h_size_k=MapFuncElCons.H_size,
+                 v_size_k=MapFuncElCons.V_size,
+                 **kwargs):
         super(MapFuncUI, self).__init__(uid,
-                                        x_k=MapFuncElCons.X,
-                                        y_k=MapFuncElCons.Y,
-                                        h_size_k=MapFuncElCons.H_size,
-                                        v_size_k=MapFuncElCons.V_size,
+                                        x_k=x_k,
+                                        y_k=y_k,
+                                        h_size_k=h_size_k,
+                                        v_size_k=v_size_k,
                                         **kwargs)
         ShapeAbs.__init__(self, **kwargs)
         self.save: MapSave = map_save
@@ -99,17 +104,17 @@ class MapFuncUI(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBord
         self.build()
 
     def load_btn_action(self, b):
-        if self.editor_ui.unsaved_edit or self.editor_ui.current_save.name != self.save.name:
-            if self.editor_ui.unsaved_edit:
-                self.editor_ui.add_popup(YesNoPopUp(f'{self.uid}_pop',
-                                                    text=f'Delete unsaved {self.save.name}?',
-                                                    no_on_click_action=lambda n_b: n_b.parent.close(n_b),
-                                                    yes_on_click_action=lambda y_b: (self.load_save(),
-                                                                                     y_b.parent.close(y_b)),
-                                                    )
-                                         )
-            else:
-                self.load_save()
+        # if self.editor_ui.current_save.name != self.save.name:
+        if self.editor_ui.unsaved_edit:
+            self.editor_ui.add_popup(YesNoPopUp(f'{self.uid}_pop',
+                                                text=f'Delete unsaved {self.save.name}?',
+                                                no_on_click_action=lambda n_b: n_b.parent.close(n_b),
+                                                yes_on_click_action=lambda y_b: (self.load_save(),
+                                                                                 y_b.parent.close(y_b)),
+                                                )
+                                     )
+        else:
+            self.load_save()
 
     def load_save(self):
         s = self.save.copy()
@@ -134,8 +139,6 @@ class MapFuncUI(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBord
 
     def draw(self):
         self.parent_surface.blit(self.surface, self.position)
-        # self.load_btn.draw()
-        # self.delete_btn.draw()
 
     def get_x(self) -> int:
         return self.default_get_x()

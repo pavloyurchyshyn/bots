@@ -2,7 +2,7 @@ from abc import abstractmethod, ABC
 from pygame import Surface, SRCALPHA
 from pygame.draw import rect as draw_rect
 
-from global_obj import Global
+from global_obj.main import Global
 from core.shape.constants import Vector2DType
 
 from visual.UI.utils import get_surface

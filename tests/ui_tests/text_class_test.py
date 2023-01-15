@@ -1,7 +1,7 @@
 from launch import GameRunner
 from visual.UI.base.text import Text
 from visual.UI.base.style import Style
-from global_obj import Global
+from global_obj.main import Global
 
 
 class Body:

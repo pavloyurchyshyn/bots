@@ -1,4 +1,4 @@
-from global_obj import Global
+from global_obj.main import Global
 from core.mech.base.skills.details_manipulations import DisconnectDetailSkill
 
 

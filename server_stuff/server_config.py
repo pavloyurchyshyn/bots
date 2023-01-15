@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 from server_stuff.constants.start_and_connect import StartArgs
-from global_obj import Global
+from global_obj.main import Global
 
 LOGGER = Global.logger
 

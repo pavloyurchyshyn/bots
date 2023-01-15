@@ -3,7 +3,7 @@ from pygame.draw import lines as draw_lines, circle as draw_circle, rect as draw
 from core.shape.hex import Hex
 # from visual.UI.base.input import InputBase
 # from visual.UI.constants.attrs import Attrs
-from global_obj import Global
+from global_obj.main import Global
 
 
 class Body:

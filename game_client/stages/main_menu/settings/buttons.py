@@ -5,7 +5,7 @@ from visual.UI.constants.attrs import ButtonAttrs, TextAttrs
 from settings.localization.menus.UI import UILocal
 
 from game_client.stages.main_menu.settings.uids import UIDs
-from global_obj import Global
+from global_obj.main import Global
 from game_client.stages.styles import get_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
 
 MENU_UIDS = (
@@ -48,7 +48,7 @@ def join_menu(b):
 
 
 def yes_btn_func(b):
-    Global.logger.info(f'Clicked Yes to exit in main menu.')
+    Global.logger.debug(f'Clicked Yes to exit in main menu.')
     Global.stages.exit_game()
 
 
@@ -61,7 +61,7 @@ def no_btn_func(b):
 
 
 def set_host_game(b: Button):
-    Global.stages.load_host_game()
+    Global.stages.host_game()
 
 
 BUTTONS_DATA = {

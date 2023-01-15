@@ -1,5 +1,5 @@
 from launch import GameRunner
-from global_obj import Global
+from global_obj.main import Global
 from visual.UI.base.button import Button
 from visual.UI.base.style import ButtonStyle
 

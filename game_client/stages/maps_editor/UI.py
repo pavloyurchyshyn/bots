@@ -4,7 +4,7 @@ from game_client.stages.maps_editor.settings.menu_abs import MenuAbs
 from core.world.base.logic.tiles_data import EmptyTile
 from core.world.base.map_save import MapSave
 from core.world.base.visual.world import VisualWorld
-from global_obj import Global
+from global_obj.main import Global
 from pygame.draw import rect as draw_rect
 from core.world.classic_maps.empty import Empty
 
@@ -24,7 +24,17 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
     def __init__(self):
         super(MapEditor, self).__init__({**BUTTONS_DATA, **PENCIL_BUTTONS})
         PopUpsController.__init__(self)
-
+        self.name_inp = InputBase(UIDs.MapNameInput,
+                                  text='',
+                                  default_text='Enter name',
+                                  x_k=NameInput.X,
+                                  y_k=NameInput.Y,
+                                  h_size_k=NameInput.H_size,
+                                  v_size_k=NameInput.V_size,
+                                  surface_color=(100, 100, 100),
+                                  parent=self,
+                                  from_left=True,
+                                  )
         self.size_txt = Text('', from_left=True, parent=self,
                              x_k=0.802, y_k=0.07, h_size_k=0.1, v_size_k=0.1)
 
@@ -40,18 +50,6 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
             map_save = self.maps_mngr.maps[0].copy()
         self.load_save(map_save)
 
-        self.name_inp = InputBase(UIDs.MapNameInput,
-                                  text=map_save.name if map_save else '',
-                                  default_text='Enter name',
-                                  x_k=NameInput.X,
-                                  y_k=NameInput.Y,
-                                  h_size_k=NameInput.H_size,
-                                  v_size_k=NameInput.V_size,
-                                  surface_color=(100, 100, 100),
-                                  parent=self,
-                                  from_left=True,
-                                  )
-
         self.maps_cont = Container('container', True,
                                    parent=self,
                                    x_k=MapsButtonsContainer.X, y_k=MapsButtonsContainer.Y,
@@ -64,6 +62,7 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         self.current_pencil_type = 'forest'
 
     def load_save(self, map_save: MapSave):
+        self.name_inp.change_text(map_save.name)
         self.current_save: MapSave = map_save
         self.init_map(map_save, )
 

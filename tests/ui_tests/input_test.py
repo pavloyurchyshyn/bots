@@ -1,7 +1,7 @@
 from launch import GameRunner
 from visual.UI.base.input import InputBase
 from visual.UI.constants.attrs import Attrs
-from global_obj import Global
+from global_obj.main import Global
 
 text_data = {
     Attrs.HSizeK: 0.5,

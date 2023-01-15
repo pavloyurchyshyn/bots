@@ -1,7 +1,7 @@
 import os
 from pygame import Surface, SRCALPHA
 from pygame import image, error, transform, Color, surface, draw
-from global_obj import Global
+from global_obj.main import Global
 
 LOGGER = Global.logger
 

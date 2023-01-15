@@ -40,8 +40,8 @@ class ServerRunner(ServerRunnerAbs):
             arguments = [os.path.join(ROOT_OF_GAME, SERVER_FILE_NAME), *arguments]
         else:
             arguments = ['python', os.path.join(ROOT_OF_GAME, SERVER_PYTHON_FILE_NAME), *arguments]
-        LOGGER.info('Server started.')
-        LOGGER.info(f'Arguments.{arguments}')
+
+        LOGGER.debug(f'Arguments.{arguments}')
         self.server_process = subprocess.Popen(arguments, shell=True, creationflags=subprocess.DETACHED_PROCESS)
         LOGGER.info('Server started')
 

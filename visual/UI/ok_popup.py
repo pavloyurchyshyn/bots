@@ -1,5 +1,5 @@
 from pygame import Surface
-from global_obj import Global
+from global_obj.main import Global
 
 from visual.UI.base.button import Button
 from visual.UI.base.pop_up import PopUpBase

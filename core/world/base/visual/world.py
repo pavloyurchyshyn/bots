@@ -3,7 +3,7 @@ if __name__ == '__main__':
 from pygame.rect import Rect
 from typing import List, Type
 from pygame import draw, Surface, transform
-from global_obj import Global
+from global_obj.main import Global
 from visual.UI.utils import get_surface
 from visual.UI.base.font import get_custom_font
 from settings.tile_settings import TileSettings
@@ -106,10 +106,10 @@ class VisualWorld(LogicWorld):
         draw.polygon(surface, tile.tile_data.color, tile.dots)
         draw.lines(surface, (50, 50, 50), True, points=tile.dots)
 
-        font = get_custom_font(int(9 * self.scale))
-        text = font.render(f'{tile.id_x, tile.id_y}', True, (255, 255, 255))
-        pos = self.hex_math.get_center_by_xy_id(tile.id_x, tile.id_y, self.tile_size)
-        surface.blit(text, (pos[0] - text.get_width() // 2, pos[1] - text.get_height() // 2))
+        # font = get_custom_font(int(9 * self.scale))
+        # text = font.render(f'{tile.id_x, tile.id_y}', True, (255, 255, 255))
+        # pos = self.hex_math.get_center_by_xy_id(tile.id_x, tile.id_y, self.tile_size)
+        # surface.blit(text, (pos[0] - text.get_width() // 2, pos[1] - text.get_height() // 2))
         # self.textures.get_texture()
 
     def get_tile_from_data(self, x, y, tile_data: Type[TileDataAbs], **extra_data) -> VisualTile | LogicTile:

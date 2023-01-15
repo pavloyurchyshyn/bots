@@ -1,7 +1,7 @@
 from typing import Union
 from core.mech.base.details.constants import *
 from core.mech.base.exceptions import *
-from global_obj import Global
+from global_obj.main import Global
 
 __all__ = ['BaseDetail', ]
 

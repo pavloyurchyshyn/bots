@@ -1,5 +1,5 @@
 
-from global_obj import Global
+from global_obj.main import Global
 
 from visual.UI.constants.attrs import ButtonAttrs
 

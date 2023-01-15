@@ -9,7 +9,7 @@ init()
 from pygame import display, event as EVENT, MOUSEBUTTONDOWN, MOUSEBUTTONUP, KEYDOWN, TEXTINPUT
 from pygame.time import Clock
 
-from global_obj import Global
+from global_obj.main import Global
 from visual.UI.constants.colors import WHITE
 from global_obj.display import MAIN_DISPLAY
 from visual.UI.base.font import DEFAULT_FONT
@@ -172,5 +172,12 @@ class GameRunner:
 
 
 if __name__ == '__main__':
-    game = GameRunner()
-    game.run()
+    try:
+        game = GameRunner()
+        game.run()
+    except KeyboardInterrupt:
+        try:
+            game.game_body.close_game()
+        except Exception as e:
+            print(e)
+        exit(1)

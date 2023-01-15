@@ -1,11 +1,10 @@
 from visual.UI.base.button import Button
-from game_client.stages.styles import get_green_btn_style
-from visual.UI.constants.attrs import ButtonAttrs, TextAttrs
-from game_client.stages.setup_menu.settings.uids import UIDs
-from visual.UI.yes_no_popup import YesNoPopUp
-from global_obj import Global
+from visual.UI.constants.attrs import ButtonAttrs
+from game_client.game_match.stages.setup_menu.settings.uids import UIDs
+from global_obj.main import Global
 from game_client.stages.styles import get_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
 from settings.localization.menus.UI import UILocal
+
 
 # TODO
 def exit_to_main_menu(b: Button):

@@ -1,6 +1,6 @@
 from visual.UI.base.menu import Menu
 from game_client.stages.maps_editor.settings.menu_abs import MenuAbs
-from global_obj import Global
+from global_obj.main import Global
 
 from game_client.stages.join_menu.settings.buttons import BUTTONS_DATA
 from visual.UI.base.mixins import DrawElementBorderMixin
@@ -14,6 +14,7 @@ class JoinMenu(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         pass
 
     def update(self):
+        Global.display.fill((0, 0, 0))
         for b in self.buttons:
             b.draw()
             if b.active and b.collide_point(Global.mouse.pos):

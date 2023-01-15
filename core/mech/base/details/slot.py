@@ -1,4 +1,4 @@
-from global_obj import Global
+from global_obj.main import Global
 from core.mech.base.exceptions import *
 from core.mech.base.details.detail import BaseDetail
 from core.mech.base.details.constants import DetailsTypes

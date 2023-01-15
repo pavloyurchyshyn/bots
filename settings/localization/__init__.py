@@ -38,7 +38,7 @@ class LocalizationConfig:
         self.load()
 
     def load(self):
-        LOGGER.info(f'Importing localization {self.country.upper()}')
+        LOGGER.debug(f'Importing localization {self.country.upper()}')
         country = path.join(LOCALIZATIONS_FOLDER, self.country)
         for file in listdir(country):
             with open(path.join(country, file), encoding='utf8') as f:
@@ -99,7 +99,7 @@ class LocalizationLoader(metaclass=Singleton):
                     break
 
             LocalizationLoader.memory[key] = text
-            LOGGER.info(f'Path {path} localization result: {LocalizationLoader.memory[key]}')
+            LOGGER.debug(f'Path {path} localization result: {LocalizationLoader.memory[key]}')
 
         return LocalizationLoader.memory[key]
 

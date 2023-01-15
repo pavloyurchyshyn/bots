@@ -4,7 +4,6 @@ from visual.UI.base.style import Style
 from visual.UI.base.button import Text
 from visual.UI.base.abs import ShapeAbs
 from visual.UI.constants.attrs import Attrs, TextAttrs, StyleAttrs
-
 from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorderMixin, BuildRectShapeMixin, UpdateInterface
 
 

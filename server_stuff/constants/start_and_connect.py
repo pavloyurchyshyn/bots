@@ -3,7 +3,7 @@ class StartArgs:
     Port = 'port'
     DefaultPort = 8002
     RecvSize = 'recv_size'
-    DefaultRecvSize = 2048
+    DefaultRecvSize = 64
 
     Password = 'password'
     AdminToken = 'admin_token'
@@ -20,6 +20,7 @@ class LoginArgs:
     Msg = 'msg'
     BadPassword = 'bad_password'
     SuccLogin = 'succ_login'
+    NickName = 'nickname'
 
 # class ActionsToPlayer:
 #     MessagesToAll = 'global_messages'

@@ -11,7 +11,7 @@ LOGGER = get_logger()
 from server_stuff.server_config import ServerConfig
 from server_stuff.constants.start_and_connect import LoginArgs
 from server_stuff.gameserver import GameServer
-from game_client.server_interactions.network.connection_wrapper import SocketConnectionWrapper
+from game_client.server_interactions.network.socket_connection import SocketConnection
 
 
 class Server(ServerConfig):
@@ -57,35 +57,51 @@ class Server(ServerConfig):
 
                 LOGGER.info('Waiting for connection')
                 player_connection, (addr, port) = self.socket.accept()
-                client_data = SocketConnectionWrapper.recv_from_connection(player_connection)
-                client_data = SocketConnectionWrapper.recv_to_json(client_data)
+                client_data = SocketConnection.recv_from_connection(player_connection)
+                client_data = SocketConnection.recv_to_json(client_data)
                 LOGGER.info(f'Client data: {client_data}')
-                if client_data.get(LoginArgs.Token) in self.game_server.connected_before:
-                    token = client_data[LoginArgs.Token]
-                    connection = SocketConnectionWrapper(player_connection, token)
+                client_token = client_data.get(LoginArgs.Token)
+                is_admin = client_token == self.admin_token
+
+                if client_token in self.game_server.connected_before:
+                    LOGGER.info('Player connected before')
+                    connection = SocketConnection(LOGGER).set_connection(player_connection)
+                    if client_token in self.game_server.connections:
+                        client_token = str(hash(str((addr, port))))
+                        is_admin = False
+
                     response = {LoginArgs.Connected: True,
                                 LoginArgs.Msg: LoginArgs.SuccLogin,
-                                LoginArgs.Token: token,
-                                LoginArgs.IsAdmin: self.admin_token == token,
+                                LoginArgs.Token: client_token,
+                                LoginArgs.IsAdmin: is_admin,
                                 }
-                    self.game_server.connect(response, connection)
+                    LOGGER.info(f'Simple response: {response}')
+
+                    self.game_server.connect(client_data, response, connection, is_admin)
 
                 elif self.password is None or client_data.get(LoginArgs.Password) == self.password:
-                    if client_data[LoginArgs.Token] == self.admin_token:
-                        token = client_data[LoginArgs.Token]
+                    LOGGER.error(
+                        f'{client_data[LoginArgs.Token]} == {self.admin_token} -> {client_data[LoginArgs.Token] == self.admin_token}')
+                    if is_admin:
+                        token = client_token
                     else:
                         token = str(hash(str((addr, port))))
-                    connection = SocketConnectionWrapper(player_connection, token)
+
+                    connection = SocketConnection(LOGGER)
+                    connection.set_connection(player_connection)
+
                     response = {LoginArgs.Connected: True,
                                 LoginArgs.Msg: LoginArgs.SuccLogin,
                                 LoginArgs.Token: token,
-                                LoginArgs.IsAdmin: self.admin_token == token,
+                                LoginArgs.IsAdmin: is_admin,
                                 }
-                    self.game_server.connect(response, connection)
+                    LOGGER.info(f'Simple response: {response}')
+
+                    self.game_server.connect(client_data, response, connection, is_admin)
 
                 else:
                     response = {LoginArgs.Connected: False, LoginArgs.Msg: LoginArgs.BadPassword}
-                    SocketConnectionWrapper(connection=player_connection).send_json(response)
+                    SocketConnection(LOGGER).set_connection(player_connection).send_json(response)
 
         except Exception as e:
             LOGGER.error(str(e))
