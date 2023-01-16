@@ -10,3 +10,4 @@ class SetupStgConst:
     class Server:
         ChosenMap = 'chosen_map'
         Chat = 'chat'
+        Disconnect = 'disconnect'

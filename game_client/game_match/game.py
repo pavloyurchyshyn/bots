@@ -4,7 +4,7 @@ import _thread
 from global_obj.main import Global
 from game_client.game_match.stages.abs import Processor
 from game_client.game_match.stages.setup import SetupStage
-from game_client.server_interactions.server_runner import ServerRunner
+from game_client.game_match.stages.match import MathStage
 # from game_client.server_interactions.network.client import SocketConnectionNetwork
 from server_stuff.constants.stages import ServerStages
 from server_stuff.constants.start_and_connect import LoginArgs
@@ -14,15 +14,15 @@ from settings.localization.menus.UI import UILocal
 
 class Game:
     def __init__(self, game_body):
-        self.server_runner: ServerRunner = None
         self.setup_processor: SetupStage = None
+        self.match_processor: MathStage = None
         self.game_body = game_body
 
         # self.current_processor: Processor = None
         self.current_processor: SetupStage = None
 
-        self.connect()
-        self.alive = True
+        self.alive: bool = True
+        self.kill_thread: bool = False
 
     def update(self):
         self.current_processor.update()
@@ -65,42 +65,42 @@ class Game:
         self.start_recv_thread()
 
     def connect_to_setup(self, response):
-        self.current_processor = self.setup_processor = SetupStage(self, response)
+        self.current_processor = self.setup_processor = SetupStage(self, response.get(LoginArgs.IsAdmin, False))
+        self.current_processor.connect(response)
 
     def connect_to_game(self, response):
-        pass
+        self.current_processor = self.match_processor = MathStage(self, response.get(LoginArgs.IsAdmin, False))
+        self.current_processor.connect(response)
 
     def start_recv_thread(self):
         _thread.start_new_thread(self.recv_thread, ())
 
     def recv_thread(self):
         Global.logger.info('Started recv thread')
+        num = Global.connection.conn_num
         while self.alive and Global.connection:
             try:
                 r = Global.connection.recv_json()
-                self.current_processor.process_req(r)
-            except ConnectionError as e:
-                if self.alive and Global.connection.alive:
-                    self.process_error(e)
-                    self.add_popup_to_mmenu(UILocal.Errors.ConnectionLost)
-            except AttributeError as e:
-                Global.stages.close_game()
-                self.alive = False
-            except OSError as e:
-                Global.logger.warning(str(e))
-                if not Global.connection.alive:
-                    self.process_error(e)
             except Exception as e:
-                self.process_error(e)
-                self.add_popup_to_mmenu(UILocal.Errors.UnknownError)
+                Global.logger.info(f'Got thread error: {e}')
+                Global.logger.info(f'Kill thread: {self.kill_thread}')
+                Global.logger.info(f'Current conn num: {Global.connection.conn_num} and old {num}')
+                if self.kill_thread or not Global.connection or Global.connection.conn_num != num:
+                    return
+                self.process_thread_exception(e)
+            else:
+                self.current_processor.process_req(r)
+
         Global.logger.info(f'Recv server stopped')
 
-    def process_error(self, e: Exception):
-        # TODO make normal text
-        # if self.alive and Global.connection.alive:
-        Global.logger.error(str(e))
-        Global.stages.close_game()
-        self.alive = False
+    def process_thread_exception(self, e: Exception):
+        Global.logger.error(f'Thread exception: {e}')
+        try:
+            raise e
+        except (ConnectionError, ConnectionResetError):
+            self.alive = False
+            Global.stages.close_game()
+            self.add_popup_to_mmenu(UILocal.Errors.ConnectionLost)
 
     def add_popup_to_mmenu(self, msg: str, raw: bool = False):
         self.game_body.main_menu.add_popup(OkPopUp('error_popup',
@@ -110,7 +110,7 @@ class Game:
 
     def close(self):
         self.alive = False
-        Global.connection.close()
+        self.kill_thread = True
 
     def __del__(self):
         self.close()

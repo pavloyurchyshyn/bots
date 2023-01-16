@@ -1,5 +1,5 @@
-from abc import ABC
-from typing import List
+from abc import ABC, abstractmethod
+from typing import List, Any
 from visual.UI.base.style import Style
 from visual.UI.base.button import Text
 from visual.UI.base.abs import ShapeAbs
@@ -44,6 +44,10 @@ class PopUpBase(BaseUI, GetSurfaceMixin, DrawBorderMixin, BuildRectShapeMixin, U
         for b in self.buttons:
             b.make_active_and_visible()
 
+    @abstractmethod
+    def on_enter_action(self):
+        raise NotImplementedError
+
 
 class PopUpsController:
     def __init__(self):
@@ -68,3 +72,9 @@ class PopUpsController:
 
     def clear_popups(self):
         self.popups.clear()
+
+    def do_popups_enter_stuff(self) -> Any:
+        if self.popups:
+            return self.popups[0].on_enter_action()
+        else:
+            return None

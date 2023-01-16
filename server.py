@@ -7,11 +7,11 @@ import socket
 from _thread import start_new_thread
 from global_obj.logger import get_logger
 
-LOGGER = get_logger()
 from server_stuff.server_config import ServerConfig
 from server_stuff.constants.start_and_connect import LoginArgs
 from server_stuff.gameserver import GameServer
 from game_client.server_interactions.network.socket_connection import SocketConnection
+LOGGER = get_logger()
 
 
 class Server(ServerConfig):
@@ -65,11 +65,11 @@ class Server(ServerConfig):
 
                 if client_token in self.game_server.connected_before:
                     LOGGER.info('Player connected before')
-                    connection = SocketConnection(LOGGER).set_connection(player_connection)
+                    connection = SocketConnection(LOGGER).set_socket(player_connection)
                     if client_token in self.game_server.connections:
                         client_token = str(hash(str((addr, port))))
                         is_admin = False
-
+                    self.game_server.reassign_player_obj(client_token, client_token)
                     response = {LoginArgs.Connected: True,
                                 LoginArgs.Msg: LoginArgs.SuccLogin,
                                 LoginArgs.Token: client_token,
@@ -80,15 +80,13 @@ class Server(ServerConfig):
                     self.game_server.connect(client_data, response, connection, is_admin)
 
                 elif self.password is None or client_data.get(LoginArgs.Password) == self.password:
-                    LOGGER.error(
-                        f'{client_data[LoginArgs.Token]} == {self.admin_token} -> {client_data[LoginArgs.Token] == self.admin_token}')
                     if is_admin:
                         token = client_token
                     else:
                         token = str(hash(str((addr, port))))
 
                     connection = SocketConnection(LOGGER)
-                    connection.set_connection(player_connection)
+                    connection.set_socket(player_connection)
 
                     response = {LoginArgs.Connected: True,
                                 LoginArgs.Msg: LoginArgs.SuccLogin,
@@ -101,7 +99,7 @@ class Server(ServerConfig):
 
                 else:
                     response = {LoginArgs.Connected: False, LoginArgs.Msg: LoginArgs.BadPassword}
-                    SocketConnection(LOGGER).set_connection(player_connection).send_json(response)
+                    SocketConnection(LOGGER).set_socket(player_connection).send_json(response)
 
         except Exception as e:
             LOGGER.error(str(e))
@@ -114,4 +112,6 @@ if __name__ == '__main__':
         s = Server()
         s.run()
     except Exception as e:
+        import traceback
         LOGGER.critical(str(e))
+        LOGGER.critical(traceback.format_exc())

@@ -115,3 +115,6 @@ class YesNoPopUp(PopUpBase):
                 self.no.do_action()
                 if self.on_click_action:
                     self.on_click_action(self, self.no)
+
+    def on_enter_action(self):
+        self.yes.do_action()

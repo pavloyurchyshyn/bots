@@ -8,3 +8,5 @@ class MenuAbs:
     join_game: Button
     settings: Button
     exit: Button
+    exit_no: Button
+    exit_yes: Button

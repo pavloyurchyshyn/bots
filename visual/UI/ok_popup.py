@@ -67,6 +67,9 @@ class OkPopUp(PopUpBase):
     def fill_surface(self, surface=None, color=None) -> None:
         self.fill_surface_due_to_border_attrs()
 
+    def on_enter_action(self):
+        self.close(self.ok)
+
     def update(self):
         if Global.mouse.l_up:
             if self.ok.collide_point(Global.mouse.pos):

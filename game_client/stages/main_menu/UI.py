@@ -8,7 +8,7 @@ from visual.UI.settings import UIDefault
 from visual.UI.base.button import Button
 from visual.UI.base.pop_up import PopUpsController
 
-from game_client.stages.main_menu.settings.buttons import BUTTONS_DATA
+from game_client.stages.main_menu.settings.buttons import BUTTONS_DATA, exit_btn_func, no_btn_func
 from game_client.stages.main_menu.settings.menu_abs import MenuAbs
 from visual.UI.base.mixins import DrawElementBorderMixin
 
@@ -20,6 +20,12 @@ class MainMenu(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
 
     def update(self):
         Global.display.fill((0, 0, 0))
+        if Global.keyboard.ESC:
+            if self.exit.active:
+                exit_btn_func(self.exit)
+            else:
+                no_btn_func(self.exit_no)
+
         collided_popup_btn = self.update_popups()
 
         for b in self.buttons:
@@ -41,6 +47,9 @@ class MainMenu(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
 
     def update_popups(self):
         collided_popup_btn = None
+        if Global.keyboard.ENTER:
+            self.do_popups_enter_stuff()
+
         if self.popups:
             if self.popups[0].collide_point(Global.mouse.pos):
                 for btn in self.popups[0].buttons:
@@ -51,8 +60,9 @@ class MainMenu(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
                             if self.popups[0].on_click_action:
                                 self.popups[0].on_click_action(self.popups[0], btn)
                             break
-                if self.popups and self.popups[0].inactive:
-                    self.popups.remove(self.popups[0])
+
+            if self.popups and self.popups[0].inactive:
+                self.popups.remove(self.popups[0])
             Global.mouse.l_up = False
             Global.mouse._pos = -10, -10
         return collided_popup_btn

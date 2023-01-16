@@ -1,33 +1,20 @@
-from visual.UI.base.menu import Menu
-from game_client.stages.maps_editor.settings.menu_abs import MenuAbs
-
-# from core.world.base.logic.tiles_data import EmptyTile
-from core.world.base.map_save import MapSave
-# from core.world.base.visual.world import VisualWorld
-from global_obj.main import Global
 from pygame.draw import rect as draw_rect
-#
-# from visual.UI.base.input import InputBase
-# from visual.UI.base.container import Container
-# from game_client.stages.maps_editor.settings.other import *
-from game_client.game_match.stages.setup_menu.settings.buttons import BUTTONS_DATA
-from game_client.game_match.stages.setup_menu.settings.maps_stuff import MapRect, MapsButtonsContainer
-from game_client.game_match.stages.setup_menu.settings.maps_stuff import MapFuncUI
-# from game_client.stages.maps_editor.settings.pencil_buttons import PENCIL_BUTTONS
-# from game_client.stages.maps_editor.settings.uids import UIDs
-from visual.UI.base.mixins import DrawElementBorderMixin
-from visual.UI.base.pop_up import PopUpsController
-# from visual.UI.base.text import Text
+
+from global_obj.main import Global
+from core.world.base.map_save import MapSave
 from core.world.base.visual.world import VisualWorld
-# from visual.map_load_delete import MapFuncUI
+
+from game_client.game_match.stages.setup_menu.settings.buttons import BUTTONS_DATA
+from game_client.game_match.stages.setup_menu.settings.maps_stuff import MapFuncUI
+from game_client.game_match.stages.setup_menu.settings.maps_stuff import MapRect, MapsButtonsContainer
+
+from visual.UI.base.menu import Menu
 from visual.UI.base.container import Container
-from game_client.server_interactions.network.socket_connection import ConnectionWrapperAbs
+from visual.UI.base.pop_up import PopUpsController
+from visual.UI.base.mixins import DrawElementBorderMixin
 
 
-# TODO clear
-
-
-class SetupMenu(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
+class SetupMenu(Menu, PopUpsController, DrawElementBorderMixin):
     def __init__(self, setup_stage):
         super(SetupMenu, self).__init__(BUTTONS_DATA)
         PopUpsController.__init__(self)
@@ -35,7 +22,7 @@ class SetupMenu(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         self.w: VisualWorld = VisualWorld(MapRect.rect)
         self.maps_mngr = setup_stage.maps_mngr
 
-        self.current_save: int = None
+        self.current_save: int = 0
         self.maps_cont = Container('container', True,
                                    parent=self,
                                    x_k=MapsButtonsContainer.X, y_k=MapsButtonsContainer.Y,
@@ -72,8 +59,8 @@ class SetupMenu(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
 
         self.maps_cont.build()
 
-    def update_chosen_map(self, index: int):
-        if self.current_save != index:
+    def update_chosen_map(self, index: int, force=False):
+        if self.current_save != index or force:
             self.current_save = index
             for i, save_c in enumerate(self.maps_cont.elements):
                 if i == index:

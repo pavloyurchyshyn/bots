@@ -9,6 +9,10 @@ class Processor:
         self.admin = admin
 
     @abstractmethod
+    def connect(self, response: dict):
+        raise NotImplementedError
+
+    @abstractmethod
     def process_req(self, r: dict):
         raise NotImplementedError
 

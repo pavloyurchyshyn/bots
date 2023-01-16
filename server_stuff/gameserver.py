@@ -2,14 +2,20 @@ import time
 import traceback
 from typing import Dict
 from _thread import start_new_thread
+
 from global_obj.main import Global
+
+from core.player import Player
+from core.world.maps_manager import MapsManager
 from core.game_logic.game_components.game_data.game_data import GameData
+
+from game_client.server_interactions.network.socket_connection import SocketConnection
+from game_client.server_interactions.network.socket_connection import ConnectionWrapperAbs
+
 from server_stuff.stages.abs import LogicStageAbs
 from server_stuff.stages.game_setup.logic import GameSetup
-from game_client.server_interactions.network.socket_connection import ConnectionWrapperAbs
-from core.world.maps_manager import MapsManager
-from core.player import Player
 from server_stuff.constants.start_and_connect import LoginArgs
+from server_stuff.constants.setup_stage import SetupStgConst as SSC
 
 LOGGER = Global.logger
 
@@ -25,7 +31,7 @@ class GameServer:
 
         self.game_data = GameData()
         self.alive = 1
-        self.connections: Dict[str, ConnectionWrapperAbs] = {}
+        self.connections: Dict[str, SocketConnection] = {}
         self.players_objs: Dict[str, Player] = {}
         self.connected_before = set()
 
@@ -36,9 +42,11 @@ class GameServer:
         while self.alive:
             time.sleep(0.1)
             self.current_stage.update()
-            # LOGGER.info('event')
+
             if time.time() > TIME:
+                LOGGER.info('Server stopped by timeout.')
                 self.alive = False
+
         LOGGER.info('Server stopped')
 
     def connect(self, client_data: dict, response: dict, connection: ConnectionWrapperAbs, is_admin: bool) -> None:
@@ -83,8 +91,20 @@ class GameServer:
             LOGGER.error(e)
             LOGGER.error(traceback.format_exc())
 
+    def reassign_player_obj(self, from_token: str, to_token: str):
+        self.players_objs[to_token] = self.players_objs.pop(from_token)
+        Global.logger.info(f'Reassigned player obj from {from_token} to {to_token}')
+
+    def disconnect(self, token: str):
+        connection: SocketConnection = self.connections.pop(token)
+        if connection:
+            if connection.socket_is_alive:
+                connection.send_json({SSC.Server.Disconnect: True})
+            connection.close()
+            self.connected_before.add(token)
+
     def send_to_all(self, json_: dict):
-        Global.logger.info(f'Send ot all: {json_}')
+        Global.logger.debug(f'Send ot all: {json_}')
         for connection in self.connections.values():
             if connection.alive:
                 connection.send_json(json_)

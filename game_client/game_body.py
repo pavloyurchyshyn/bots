@@ -56,6 +56,7 @@ class GameBody:
         self.join_menu.update()
 
     def host(self):
+        Global.logger.info('Hosting a game')
         if self.server_runner:
             self.server_runner = None
         self.server_runner = ServerRunner(token=Global.network_data.token)
@@ -67,16 +68,20 @@ class GameBody:
         """
         Connect to game.
         """
+        Global.logger.info('Joining game')
         self.game = Game(self)
+        self.game.connect()
         Global.stages.game()
 
     def update_game(self):
         self.game.update()
 
     def close_game(self):
-        Global.connection.close()
-        self.game = None
+        Global.logger.info('Closing game')
+        self.game.close()
+        self.game: Game = None
         self.server_runner = None
+        Global.connection.close()
         Global.stages.main_menu()
 
     def check_alt_and_f4(self):
