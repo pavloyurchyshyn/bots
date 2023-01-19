@@ -43,6 +43,30 @@ def exit_to_main_menu(b):
         Global.stages.main_menu()
 
 
+def minus_h_size_l(b: Button):
+    b.parent.minus_save_h_size_l()
+
+
+def add_save_h_size_l(b: Button):
+    b.parent.add_save_h_size_l()
+
+
+def add_h_size_r(b: Button):
+    b.parent.add_save_h_size_r()
+
+
+def minus_h_size_r(b: Button):
+    b.parent.minus_save_h_size_r()
+
+
+def add_save_v_size_b(b: Button):
+    b.parent.add_save_v_size_b()
+
+
+def minus_save_v_size_b(b: Button):
+    b.parent.minus_save_v_size_b()
+
+
 BUTTONS_DATA = {
     'save': {
         'kwargs': {
@@ -59,11 +83,82 @@ BUTTONS_DATA = {
             }
         }
     },
+    'add_v_b': {
+        'kwargs': {
+            ButtonAttrs.UID: UIDs.AddMapV,
+            ButtonAttrs.Text: '+ b',
+            ButtonAttrs.XK: 0.880,
+            ButtonAttrs.YK: 0.14,
+            ButtonAttrs.HSizeK: 0.03,
+            ButtonAttrs.VSizeK: 0.03,
+            ButtonAttrs.OnClickAction: add_save_v_size_b,
+        }
+    },
+    'minus_v': {
+        'kwargs': {
+            ButtonAttrs.UID: UIDs.MinusMapV,
+            ButtonAttrs.Text: '-',
+            ButtonAttrs.XK: 0.910,
+            ButtonAttrs.YK: 0.14,
+            ButtonAttrs.HSizeK: 0.025,
+            ButtonAttrs.VSizeK: 0.03,
+            ButtonAttrs.OnClickAction: minus_save_v_size_b,
+        }
+    },
+
+    # 'add_h_l': {
+    #     'kwargs': {
+    #         ButtonAttrs.UID: f"{UIDs.AddMapH}_l",
+    #         ButtonAttrs.Text: '<- +',
+    #         ButtonAttrs.XK: 0.870,
+    #         ButtonAttrs.YK: 0.175,
+    #         ButtonAttrs.HSizeK: 0.025,
+    #         ButtonAttrs.VSizeK: 0.03,
+    #         ButtonAttrs.OnClickAction: add_save_h_size_l,
+    #     }
+    # },
+
+    'add_h_r': {
+        'kwargs': {
+            ButtonAttrs.UID: f"{UIDs.AddMapH}_r",
+            ButtonAttrs.Text: '+ ->',
+            ButtonAttrs.XK: 0.901,
+            ButtonAttrs.YK: 0.175,
+            ButtonAttrs.HSizeK: 0.025,
+            ButtonAttrs.VSizeK: 0.03,
+            ButtonAttrs.OnClickAction: add_h_size_r,
+        }
+    },
+
+    # 'minus_h_l': {
+    #     'kwargs': {
+    #         ButtonAttrs.UID: f"{UIDs.MinusMapH}_l",
+    #         ButtonAttrs.Text: '<- -',
+    #         ButtonAttrs.XK: 0.9302,
+    #         ButtonAttrs.YK: 0.175,
+    #         ButtonAttrs.HSizeK: 0.025,
+    #         ButtonAttrs.VSizeK: 0.03,
+    #         ButtonAttrs.OnClickAction: minus_h_size_l,
+    #     }
+    # },
+
+    'minus_h_r': {
+        'kwargs': {
+            ButtonAttrs.UID: f"{UIDs.MinusMapH}_r",
+            ButtonAttrs.Text: '- ->',
+            ButtonAttrs.XK: 0.9603,
+            ButtonAttrs.YK: 0.175,
+            ButtonAttrs.HSizeK: 0.025,
+            ButtonAttrs.VSizeK: 0.03,
+            ButtonAttrs.OnClickAction: minus_h_size_r,
+        }
+    },
+
     'exit': {
         'kwargs': {
             ButtonAttrs.UID: UIDs.Exit,
             ButtonAttrs.Text: 'X',
-            ButtonAttrs.XK: 0.965,
+            ButtonAttrs.XK: 0.960,
             ButtonAttrs.YK: 0.005,
             ButtonAttrs.HSizeK: 0.03,
             ButtonAttrs.VSizeK: 0.04,

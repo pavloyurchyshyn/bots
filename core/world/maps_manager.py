@@ -1,5 +1,4 @@
 import os
-import datetime
 from typing import List
 from settings.base import MAPS_SAVES
 from core.world.base.map_save import MapSave
@@ -32,7 +31,7 @@ class MapsManager:
 
     def load_from_dict(self, data: List[dict]):
         for data_ in data:
-            self.maps.append(MapSave(**data_.pop('metadata'), **data_))
+            self.maps.append(MapSave.get_save_from_dict(data_))
 
     def sort(self):
         self.maps.sort(key=lambda m: m.name)

@@ -5,7 +5,8 @@ common:
   'cancel': Cancel
   'ok': Ok
   'press_space': Press Space
-
+  'height': height
+  'width': width
 
 UI:
   main_menu:
@@ -54,6 +55,10 @@ UI:
 
     players_number: "Players number"
     go_button: Lets go!
+
+  match_menu:
+    size: Size
+    tiles: tiles
 
 errors:
   unknown: Unknown error

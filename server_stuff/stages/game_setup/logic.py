@@ -14,6 +14,7 @@ class GameSetup(LogicStageAbs):
         self.actions = {
             SSC.Player.Chat: self.chat,
             SSC.Player.ChooseMap: self.choose_map,
+            SSC.Player.StartMatch: self.start_match,
         }
         super().__init__(game_server, server)
         self.maps_mngr: MapsManager = game_server.maps_mngr
@@ -56,6 +57,9 @@ class GameSetup(LogicStageAbs):
             if map_ == self.chosen_map:
                 Global.logger.info(f'This map already chosen')
                 return
+            if map_ + 1 > len(self.maps_mngr.maps):
+                Global.logger.warning(f'Player {player_obj.token} asking for bad map id {map_}')
+                return
 
             # TODO check for maps count
             Global.logger.info(f'{player_obj.token} changing map to {map_}')
@@ -65,6 +69,15 @@ class GameSetup(LogicStageAbs):
             Global.logger.debug('All ok')
         else:
             Global.logger.debug(f'Player {player_obj.token} is not admin!')
+
+    def start_match(self, request: dict, player_obj: Player, **kwargs):
+        if player_obj.is_admin:
+            if request[SSC.Player.StartMatch] and not self.game_server.started_match:
+                Global.logger.info(f'Game data: {request}')
+                self.game_server.start_game_match()
+
+        else:
+            Global.logger.warning(f'Non admin {player_obj.token} asking for start')
 
     def chat(self, request: dict, player_obj: Player, **kwargs):
         msg = request.get(SSC.Player.Chat, '')

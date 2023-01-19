@@ -14,6 +14,7 @@ class YesNoPopUp(PopUpBase):
         self.init_rect_shape()
 
     def __init__(self, uid,
+                 text: str,
                  yes_uid=None, no_uid=None,
                  yes_text=CommonText.Yes,
                  yes_btn_xk=None, yes_btn_yk=None,
@@ -25,7 +26,7 @@ class YesNoPopUp(PopUpBase):
                  yes_on_click_action=None,
                  no_on_click_action=None,
                  **kwargs):
-        super(YesNoPopUp, self).__init__(uid=uid, **kwargs)
+        super(YesNoPopUp, self).__init__(uid=uid, text=text, **kwargs)
         self.on_click_action = on_click_action
 
         button_data = kwargs.pop(Attrs.ButtonKwargs, {})

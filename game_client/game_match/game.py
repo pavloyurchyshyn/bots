@@ -3,8 +3,8 @@ import time
 import _thread
 from global_obj.main import Global
 from game_client.game_match.stages.abs import Processor
-from game_client.game_match.stages.setup import SetupStage
-from game_client.game_match.stages.match import MathStage
+from game_client.game_match.stages.setup_proc import SetupStage
+from game_client.game_match.stages.match_proc import MatchStage
 # from game_client.server_interactions.network.client import SocketConnectionNetwork
 from server_stuff.constants.stages import ServerStages
 from server_stuff.constants.start_and_connect import LoginArgs
@@ -15,7 +15,7 @@ from settings.localization.menus.UI import UILocal
 class Game:
     def __init__(self, game_body):
         self.setup_processor: SetupStage = None
-        self.match_processor: MathStage = None
+        self.match_processor: MatchStage = None
         self.game_body = game_body
 
         # self.current_processor: Processor = None
@@ -69,8 +69,10 @@ class Game:
         self.current_processor.connect(response)
 
     def connect_to_game(self, response):
-        self.current_processor = self.match_processor = MathStage(self, response.get(LoginArgs.IsAdmin, False))
-        self.current_processor.connect(response)
+        Global.logger.info(f'Loading game: {response}')
+        self.match_processor = MatchStage(self, response.get(LoginArgs.IsAdmin, False))
+        self.match_processor.connect(response)
+        self.current_processor = self.match_processor
 
     def start_recv_thread(self):
         _thread.start_new_thread(self.recv_thread, ())

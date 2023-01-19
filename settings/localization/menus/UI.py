@@ -33,3 +33,10 @@ class UILocal:
         errors = build_path('menus', 'errors')
         ConnectionLost = build_path(errors, 'connection_lost')
         UnknownError = build_path(errors, 'unknown')
+
+    class Match:
+        match = build_path(UI_path, 'match_menu')
+        Size = build_path(match, 'size')
+        Tiles = build_path(match, 'tiles')
+        Height = build_path('menus', 'common', 'height')
+        Width = build_path('menus', 'common', 'width')

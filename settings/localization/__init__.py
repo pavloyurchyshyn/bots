@@ -103,11 +103,14 @@ class LocalizationLoader(metaclass=Singleton):
 
         return LocalizationLoader.memory[key]
 
-    def get_text_with_localization(self, text: str):
+    def get_text_with_localization(self, text: str) -> str:
         if text.startswith(PathSymbol):
             return self.get_text(text.replace(PathSymbol, '', 1))
         else:
             return text
+
+    def get_text_wloc(self, text: str) -> str:
+        return self.get_text_with_localization(text)
 
 
 if __name__ == '__main__':

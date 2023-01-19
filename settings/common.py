@@ -10,7 +10,6 @@ GLOBAL_SETTINGS = {
     'scroll_speed': 5,
 }
 
-
 def get_scroll_speed():
     return GLOBAL_SETTINGS['scroll_speed']
 
@@ -62,3 +61,6 @@ def pause_step():
 
 def change_test_draw_status():
     GLOBAL_SETTINGS['test_draw'] = not GLOBAL_SETTINGS['test_draw']
+
+
+set_fps(GLOBAL_SETTINGS['fps'])

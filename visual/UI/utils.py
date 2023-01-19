@@ -45,7 +45,7 @@ def loaded_images_wrapper(func):
 
 
 @loaded_images_wrapper
-def load_image(path: str, size: (int, int) = None, angle=0, smooth_scale=True) -> surface.Surface:
+def load_image(path: str, size: (int, int) = None, angle=90, smooth_scale=True) -> surface.Surface:
     try:
         angle = angle if angle is not None else 90
         if not path.startswith('sprites'):
@@ -60,7 +60,7 @@ def load_image(path: str, size: (int, int) = None, angle=0, smooth_scale=True) -
             else:
                 pic = transform.scale(pic, size).convert_alpha()
 
-        pic = transform.rotate(pic, angle).convert_alpha()
+       # pic = transform.rotate(pic, angle).convert_alpha()
         LOGGER.info(f'Loaded {path} {pic.get_size()}')
         return pic
     except (error, FileNotFoundError) as e:

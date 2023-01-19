@@ -14,6 +14,15 @@ class Menu(CreateButtonMixin):
         self.buttons: List[Button] = self.create_button_from_data(buttons_data)
         self.UI_manager.add_elements(self.buttons)
 
+    def simple_buttons_update(self, draw_border_func: callable = None):
+        for b in self.buttons:
+            b.draw()
+            if b.active and b.collide_point(Global.mouse.pos):
+                if draw_border_func:
+                    draw_border_func(b)
+                if Global.mouse.l_up:
+                    b.do_action()
+
     @property
     def real_position(self) -> (int, int):
         return self.x, self.y

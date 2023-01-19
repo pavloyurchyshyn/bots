@@ -6,6 +6,7 @@ from _thread import start_new_thread
 from global_obj.main import Global
 
 from core.player import Player
+from core.world.base.map_save import MapSave
 from core.world.maps_manager import MapsManager
 from core.game_logic.game_components.game_data.game_data import GameData
 
@@ -14,12 +15,13 @@ from game_client.server_interactions.network.socket_connection import Connection
 
 from server_stuff.stages.abs import LogicStageAbs
 from server_stuff.stages.game_setup.logic import GameSetup
+from server_stuff.stages.game_match.logic import GameMatch
 from server_stuff.constants.start_and_connect import LoginArgs
 from server_stuff.constants.setup_stage import SetupStgConst as SSC
 
 LOGGER = Global.logger
 
-TIME = time.time() + 20
+TIME = time.time() + 60
 
 
 class GameServer:
@@ -27,15 +29,25 @@ class GameServer:
         self.server = server
         self.maps_mngr = MapsManager()
         self.maps_mngr.load_maps()
-        self.current_map = self.maps_mngr.maps[0]
+        self.current_map: MapSave = self.maps_mngr.maps[0]
 
         self.game_data = GameData()
         self.alive = 1
         self.connections: Dict[str, SocketConnection] = {}
         self.players_objs: Dict[str, Player] = {}
         self.connected_before = set()
-
+        self.started_match: bool = False
         self.current_stage: LogicStageAbs = GameSetup(self, self.server)
+
+    def start_game_match(self):
+        Global.logger.info('Start game match')
+        self.started_match = True
+        self.send_to_all({
+            SSC.Server.StartMatch: {
+                SSC.Server.MatchArgs.Map: self.current_map.get_save_dict()
+            },
+        }
+        )
 
     def run(self):
         LOGGER.info('Sever Lobby loop started.')

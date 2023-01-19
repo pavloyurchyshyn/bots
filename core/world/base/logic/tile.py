@@ -4,7 +4,7 @@ from core.world.base.logic.tiles_data import TileDataAbs, IMPASSABLE_VALUE, Tile
 
 class LogicTile:
 
-    def __init__(self, xy_id: tuple[int, int], tile_data: Union[str, TileDataAbs]):
+    def __init__(self, xy_id: tuple[int, int], tile_data: Union[str, TileDataAbs], at_edge: bool = False):
         self.id_x, self.id_y = xy_id
 
         if type(tile_data) is str:
@@ -18,6 +18,7 @@ class LogicTile:
         self.destroyed_type: Union[str, TileDataAbs, None] = tile_data.destroyed_type
         self.direction = tile_data.direction
         self.height = tile_data.height
+        self.at_edge = at_edge
 
     def apply_type(self, tile_type: Union[str, TileDataAbs]) -> None:
         tile_type = TileTypes.types_dict[tile_type] if type(tile_type) is str else tile_type
@@ -48,6 +49,10 @@ class LogicTile:
 
     def get_data_dict(self):
         return self.tile_data.parameters_to_dict(self)
+
+    @property
+    def id_xy(self) -> tuple:
+        return self.id_x, self.id_y
 
 
 if __name__ == '__main__':

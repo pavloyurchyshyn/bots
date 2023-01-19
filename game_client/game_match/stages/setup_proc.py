@@ -15,7 +15,7 @@ class SetupStage(Processor):
         self.UI: SetupMenu = SetupMenu(self)
         self.actions: Dict[str, Callable] = {
             SSC.Server.ChosenMap: self.chosen_map,
-
+            SSC.Server.StartMatch: self.start_game,
         }
 
     def process_req(self, r: dict):
@@ -37,3 +37,6 @@ class SetupStage(Processor):
 
     def chosen_map(self, r: dict):
         self.UI.update_chosen_map(r.get(SSC.Server.ChosenMap, self.UI.current_save), force=True)
+
+    def start_game(self, r: dict):
+        self.game.connect_to_game(r)

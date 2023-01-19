@@ -12,10 +12,10 @@ from settings.screen.size import scaled_w, scaled_h
 
 
 class MapRect:
-    H_size = scaled_w(0.8)
-    V_size = scaled_h(0.7)
     X = 0
     Y = scaled_h(0.05)
+    H_size = scaled_w(0.8)
+    V_size = scaled_h(0.7)
     rect = (X, Y, H_size, V_size)
 
 
@@ -28,7 +28,7 @@ class NameInput:
 
 class MapsButtonsContainer:
     X = 0.802
-    Y = 0.155
+    Y = 0.25
     H_size = 0.196
     V_size = 0.5
 

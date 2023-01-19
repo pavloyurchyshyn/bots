@@ -7,10 +7,10 @@ from visual.UI.base.menu import Menu
 from visual.UI.settings import UIDefault
 from visual.UI.base.button import Button
 from visual.UI.base.pop_up import PopUpsController
-
-from game_client.stages.main_menu.settings.buttons import BUTTONS_DATA, exit_btn_func, no_btn_func
-from game_client.stages.main_menu.settings.menu_abs import MenuAbs
 from visual.UI.base.mixins import DrawElementBorderMixin
+
+from game_client.stages.main_menu.settings.menu_abs import MenuAbs
+from game_client.stages.main_menu.settings.buttons import BUTTONS_DATA, exit_btn_func, no_btn_func
 
 
 class MainMenu(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
@@ -19,7 +19,8 @@ class MainMenu(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         PopUpsController.__init__(self)
 
     def update(self):
-        Global.display.fill((0, 0, 0))
+        self.draw_back_ground()
+
         if Global.keyboard.ESC:
             if self.exit.active:
                 exit_btn_func(self.exit)
@@ -28,16 +29,20 @@ class MainMenu(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
 
         collided_popup_btn = self.update_popups()
 
-        for b in self.buttons:
-            b.draw()
-            if b.active and b.collide_point(Global.mouse.pos):
-                self.draw_border(b)
-                if Global.mouse.l_up:
-                    b.do_action()
+        self.simple_buttons_update(self.draw_border)
+        # for b in self.buttons:
+        #     b.draw()
+        #     if b.active and b.collide_point(Global.mouse.pos):
+        #         self.draw_border(b)
+        #         if Global.mouse.l_up:
+        #             b.do_action()
 
         self.draw_popups()
         if collided_popup_btn:
             self.draw_border_around_element(collided_popup_btn)
+
+    def draw_back_ground(self):
+        Global.display.fill((0, 0, 0))
 
     def draw_border(self, element: Button):
         r_c = UIDefault.CollidedElBorder.r_0 + UIDefault.CollidedElBorder.r_1 * abs(cos(Global.clock.time))

@@ -47,6 +47,9 @@ class InputBase(BaseUI, DrawBorderMixin, BuildRectShapeMixin, GetSurfaceMixin, S
         self.input_position = -1
         self.build()
 
+        self.del_speed = 0.1
+        self.del_delay = 0
+
     def update(self):
         if self.input_is_active and self.active:
             self.check_for_input()
@@ -56,9 +59,11 @@ class InputBase(BaseUI, DrawBorderMixin, BuildRectShapeMixin, GetSurfaceMixin, S
                     self.on_enter_action(self)
 
             elif Global.keyboard.BACKSPACE and self.text.str_text:
-                new_text = self.text.str_text[:-1]
-                self.text.change_text(new_text)
-                self.render()
+                if Global.clock.time - self.del_delay > self.del_speed:
+                    self.del_delay = Global.clock.time
+                    new_text = self.text.str_text[:-1]
+                    self.text.change_text(new_text)
+                    self.render()
 
     def change_text(self, text: str):
         self.text.str_text = text

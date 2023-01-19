@@ -4,11 +4,16 @@ from game_client.game_match.stages.setup_menu.settings.uids import UIDs
 from global_obj.main import Global
 from game_client.stages.styles import get_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
 from settings.localization.menus.UI import UILocal
+from server_stuff.constants.setup_stage import SetupStgConst as SSC
 
 
 # TODO
 def exit_to_main_menu(b: Button):
     Global.stages.close_game()
+
+
+def start_game(b: Button):
+    Global.connection.send_json({SSC.Player.StartMatch: True})
 
 
 BUTTONS_DATA = {
@@ -23,7 +28,7 @@ BUTTONS_DATA = {
             ButtonAttrs.OnClickAction: exit_to_main_menu,
         }
     },
-    'new_game': {
+    'start': {
         'kwargs': {
             ButtonAttrs.XK: 0.9,
             ButtonAttrs.YK: 0.945,
@@ -31,7 +36,7 @@ BUTTONS_DATA = {
             ButtonAttrs.VSizeK: DEFAULT_V_SIZE,
             ButtonAttrs.UID: UIDs.Start,
             ButtonAttrs.Text: UILocal.NewGameMenu.start,
-            ButtonAttrs.OnClickAction: lambda b: b,
+            ButtonAttrs.OnClickAction: start_game,
             ButtonAttrs.Style: get_btn_style(),
         }
     },

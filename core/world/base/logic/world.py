@@ -17,6 +17,15 @@ class LogicWorld:
         self.tiles.append(tile)
         self.xy_to_tile[(tile.id_x, tile.id_y)] = tile
 
+    def remove_tile_by_xy(self, xy: tuple):
+        if xy in self.xy_to_tile:
+            self.remove_tile(self.xy_to_tile.get(xy))
+
+    def remove_tile(self, tile: LogicTile):
+        self.xy_to_tile.pop((tile.id_x, tile.id_y), None)
+        if tile in self.tiles:
+            self.tiles.remove(tile)
+
     def change_tile(self, tile: LogicTile):
         if (tile.id_x, tile.id_y) in self.xy_to_tile:
             self.tiles.remove(self.xy_to_tile[(tile.id_x, tile.id_y)])
@@ -31,10 +40,15 @@ class LogicWorld:
 
         for y, line in enumerate(data):
             for x, tile_data in enumerate(line):
-                if tile_data:
-                    self.add_tile(self.get_tile_from_data(x, y, tile_data))
+                if x == 0 or y == 0 or (y == self.y_size - 1) or (x == self.x_size - 1):
+                    at_edge = True
                 else:
-                    self.add_tile(self.get_tile_from_data(x, y, EmptyTile()))
+                    at_edge = False
+
+                if tile_data:
+                    self.add_tile(self.get_tile_from_data(x, y, tile_data, at_edge=at_edge))
+                else:
+                    self.add_tile(self.get_tile_from_data(x, y, EmptyTile(), at_edge=at_edge))
 
     def clear(self):
         self.tiles.clear()

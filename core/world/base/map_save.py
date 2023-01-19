@@ -9,14 +9,11 @@ from core.world.base.logic.world import LogicWorld
 from core.world.base.logic.tiles_data import TileDataAbs, EmptyTile, TileTypes, TileAttrs
 
 
-def get_world_dict_structure(name: str, dict_tiles_data: List[List[dict]], created: str) -> dict:
-    return {
-        'name': name,
-        'metadata': {
-            'created': created
-        },
-        'dict_tiles_data': dict_tiles_data,
-    }
+class SaveDictConst:
+    Name = 'name'
+    Metadata = 'metadata'
+    Created = 'created'
+    DictTilesData = 'dict_tiles_data'
 
 
 class MapSave:
@@ -112,10 +109,22 @@ class MapSave:
     def get_save_dict(self) -> dict:
         if not self.__name or not self.__dict_tiles_data:
             raise Exception
+        return {
+            SaveDictConst.Name: self.__name,
+            SaveDictConst.Metadata: {
+                SaveDictConst.Created: self.__created if self.__created else str(datetime.datetime.now()),
+            },
+            SaveDictConst.DictTilesData: self.__dict_tiles_data,
+        }
 
-        return get_world_dict_structure(self.__name,
-                                        dict_tiles_data=self.__dict_tiles_data,
-                                        created=self.__created if self.__created else str(datetime.datetime.now()))
+    @staticmethod
+    def get_save_from_dict(d: dict):
+        Global.logger.info(f'Map save dict: {d}')
+        return MapSave(
+            name=d[SaveDictConst.Name],
+            created=d[SaveDictConst.Metadata][SaveDictConst.Created],
+            dict_tiles_data=d[SaveDictConst.DictTilesData],
+        )
 
     def save_as_raw_text(self):
         with open(self.__path.replace('.json', '.txt'), 'w') as f:

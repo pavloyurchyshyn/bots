@@ -30,8 +30,6 @@ class Text(BaseUI):
 
         self.auto_draw = kwargs.get(Attrs.AutoDraw, True)
 
-        self.speed_increase = 0.2
-        self.current_speed = 1
         self.from_left = kwargs.get('from_left', False)
 
         if not kwargs.get(Attrs.PostponeBuild):

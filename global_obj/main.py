@@ -32,6 +32,7 @@ class Global:
         keyboard = __keyboard(logger)
         mouse = __mouse()
         localization = __localization()
+        loc = localization
         network_data = __NetworkData()
         connection = __SC(logger=logger)
         # add sound
