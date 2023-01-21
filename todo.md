@@ -29,7 +29,8 @@
   - tiles texture direction
 
 
-
+## Server
+  - ping pong
 
 ## BUGS:
- -
+ - map scale

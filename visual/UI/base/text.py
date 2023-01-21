@@ -143,10 +143,10 @@ class Text(BaseUI):
         h_size, v_size = font.size(max(lines, key=len))
         if not self.unlimited_h_size and h_size < self.h_size:
             h_size = self.h_size
+        if self.unlimited_h_size:
+            self.h_size = h_size
 
         v_size *= len(lines)
-        # if not self.unlimited_v_size and v_size < self.v_size:
-        #     v_size = self.v_size
 
         text_surf = get_surface(h_size, v_size, transparent=1)
 
@@ -170,6 +170,10 @@ class Text(BaseUI):
         if not self.unlimited_v_size and v_size > self.v_size:
             bigger = True
             v_size = self.v_size
+
+        if self.unlimited_v_size:
+            self.v_size = v_size
+
         if bigger:
             text_surf = smoothscale(text_surf, (h_size, v_size))
 

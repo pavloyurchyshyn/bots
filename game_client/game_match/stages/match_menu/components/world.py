@@ -2,19 +2,9 @@ from pygame.draw import rect as draw_rect
 
 from global_obj.main import Global
 
-from core.world.base.map_save import MapSave
 from core.world.base.visual.world import VisualWorld
-from settings.screen.size import scaled_w
-
-
-class MapRect:
-    from settings.screen.size import scaled_w, scaled_h
-
-    H_size = scaled_w(0.8)
-    V_size = scaled_h(0.7)
-    X = 0
-    Y = scaled_h(0.05)
-    rect = (X, Y, H_size, V_size)
+from settings.screen.size import scaled_w, scaled_h
+from game_client.game_match.stages.match_menu.settings.windows_sizes import MapRect
 
 
 class WorldC:
@@ -39,27 +29,28 @@ class WorldC:
         if scroll := Global.mouse.scroll:
             if self.w.window_rect.collidepoint(*Global.mouse.pos):
                 map_bigger = True
-                if self.w.surface.get_width() * 1.02 < MapRect.H_size \
-                        and self.w.surface.get_height() * 1.02 < MapRect.V_size:
+                if self.w.surface.get_width() * 1.02 < MapRect.h_size \
+                        and self.w.surface.get_height() * 1.02 < MapRect.v_size:
                     map_bigger = False
 
                 if scroll > 0 or (scroll < 0 and map_bigger):
-                    self.w.scale = self.w.scale + scroll * Global.clock.d_time * 2
-                    #self.w.reload_surface()
-                    #self.define_map_position()
-                    self.w.threaded_reload_surface(self.define_map_position)
+                    self.w.scale = self.w.scale + scroll * Global.clock.d_time
+                    # TODO add minimum scale parameter due to rect size
+                    self.w.reload_surface()
+                    self.define_map_position()
+                    # self.w.threaded_reload_surface()
 
     def define_map_position(self):
-        if MapRect.H_size > self.w.surface.get_width():
-            self.w.dx = (MapRect.H_size - self.w.surface.get_width()) // 2
+        if MapRect.h_size > self.w.surface.get_width():
+            self.w.dx = (MapRect.h_size - self.w.surface.get_width()) // 2
         elif self.w.dx > 0:
             self.w.dx = 0
-        elif self.w.surface.get_width() + self.w.dx < MapRect.H_size:
-            self.w.dx = MapRect.H_size - self.w.surface.get_width()
+        elif self.w.surface.get_width() + self.w.dx < MapRect.h_size:
+            self.w.dx = MapRect.h_size - self.w.surface.get_width()
 
-        if MapRect.V_size > self.w.surface.get_height():
-            self.w.dy = (MapRect.V_size - self.w.surface.get_height()) // 2
+        if MapRect.v_size > self.w.surface.get_height():
+            self.w.dy = (MapRect.v_size - self.w.surface.get_height()) // 2
         elif self.w.dy > 0:
             self.w.dy = 0
-        elif self.w.surface.get_height() + self.w.dy < MapRect.V_size:
-            self.w.dy = MapRect.V_size - self.w.surface.get_height()
+        elif self.w.surface.get_height() + self.w.dy < MapRect.v_size:
+            self.w.dy = MapRect.v_size - self.w.surface.get_height()

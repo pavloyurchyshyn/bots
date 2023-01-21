@@ -34,8 +34,8 @@ class Game:
         Global.logger.info(f'Sending creds: {Global.network_data.credentials}')
         Global.connection.send_json(Global.network_data.credentials)
         response = Global.connection.recv_json()
+        Global.logger.debug(f'Response: {response}')
         if response[LoginArgs.Connected]:
-            Global.logger.info(f'Response: {response}')
             self.process_connection(response)
         else:
             Global.stages.close_game()
@@ -59,8 +59,8 @@ class Game:
             raise NotImplementedError('Unknown stage')
 
     def wait_for_ready_and_start_thread(self):
-        while not Global.connection.recv_json().get('ready'):
-            time.sleep(0.1)
+        # while not Global.connection.recv_json().get('ready'):
+        #     time.sleep(0.1)
         Global.logger.info('Player thread on server is ready')
         self.start_recv_thread()
 
@@ -69,7 +69,7 @@ class Game:
         self.current_processor.connect(response)
 
     def connect_to_game(self, response):
-        Global.logger.info(f'Loading game: {response}')
+        Global.logger.debug(f'Loading game: {response}')
         self.match_processor = MatchStage(self, response.get(LoginArgs.IsAdmin, False))
         self.match_processor.connect(response)
         self.current_processor = self.match_processor

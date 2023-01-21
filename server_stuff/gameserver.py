@@ -2,7 +2,6 @@ import time
 import traceback
 from typing import Dict
 from _thread import start_new_thread
-
 from global_obj.main import Global
 
 from core.player import Player
@@ -21,7 +20,7 @@ from server_stuff.constants.setup_stage import SetupStgConst as SSC
 
 LOGGER = Global.logger
 
-TIME = time.time() + 60
+TIME = time.time() + 300
 
 
 class GameServer:
@@ -88,7 +87,7 @@ class GameServer:
 
             LOGGER.info(f'Started thread for: {player_obj.token}')
             self.connected_before.add(player_obj.token)
-            connection.send_json({'ready': True})
+            # connection.send_json({'ready': True})
             while self.alive and connection.alive:
                 player_request = connection.recv_json()
                 if player_request:

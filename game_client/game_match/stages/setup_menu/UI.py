@@ -4,6 +4,7 @@ from global_obj.main import Global
 from core.world.base.map_save import MapSave
 from core.world.base.visual.world import VisualWorld
 
+from game_client.game_match.stages.common.chat import ChatPart
 from game_client.game_match.stages.setup_menu.settings.buttons import BUTTONS_DATA
 from game_client.game_match.stages.setup_menu.settings.maps_stuff import MapFuncUI
 from game_client.game_match.stages.setup_menu.settings.maps_stuff import MapRect, MapsButtonsContainer
@@ -14,10 +15,11 @@ from visual.UI.base.pop_up import PopUpsController
 from visual.UI.base.mixins import DrawElementBorderMixin
 
 
-class SetupMenu(Menu, PopUpsController, DrawElementBorderMixin):
+class SetupMenu(Menu, PopUpsController, ChatPart, DrawElementBorderMixin):
     def __init__(self, setup_stage):
         super(SetupMenu, self).__init__(BUTTONS_DATA)
         PopUpsController.__init__(self)
+        ChatPart.__init__(self)
         self.setup_stage = setup_stage
         self.w: VisualWorld = VisualWorld(MapRect.rect)
         self.maps_mngr = setup_stage.maps_mngr
@@ -40,7 +42,7 @@ class SetupMenu(Menu, PopUpsController, DrawElementBorderMixin):
                     b.do_action()
 
         self.upd_draw_map_container()
-        self.maps_cont.draw()
+        self.update_chat()
 
     def load_save(self, save: MapSave):
         self.w.build_map_from_save(save)

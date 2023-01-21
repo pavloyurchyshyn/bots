@@ -6,13 +6,14 @@ from core.world.maps_manager import MapsManager
 from server_stuff.constants.setup_stage import SetupStgConst as SSC
 
 from core.player import Player
+from server_stuff.constants.common import CommonConst
 
 
 class GameSetup(LogicStageAbs):
 
     def __init__(self, game_server, server):
         self.actions = {
-            SSC.Player.Chat: self.chat,
+            CommonConst.Chat: self.chat,
             SSC.Player.ChooseMap: self.choose_map,
             SSC.Player.StartMatch: self.start_match,
         }
@@ -66,6 +67,7 @@ class GameSetup(LogicStageAbs):
 
             self.game_server.send_to_all({SSC.Server.ChosenMap: map_})
             self.chosen_map = map_
+            self.game_server.current_map = self.maps_mngr.maps[self.chosen_map]
             Global.logger.debug('All ok')
         else:
             Global.logger.debug(f'Player {player_obj.token} is not admin!')
@@ -80,7 +82,7 @@ class GameSetup(LogicStageAbs):
             Global.logger.warning(f'Non admin {player_obj.token} asking for start')
 
     def chat(self, request: dict, player_obj: Player, **kwargs):
-        msg = request.get(SSC.Player.Chat, '')
+        msg = request.get(CommonConst.Chat, '')
         Global.logger.info(f'{player_obj.token} send a message {msg}')
         if msg:
-            self.game_server.send_to_all({SSC.Server.Chat: request})
+            self.game_server.send_to_all({CommonConst.Chat: f'{player_obj.nickname}: {msg}'})

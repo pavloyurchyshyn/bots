@@ -3,6 +3,7 @@ from global_obj.main import Global
 from core.world.maps_manager import MapsManager
 from game_client.game_match.stages.abs import Processor
 from game_client.game_match.stages.setup_menu.UI import SetupMenu
+from server_stuff.constants.common import CommonConst
 from server_stuff.constants.setup_stage import SetupStgConst as SSC
 
 
@@ -16,6 +17,7 @@ class SetupStage(Processor):
         self.actions: Dict[str, Callable] = {
             SSC.Server.ChosenMap: self.chosen_map,
             SSC.Server.StartMatch: self.start_game,
+            CommonConst.Chat: self.process_player_msg,
         }
 
     def process_req(self, r: dict):
@@ -40,3 +42,6 @@ class SetupStage(Processor):
 
     def start_game(self, r: dict):
         self.game.connect_to_game(r)
+
+    def process_player_msg(self, r: dict):
+        self.UI.chat.add_msg(r[CommonConst.Chat])

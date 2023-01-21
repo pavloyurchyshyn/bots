@@ -1,0 +1,2 @@
+class CommonConst:
+    Chat = 'chat'

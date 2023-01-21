@@ -119,7 +119,7 @@ class MapSave:
 
     @staticmethod
     def get_save_from_dict(d: dict):
-        Global.logger.info(f'Map save dict: {d}')
+        Global.logger.debug(f'Map save dict: {d}')
         return MapSave(
             name=d[SaveDictConst.Name],
             created=d[SaveDictConst.Metadata][SaveDictConst.Created],

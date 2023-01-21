@@ -7,9 +7,9 @@ import socket
 from _thread import start_new_thread
 from global_obj.logger import get_logger
 
+from server_stuff.gameserver import GameServer
 from server_stuff.server_config import ServerConfig
 from server_stuff.constants.start_and_connect import LoginArgs
-from server_stuff.gameserver import GameServer
 from game_client.server_interactions.network.socket_connection import SocketConnection
 LOGGER = get_logger()
 
