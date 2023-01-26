@@ -53,6 +53,7 @@ class GameRunner:
             start = finish
             # update time
             global_clock.update(dt)
+            Global.round_clock.update(dt)
 
             global_mouse.update()
             global_keyboard.update()

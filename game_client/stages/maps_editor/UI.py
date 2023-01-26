@@ -97,8 +97,8 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         self.maps_cont.build()
 
     def init_map(self, map_save: MapSave):
-        x_size = int(MapRect.H_size // self.w.hex_math.horizontal_spacing(self.w.tile_size)) - 2
-        y_size = int(MapRect.V_size // self.w.hex_math.vertical_spacing(self.w.tile_size)) - 2
+        x_size = int(MapRect.H_size // self.w.hex_math.horizontal_spacing(self.w.tile_r)) - 2
+        y_size = int(MapRect.V_size // self.w.hex_math.vertical_spacing(self.w.tile_r)) - 2
 
         if map_save is None:
             odd = True
@@ -277,7 +277,6 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
                 tile.at_edge = (tile.id_y == 0) or (tile.id_y == self.w.y_size - 1)
 
         x = min(self.w.tiles, key=lambda t: t.id_x).id_x - 1
-        print(x)
         for y in range(self.w.y_size):
             self.w.add_tile(self.w.get_tile_from_data(x, y, EmptyTile(), at_edge=True))
             # self.w.xy_to_tile[(1, y)].at_edge = (y == 0) or (y == self.w.y_size - 1)

@@ -24,6 +24,7 @@ class GameBody:
             StagesConstants.LoadGame: self.join_game,
             StagesConstants.Game: self.update_game,
             StagesConstants.CloseGame: self.close_game,
+            'test': self.test,
 
         }
 
@@ -34,6 +35,18 @@ class GameBody:
 
         self.server_runner: ServerRunner = None
         self.game: Game = None
+
+        from core.world.classic_maps.forest import ForestMap
+        from game_client.game_match.stages.match_menu.UI import GameMatch
+        self.match_ui = GameMatch(None)
+
+        # Global.stages.change_current_stage('test')
+        self.match_ui.w.build_map_from_save(ForestMap())
+        self.match_ui.w.adapt_scale_to_win_size()
+        self.match_ui.define_map_position()
+
+    def test(self):
+        self.match_ui.update()
 
     def game_loop(self):
         self.stages_dict[Global.stages.current_stage]()

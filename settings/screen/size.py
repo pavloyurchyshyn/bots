@@ -4,7 +4,7 @@ import ctypes
 user32 = ctypes.windll.user32
 SCREEN_W, SCREEN_H = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
 SCREEN_W = 1870
-SCREEN_H = 980
+SCREEN_H = 1000
 
 
 def scaled_w(k) -> int:

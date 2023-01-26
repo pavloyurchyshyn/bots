@@ -208,3 +208,8 @@ class Text(BaseUI):
         self.x, self.y = xy
         if self.auto_draw:
             self.draw()
+
+    def change_color(self, color):
+        if self.color != color:
+            self.color = color
+            self.render()

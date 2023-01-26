@@ -1,25 +1,24 @@
 if __name__ == '__main__':
-    from launch import GameRunner
+    pass
 from pygame.rect import Rect
 from typing import List, Type
 from _thread import start_new_thread
 from pygame import draw, Surface, transform
 from global_obj.main import Global
 from visual.UI.utils import get_surface
-from visual.UI.base.font import get_custom_font
+from visual.tiles_textures import TilesTextures
 from settings.tile_settings import TileSettings
 from core.world.base.logic.tile import LogicTile
 from core.world.base.visual.tile import VisualTile
 from core.world.base.logic.world import LogicWorld
+from core.world.base.logic.tiles_data import EmptyTile
 from core.world.base.logic.tiles_data import TileDataAbs
 from core.world.base.hex_utils import get_hex_math, HexMathAbs
-from core.world.base.visual.tiles_textures import TilesTextures
-from core.world.base.logic.tiles_data import EmptyTile
 
 
 class VisualWorld(LogicWorld):
 
-    def __init__(self, window_rect, tile_size: int = TileSettings.visual_tile_r, parent_surface=Global.display):
+    def __init__(self, window_rect, tile_r: int = TileSettings.visual_tile_r, parent_surface=Global.display):
         super(VisualWorld, self).__init__(tile_class=VisualTile)
         self.parent_surface = parent_surface
         self.textures = TilesTextures()
@@ -35,12 +34,13 @@ class VisualWorld(LogicWorld):
 
         self.hex_math: HexMathAbs = None
         self.reference_hex: VisualTile = None
-        self.tile_size: int = tile_size
+        self.tile_r: int = tile_r
+        self.tile_xy_size = (1, 1)  # self.hex_math.get_hex_size(self.tile_r)
 
         self.scale = 1
 
     def adapt_scale_to_win_size(self):
-        h_size, v_size = self.hex_math.get_map_size(self.x_size, self.y_size, self.tile_size)
+        h_size, v_size = self.hex_math.get_map_size(self.x_size, self.y_size, self.tile_r)
         h_k = self.window_rect[2] / h_size
         v_k = self.window_rect[3] / v_size
         self.scale = h_k if h_k < v_k else v_k
@@ -48,7 +48,7 @@ class VisualWorld(LogicWorld):
 
     @property
     def scaled_tile_size(self):
-        return self.tile_size * self.scale
+        return self.tile_r * self.scale
 
     def threaded_reload_surface(self, *add_funcs):
         start_new_thread(self.reload_surface, ())
@@ -61,13 +61,17 @@ class VisualWorld(LogicWorld):
 
     def build_map(self, flat, odd, data: List[List[TileDataAbs]]):
         self.hex_math = get_hex_math(flat, odd)
+        self.tile_xy_size = self.hex_math.get_hex_size(self.tile_r)
         self.clear()
         super().build_map(flat, odd, data)
-        self.reference_hex = VisualTile((None, None), self.hex_math.get_dots_by_xy(0, 0, self.tile_size), '')
+        self.reference_hex = VisualTile((None, None),
+                                        position=(-100, -100),
+                                        dots=self.hex_math.get_dots_by_xy(0, 0, self.tile_r),
+                                        texture_size=self.hex_math.get_hex_size(self.tile_r))
         self.render()
 
     def create_big_surface(self):
-        return get_surface(*self.hex_math.get_map_size(self.x_size, self.y_size, self.tile_size))
+        return get_surface(*self.hex_math.get_map_size(self.x_size, self.y_size, self.tile_r))
 
     def build_map_from_save(self, save):
         self.build_map(save.flat, save.odd, save.get_tiles_data())
@@ -85,7 +89,7 @@ class VisualWorld(LogicWorld):
         return self.hex_math.get_indexes_from_coordinates(
             (Global.mouse.x - self.x - self.dx) / self.scale,
             (Global.mouse.y - self.y - self.dy) / self.scale,
-            self.tile_size)
+            self.tile_r)
 
     def get_tile_under_mouse(self) -> LogicTile:
         return self.xy_to_tile.get(self.get_mouse_to_xy())
@@ -113,10 +117,14 @@ class VisualWorld(LogicWorld):
                 draw.lines(surface, (200, 200, 255), True, points=tile.dots, width=3)
             return
 
-        draw.polygon(surface, tile.tile_data.color, tile.dots)
-        draw.lines(surface, (50, 50, 50), True, points=tile.dots)
+        # draw.polygon(surface, tile.tile_data.color, tile.dots)
+        # draw.lines(surface, (50, 50, 50), True, points=tile.dots)
+        surface.blit(tile.texture, tile.position)
+        # draw.lines(surface, (250, 250, 250), True, points=tile.dots)
+        # TODO
         if tile.at_edge:
             draw.lines(surface, (200, 200, 255), True, points=tile.dots, width=3)
+
         # font = get_custom_font(int(9 * self.scale))
         # text = font.render(f'{tile.id_x, tile.id_y}', True, (255, 255, 255))
         # pos = self.hex_math.get_center_by_xy_id(tile.id_x, tile.id_y, self.tile_size)
@@ -124,9 +132,17 @@ class VisualWorld(LogicWorld):
         # self.textures.get_texture()
 
     def get_tile_from_data(self, x, y, tile_data: Type[TileDataAbs], **extra_data) -> VisualTile | LogicTile:
-        dots = self.hex_math.get_dots_by_xy(x, y, self.tile_size)
-
-        return super().get_tile_from_data(x=x, y=y, tile_data=tile_data, dots=dots, **extra_data)
+        dots = self.hex_math.get_dots_by_xy(x, y, self.tile_r)
+        size = max(self.tile_xy_size)
+        pos = self.hex_math.get_center_by_xy_id(x, y, self.tile_r)
+        #TODO
+        position = self.hex_math.get_lt_by_id(x, y, self.tile_r)
+        return super().get_tile_from_data(x=x, y=y,
+                                          tile_data=tile_data,
+                                          dots=dots,
+                                          texture_size=(size, size),
+                                          position=position,
+                                          **extra_data)
 
     def draw_border_for_xy(self, xy, color=(255, 255, 255)):
         self.draw_tile_border(Global.display, self.get_dots_due_to_map_pos(*xy), color=color)

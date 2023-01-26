@@ -9,14 +9,14 @@ from game_client.game_match.stages.match_menu.settings.windows_sizes import MapR
 
 class WorldC:
     def __init__(self):
-        self.w: VisualWorld = VisualWorld(MapRect.rect, tile_size=scaled_w(0.03))
+        self.w: VisualWorld = VisualWorld(MapRect.rect, tile_r=scaled_w(0.03))
 
     def update_and_draw_map(self):
         self.check_for_drag()
         self.check_for_scale()
 
         self.w.draw()
-        draw_rect(Global.display, (255, 255, 255), self.w.window_rect, 3)
+        draw_rect(Global.display, (255, 255, 255), self.w.window_rect, 1)
         self.w.draw_border_under_mouse()
 
     def check_for_drag(self):

@@ -75,6 +75,10 @@ class HexMathAbs:
     def get_tile_size_from_map_size(cls, h_size, v_size, tiles_x_count, tiles_y_count):
         raise NotImplementedError
 
+    @classmethod
+    def get_hex_size(cls, r):
+        return cls.get_width(r), cls.get_height(r)
+
 
 class PointTopHex(HexMathAbs):
     @classmethod

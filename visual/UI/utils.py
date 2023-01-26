@@ -1,9 +1,9 @@
 import os
 from pygame import Surface, SRCALPHA
 from pygame import image, error, transform, Color, surface, draw
-from global_obj.main import Global
+from global_obj.logger import get_logger
 
-LOGGER = Global.logger
+LOGGER = get_logger()
 
 
 def get_surface(h_size, v_size=None, transparent: (bool, int) = 0, flags=SRCALPHA, color=None):
@@ -34,10 +34,10 @@ except:
 def loaded_images_wrapper(func):
     loaded_ = {}
 
-    def wrapper(path, size=None, angle=90, *args, **kwargs):
+    def wrapper(path, size=None, smooth_scale=True):
         if (path, size) not in loaded_:
             # LOGGER.info(f'Loading {path} {size}')
-            loaded_[(path, size)] = func(path, size, *args, angle=angle, **kwargs)
+            loaded_[(path, size)] = func(path, size, smooth_scale)
 
         return loaded_[(path, size)]
 
@@ -45,11 +45,10 @@ def loaded_images_wrapper(func):
 
 
 @loaded_images_wrapper
-def load_image(path: str, size: (int, int) = None, angle=90, smooth_scale=True) -> surface.Surface:
+def load_image(path: str, size: (int, int) = None, smooth_scale=True) -> surface.Surface:
     try:
-        angle = angle if angle is not None else 90
-        if not path.startswith('sprites'):
-            path = os.path.join('sprites', path)
+        if not str(path).startswith('textures'):
+            path = os.path.join('textures', path)
 
         pic = image.load(path)  # .convert_alpha()
 
@@ -60,7 +59,6 @@ def load_image(path: str, size: (int, int) = None, angle=90, smooth_scale=True) 
             else:
                 pic = transform.scale(pic, size).convert_alpha()
 
-       # pic = transform.rotate(pic, angle).convert_alpha()
         LOGGER.info(f'Loaded {path} {pic.get_size()}')
         return pic
     except (error, FileNotFoundError) as e:
@@ -82,7 +80,6 @@ def __normalize_color(color) -> int:
 
 def normalize_color(color) -> list:
     return list(map(__normalize_color, color))
-
 
 # def recolor_picture(picture, color, recolor_key=(10, 10, 10), min_transparent=250):
 #     w, h = picture.get_size()

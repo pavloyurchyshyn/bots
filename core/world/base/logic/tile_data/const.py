@@ -10,3 +10,4 @@ class TileAttrs:
     DestroyedType = 'dest_t'
     Direction = 'dir'
     Height = 'hgt'
+    Img = 'img'

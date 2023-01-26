@@ -8,8 +8,10 @@ class TileDataAbs:
     move_energy_k: float = 0.
     eternal: bool = False
     destroyed_type = None
-    direction: int = 0
     height: int = 0
+
+    img: int = 0
+    direction: int = 0
 
     def __init__(self, **kwargs):
         self.name = kwargs[TileAttrs.Name] if TileAttrs.Name in kwargs else self.name
@@ -22,6 +24,9 @@ class TileDataAbs:
         self.destroyed_type = kwargs.get(TileAttrs.DestroyedType, self.destroyed_type)
         self.height = kwargs.get(TileAttrs.Height, self.height)
         self.init_additional_attrs(**kwargs)
+
+        self.direction = kwargs.get(TileAttrs.Direction, 0)
+        self.img = kwargs.get(TileAttrs.Img, 0)
 
     def init_additional_attrs(self, **kwargs):
         pass
@@ -43,4 +48,5 @@ class TileDataAbs:
             TileAttrs.VerboseName: self.verbose_name,
             TileAttrs.Direction: self.direction,
             TileAttrs.Height: self.height,
+            TileAttrs.Img: self.img,
         }

@@ -16,8 +16,11 @@ class LogicTile:
         self.eternal: bool = tile_data.eternal
         self.move_energy_k: float = tile_data.move_energy_k
         self.destroyed_type: Union[str, TileDataAbs, None] = tile_data.destroyed_type
-        self.direction = tile_data.direction
         self.height = tile_data.height
+
+        self.img = tile_data.img
+        self.direction = tile_data.direction
+
         self.at_edge = at_edge
 
     def apply_type(self, tile_type: Union[str, TileDataAbs]) -> None:
@@ -28,6 +31,9 @@ class LogicTile:
         self.eternal: bool = tile_type.eternal
         self.move_energy_k: float = tile_type.move_energy_k
         self.destroyed_type: Union[str, TileDataAbs, None] = tile_type.destroyed_type
+
+        self.img = tile_type.img
+        self.direction = tile_type.direction
 
     def damage(self, dmg: float) -> None:
         if not self.eternal and self.hp > 0:
@@ -56,13 +62,7 @@ class LogicTile:
 
 
 if __name__ == '__main__':
-    tile = LogicTile((0, 0), TileTypes.PrivateHouse)
+    tile = LogicTile((0, 0), TileTypes.Forest)
     print(tile.__dict__)
     tile.damage(tile.hp)
     print(tile.__dict__)
-    tile = LogicTile((0, 0), TileTypes.Field)
-    print(tile.__dict__)
-    tile.damage(tile.hp)
-    print(tile.__dict__)
-
-    print(tile.get_data_dict())

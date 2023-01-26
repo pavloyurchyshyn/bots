@@ -7,7 +7,7 @@ from settings.localization.menus.UI import UILocal
 
 from game_client.game_match.stages.match_menu.settings.uids import UIDs
 from game_client.stages.styles import get_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
-
+# TODO clean
 from visual.UI.yes_no_popup import YesNoPopUp
 
 
@@ -28,10 +28,10 @@ BUTTONS_DATA = {
         'kwargs': {
             ButtonAttrs.UID: UIDs.ExitBtn,
             ButtonAttrs.Text: 'X',
-            ButtonAttrs.XK: 0.965,
-            ButtonAttrs.YK: 0.005,
+            ButtonAttrs.XK: 0.969,
+            ButtonAttrs.YK: 0.001,
             ButtonAttrs.HSizeK: 0.03,
-            ButtonAttrs.VSizeK: 0.04,
+            ButtonAttrs.VSizeK: 0.025,
             ButtonAttrs.OnClickAction: add_exit_popup,
         }
     },

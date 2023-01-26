@@ -104,6 +104,9 @@ class BaseButton(BaseUI, DrawBorderMixin, BuildRectShapeMixin, ShapeAbs, GetSurf
         super().deactivate()
         self.surface = self.inactive_surface
 
+    def __str__(self):
+        return f'Btn[{self.uid}, {self.x, self.y}]'
+
 
 class Button(BaseButton):
 
@@ -137,7 +140,7 @@ class Button(BaseButton):
     def fill_surface(self, surface: Surface = None, color=None) -> None:
         self.fill_surface_due_to_border_attrs(surface, color)
 
-    def build(self) -> BaseUI:
+    def build(self) -> 'self':
         self.render()
         self.init_shape()
         return self
