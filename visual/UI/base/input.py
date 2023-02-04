@@ -2,7 +2,7 @@ from pygame import Surface
 
 from global_obj.main import Global
 from visual.UI.base.text import Text
-from visual.UI.settings import UIDefault
+from settings.visual.ui_default import UIDefault
 from visual.UI.base.abs import ShapeAbs
 from visual.UI.constants.attrs import Attrs, InputAttr, StyleAttrs
 from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorderMixin, BuildRectShapeMixin

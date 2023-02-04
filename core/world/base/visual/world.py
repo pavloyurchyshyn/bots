@@ -65,7 +65,7 @@ class VisualWorld(LogicWorld):
         self.clear()
         super().build_map(flat, odd, data)
         self.reference_hex = VisualTile((None, None),
-                                        position=(-100, -100),
+                                        center=(-100, -100),
                                         dots=self.hex_math.get_dots_by_xy(0, 0, self.tile_r),
                                         texture_size=self.hex_math.get_hex_size(self.tile_r))
         self.render()
@@ -119,9 +119,9 @@ class VisualWorld(LogicWorld):
 
         # draw.polygon(surface, tile.tile_data.color, tile.dots)
         # draw.lines(surface, (50, 50, 50), True, points=tile.dots)
-        surface.blit(tile.texture, tile.position)
-        # draw.lines(surface, (250, 250, 250), True, points=tile.dots)
-        # TODO
+        surface.blit(tile.texture, tile.texture_pos)
+
+        # draw.rect(surface, (255, 255, 255), (tile.texture_pos, tile.texture.get_size()), 1)
         if tile.at_edge:
             draw.lines(surface, (200, 200, 255), True, points=tile.dots, width=3)
 
@@ -133,15 +133,11 @@ class VisualWorld(LogicWorld):
 
     def get_tile_from_data(self, x, y, tile_data: Type[TileDataAbs], **extra_data) -> VisualTile | LogicTile:
         dots = self.hex_math.get_dots_by_xy(x, y, self.tile_r)
-        size = max(self.tile_xy_size)
-        pos = self.hex_math.get_center_by_xy_id(x, y, self.tile_r)
-        #TODO
-        position = self.hex_math.get_lt_by_id(x, y, self.tile_r)
         return super().get_tile_from_data(x=x, y=y,
                                           tile_data=tile_data,
                                           dots=dots,
-                                          texture_size=(size, size),
-                                          position=position,
+                                          texture_size=self.tile_xy_size,
+                                          center=self.hex_math.get_center_by_xy_id(x, y, self.tile_r),
                                           **extra_data)
 
     def draw_border_for_xy(self, xy, color=(255, 255, 255)):

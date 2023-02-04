@@ -19,19 +19,6 @@ class DetailsPool:
         self.collect_details_classes()
         self.id_generator = id_generator
 
-    def get_default_details(self, details_set, players_number) -> dict:
-        default_details = {}
-        self.logger.info(f'Creating default details: {details_set}')
-        for i in range(players_number):
-            default_details[i] = []
-            for detail, num in details_set.items():
-                for _ in range(num):
-                    unique_id = self.id_generator.get_id()
-                    self.add_detail_to_pool(detail, unique_id)
-                    default_details[i].append(self.get_detail_by_id(unique_id))
-        self.logger.info(f'Default details created: {default_details}')
-        return default_details
-
     def get_class_by_name(self, name):
         return self.classes_dict.get(name)
 
@@ -41,16 +28,16 @@ class DetailsPool:
         """
         self.details.clear()
         self.id_to_detail.clear()
-        self.logger.info(f'Loading list: {len(details_list)} {details_list}')
+        self.logger.debug(f'Loading list: {len(details_list)} {details_list}')
         for class_name, unique_id in details_list:
             self.add_detail_to_pool(class_name, unique_id)
-        self.logger.info(f'Details loaded {self.id_to_detail}')
+        self.logger.debug(f'Details loaded {self.id_to_detail}')
 
     def get_detail_by_id(self, unique_id: str) -> BaseDetail:
         return self.id_to_detail.get(unique_id)
 
     def add_detail_to_pool(self, detail_class_name: str, unique_id: str = None) -> BaseDetail:
-        unique_id = self.id_generator() if unique_id is None else unique_id
+        unique_id = self.id_generator.get_id() if unique_id is None else unique_id
         detail_class = self.classes_dict.get(detail_class_name)
 
         if detail_class is None:

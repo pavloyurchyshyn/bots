@@ -1,12 +1,12 @@
 from global_obj.main import Global
-from core.mech.base.skills.details_manipulations import DisconnectDetailSkill
+# from core.mech.base.skills.details_manipulations import DisconnectDetailSkill
 
 
 class SkillsPool:
     def __init__(self):
         self.skills = []
         self.id_to_skill: dict = {}
-        self.add_skill(DisconnectDetailSkill())
+        # self.add_skill(DisconnectDetailSkill())
 
     def get_skill_by_id(self, unique_id):
         return self.id_to_skill.get(unique_id)
@@ -22,4 +22,3 @@ class SkillsPool:
         skill = self.id_to_skill.pop(unique_id, None)
         if skill is not None:
             self.skills.remove(skill)
-

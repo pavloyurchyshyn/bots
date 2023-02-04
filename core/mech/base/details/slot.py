@@ -10,9 +10,9 @@ __all__ = ['BaseSlot', 'ArmSlot', 'LegSlot', 'WeaponSlot']
 class BaseSlot:
     logger = Global.logger
 
-    def __init__(self, detail=None, detail_types: list[DetailsTypes: str, ] = None, is_open=True):
+    def __init__(self, detail: BaseDetail = None, detail_types: list[DetailsTypes: str, ] = None, is_open=True):
         self.__open = is_open
-        self.__detail = detail
+        self.__detail: BaseDetail = detail
         self.__detail_types = detail_types
 
     def type_is_ok(self, detail) -> bool:
@@ -90,17 +90,17 @@ class BaseSlot:
 
 
 class ArmSlot(BaseSlot):
-    def __init__(self, detail=None, is_open=True):
+    def __init__(self, detail: BaseDetail = None, is_open: bool = True):
         super().__init__(detail=detail, is_open=is_open,
                          detail_types=[DetailsTypes.ARM_TYPE, DetailsTypes.ARM_AND_LEG_TYPE])
 
 
 class LegSlot(BaseSlot):
-    def __init__(self, detail=None, is_open=True):
+    def __init__(self, detail: BaseDetail = None, is_open: bool = True):
         super().__init__(detail=detail, is_open=is_open,
                          detail_types=[DetailsTypes.LEG_TYPE, DetailsTypes.ARM_AND_LEG_TYPE])
 
 
 class WeaponSlot(BaseSlot):
-    def __init__(self, weapon=None, is_open=True):
+    def __init__(self, weapon=None, is_open: bool = True):
         super(WeaponSlot, self).__init__(detail=weapon, is_open=is_open, detail_types=[DetailsTypes.WEAPON_TYPE, ])

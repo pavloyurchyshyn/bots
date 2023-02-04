@@ -14,7 +14,7 @@ __all__ = ['MetalArm', 'MetalLeg', 'MetalBody']
 class MetalArm(BaseArm):
     name = DetailNames.SimpleMetal.Arm
     original_name = 'Metal Arm'
-
+    verbal_name = 'Metal Arm'
     def __init__(self, unique_id):
         skills = [SimpleHit, ]
 

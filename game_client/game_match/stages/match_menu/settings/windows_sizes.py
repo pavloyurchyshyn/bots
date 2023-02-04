@@ -33,28 +33,43 @@ class TileInfo:
     rect = (x, y, h_size, v_size)
 
 
-_CARDS_V_SIZE = (scaled_h(1) - MapRect.y - MapRect.v_size) // 2
-_CARDS_H_SIZE = scaled_w(0.5)
+CARDS_V_SIZE = scaled_h(0.2)
 
 
 class UsedCards:
     x = scaled_w(0.2)
     y = scaled_h(0.725)
-    h_size = _CARDS_H_SIZE
-    v_size = _CARDS_V_SIZE
+    h_size = scaled_w(0.5)
+    v_size = CARDS_V_SIZE  # scaled_h(0.1355)
+    rect = (x, y, h_size, v_size)
+
+
+class HpBar:
+    x = scaled_w(0.2)
+    y = scaled_h(0.725 + 0.1375 - 0.02)
+    h_size = scaled_w(0.5)
+    v_size = scaled_h(0.02)
+    rect = (x, y, h_size, v_size)
+
+
+class ManaBar:
+    x = scaled_w(0.2)
+    y = scaled_h(0.725 + 0.1375)
+    h_size = scaled_w(0.5)
+    v_size = scaled_h(0.02)
     rect = (x, y, h_size, v_size)
 
 
 class CardsDeck:
     x = scaled_w(0.2)
-    y = scaled_h(0.725) + _CARDS_V_SIZE
-    h_size = _CARDS_H_SIZE
-    v_size = _CARDS_V_SIZE
+    y = scaled_h(0.725 + 0.1375 + 0.02)
+    h_size = scaled_w(0.5)
+    v_size = CARDS_V_SIZE  # scaled_h(0.1175)
     rect = (x, y, h_size, v_size)
 
 
 class ReadyWindow:
-    x = scaled_w(0.2) + _CARDS_H_SIZE
+    x = scaled_w(0.7)
     y = MapRect.y + MapRect.v_size
     h_size = scaled_w(0.1)
     v_size = scaled_h(1) - MapRect.y - MapRect.v_size

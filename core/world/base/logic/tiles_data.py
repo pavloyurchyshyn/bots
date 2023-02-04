@@ -9,12 +9,20 @@ class EmptyTile(TileDataAbs):
     move_energy_k: float = IMPASSABLE_VALUE
     eternal: bool = True
     destroyed_type = None
-    direction: int = 0
     height: int = 0
     color = (0, 0, 20, 0)
 
     def __init__(self, **kwargs):
         super().__init__()
+
+
+class SpawnTile(TileDataAbs):
+    name = 'spawn'
+    verbose_name = 'Spawn'
+    eternal = True
+    destroyed_type = None
+    height = 0
+    spawn = True
 
 
 class TileData(TileDataAbs):
@@ -155,6 +163,7 @@ class TileTypes:
         Wall.name: Wall,
         Field.name: Field,
         Hole.name: Hole,
+        SpawnTile.name: SpawnTile,
     }
 
 

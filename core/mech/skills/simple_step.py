@@ -12,7 +12,7 @@ class SimpleStepAttrs:
 
 class SimpleStep(BaseSkill):
     name = SimpleStepAttrs.name
-    # verbal_name = SimpleStepAttrs.verbal_name
+    verbal_name = 'Step'
     targets = BaseSkill.Targets.Tile,
 
     def __init__(self, num, unique_id):

@@ -10,6 +10,7 @@ from visual.UI.utils import get_surface, load_image
 from visual.hex_stuff import rotate_hex
 from global_obj.logger import get_logger
 from core.world.base.logic.tile import LogicTile
+
 # TODO clean
 LOGGER = get_logger()
 
@@ -18,19 +19,14 @@ class TextureByPath:
     def __init__(self, path: Path, flat: bool = True):
         self.path: str = path
         self.flat: bool = flat
-        self.images: Dict[Tuple[Tuple[int, int], int], Surface] = {}
+        self.images: Dict[Tuple[int, int], Surface] = {}
         self.original_img: Surface = self.load_img(path, flat)
 
-    def get_texture(self, size, direction: '0-5' = 0) -> Surface:
-        if (size, direction) not in self.images:
-            if direction != 0:
-                img = transform.rotate(self.original_img, direction * 80)
-            else:
-                img = self.original_img
+    def get_texture(self, size) -> Surface:
+        if size not in self.images:
+            self.images[size] = transform.smoothscale(self.original_img.copy(), size)
 
-            self.images[(size, direction)] = transform.smoothscale(img, size)
-
-        return self.images[(size, direction)]
+        return self.images[size].copy()
 
     @staticmethod
     def load_img(path: str, flat: bool) -> Surface:
@@ -81,7 +77,7 @@ class TilesTextures:
         elif not folder.exists():
             folder = TEXTURES_FOLDER / folder
 
-        tiles = folder / 'tiles'
+        tiles = folder / 'tiles'  # TODO move to constants
         for tile_type in os.listdir(tiles):
             self.textures_groups[tile_type] = texture_group = TextureGroup(tile_type)
             for img in os.listdir(tiles / tile_type):
@@ -89,7 +85,7 @@ class TilesTextures:
                 texture_group.add(texture)
                 self.textures[texture.path] = texture
 
-    def get_texture(self, tile: LogicTile) -> TextureByPath:
+    def get_texture_group(self, tile: LogicTile) -> TextureGroup:
         return self.textures_groups[tile.name]
 
     # def get_texture(self, path: str or Path) -> TextureByPath:

@@ -21,6 +21,7 @@ class LoginArgs:
     BadPassword = 'bad_password'
     SuccLogin = 'succ_login'
     NickName = 'nickname'
+    Player = 'player'
 
 # class ActionsToPlayer:
 #     MessagesToAll = 'global_messages'

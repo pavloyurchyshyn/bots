@@ -4,7 +4,7 @@ from visual.UI.constants.attrs import ButtonAttrs, TextAttrs
 from game_client.stages.maps_editor.settings.uids import UIDs
 from game_client.stages.maps_editor.settings.menu_abs import MenuAbs
 from visual.UI.yes_no_popup import YesNoPopUp
-from core.world.base.logic.tiles_data import TileTypes, EmptyTile
+from core.world.base.logic.tiles_data import TileTypes, EmptyTile, SpawnTile
 
 from visual.UI.base.style import ButtonStyle
 from visual.UI.constants.attrs import ButtonStyleAttrs as BtnSA, StyleAttrs as SA
@@ -41,7 +41,17 @@ PENCIL_BUTTONS = {
             ButtonAttrs.VSizeK: 0.04,
         }
     },
-
+    SpawnTile.name: {
+        'kwargs': {
+            ButtonAttrs.UID: f'{SpawnTile.name}_btn',
+            ButtonAttrs.Text: SpawnTile.verbose_name,
+            ButtonAttrs.OnClickAction: change_tile_type(SpawnTile),
+            ButtonAttrs.XK: 0.09,
+            ButtonAttrs.YK: 0.9,
+            ButtonAttrs.HSizeK: 0.03,
+            ButtonAttrs.VSizeK: 0.04,
+        }
+    }
     # TileTypes.Field.name: {
     #     'kwargs': {
     #         ButtonAttrs.UID: f'{TileTypes.Field.name}_btn',

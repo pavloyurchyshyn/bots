@@ -1,7 +1,7 @@
 from typing import Tuple
 from enum import Enum
 
-from visual.UI.settings import UIDefault
+from settings.visual.ui_default import UIDefault
 from visual.UI.base.abs import StyleBaseAbs, ButtonStyleBaseAbs
 from visual.UI.constants.attrs import StyleAttrs, ButtonStyleAttrs
 

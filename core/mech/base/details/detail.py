@@ -11,11 +11,18 @@ class BaseDetail:
 
     name: str = None
     original_name: str = None
+    verbal_name: str = None
 
     is_limb = False
     is_weapon = False
     material = MaterialTypes.METAL_TYPE
     detail_type = None
+
+    arm_types = (DetailsTypes.ARM_TYPE, DetailsTypes.ARM_AND_LEG_TYPE)
+    leg_types = (DetailsTypes.LEG_TYPE, DetailsTypes.ARM_AND_LEG_TYPE)
+    mod_types = (DetailsTypes.MOD_TYPE, DetailsTypes.BODY_MOD_TYPE)
+    body_types = (DetailsTypes.BODY,)
+    body_mod_types = (DetailsTypes.BODY_MOD_TYPE,)
 
     def __init__(self, unique_id=None, **kwargs):
         """
@@ -86,23 +93,23 @@ class BaseDetail:
 
     @property
     def is_arm(self) -> bool:
-        return self.detail_type in (DetailsTypes.ARM_TYPE, DetailsTypes.ARM_AND_LEG_TYPE)
+        return self.detail_type in self.arm_types
 
     @property
     def is_leg(self) -> bool:
-        return self.detail_type in (DetailsTypes.LEG_TYPE, DetailsTypes.ARM_AND_LEG_TYPE)
+        return self.detail_type in self.leg_types
 
     @property
     def is_mod(self) -> bool:
-        return self.detail_type in (DetailsTypes.MOD_TYPE, DetailsTypes.BODY_MOD_TYPE)
+        return self.detail_type in self.mod_types
 
     @property
     def is_body(self) -> bool:
-        return self.detail_type in (DetailsTypes.BODY,)
+        return self.detail_type in self.body_types
 
     @property
     def is_body_mod(self) -> bool:
-        return self.detail_type is DetailsTypes.BODY_MOD_TYPE
+        return self.detail_type in self.body_mod_types
 
     @property
     def skills(self) -> list:

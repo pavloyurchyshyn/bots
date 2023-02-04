@@ -8,8 +8,8 @@ from core.shape.constants import Vector2DType
 from visual.UI.utils import get_surface
 from visual.UI.base.style import Style
 from visual.UI.base.abs import BaseUIAbs
-from visual.UI.settings import UIDefault
 from visual.UI.constants.attrs import Attrs, StyleAttrs
+from settings.visual.ui_default import UIDefault
 
 
 class BaseUI(BaseUIAbs, ABC):

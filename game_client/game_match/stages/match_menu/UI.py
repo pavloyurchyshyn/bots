@@ -13,12 +13,13 @@ from game_client.game_match.stages.match_menu.components.ready import ReadyW
 from game_client.game_match.stages.match_menu.components.tile import TileInfoC
 from game_client.game_match.stages.match_menu.components.cards_deck import CardsC
 from game_client.game_match.stages.match_menu.components.used_cards import UsedCardsC
+from game_client.game_match.stages.match_menu.components.hp_and_mana import HpAndManaC
 
 
 class GameMatch(Menu, PopUpsController,
                 WorldC, ChatC, MechC,
                 CardsC, UsedCardsC,
-                TileInfoC, TasksC,
+                TileInfoC, TasksC, HpAndManaC,
                 DrawElementBorderMixin,
                 ):
 
@@ -32,6 +33,7 @@ class GameMatch(Menu, PopUpsController,
         UsedCardsC.__init__(self)
         TileInfoC.__init__(self)
         TasksC.__init__(self)
+        HpAndManaC.__init__(self)
 
         self.ready_win = ReadyW(self)
         self.processor = processor
@@ -52,8 +54,11 @@ class GameMatch(Menu, PopUpsController,
         self.ready_win.update()
         self.draw_tile_info()
         self.draw_tasks()
+        self.draw_hp_and_mana_win()
         if collided_popup_btn:
             self.draw_border_around_element(collided_popup_btn)
+        self.card.draw()
+        self.card1.draw()
 
     def update_popups(self):
         collided_popup_btn = None

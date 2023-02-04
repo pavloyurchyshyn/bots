@@ -1,6 +1,5 @@
 from pygame.draw import rect as draw_rect
 
-import global_obj.stages
 from core.world.maps_manager import MapsManager
 from core.world.classic_maps.empty import Empty
 from core.world.base.visual.world import VisualWorld

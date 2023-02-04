@@ -5,8 +5,8 @@ from core.world.base.logic.tiles_data import EmptyTile
 
 class LogicWorld:
 
-    def __init__(self, tile_class=Type[LogicTile]):
-        self.tile_class: tile_class = tile_class
+    def __init__(self, tile_class: LogicTile = LogicTile):
+        self.tile_class: LogicTile = tile_class
         self.flat = self.odd = True
         self.y_size = None
         self.x_size = None

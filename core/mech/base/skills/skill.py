@@ -11,10 +11,11 @@ class BaseSkill:
     Targets = Targets
     # StepsClock = GameGlobal.steps_clock
     name = None
+    verbal_name = None
     targets = None
 
     def __init__(self, num, unique_id: str, energy_cost: int, cooldown: int = 1):
-        if self.name is None:
+        if self.name is None or self.verbal_name is None:
             raise SpellWithoutName
 
         if self.targets is None:

@@ -4,7 +4,7 @@ from pygame.draw import rect as draw_rect
 from global_obj.main import Global
 
 from visual.UI.base.menu import Menu
-from visual.UI.settings import UIDefault
+from settings.visual.ui_default import UIDefault
 from visual.UI.base.button import Button
 from visual.UI.utils import normalize_color
 from visual.UI.base.pop_up import PopUpsController
@@ -12,7 +12,6 @@ from visual.UI.base.mixins import DrawElementBorderMixin
 
 from game_client.stages.main_menu.settings.menu_abs import MenuAbs
 from game_client.stages.main_menu.settings.buttons import BUTTONS_DATA, exit_btn_func, no_btn_func
-
 
 
 class MainMenu(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):

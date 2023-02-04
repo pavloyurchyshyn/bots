@@ -11,3 +11,4 @@ class TileAttrs:
     Direction = 'dir'
     Height = 'hgt'
     Img = 'img'
+    Spawn = 'spw'

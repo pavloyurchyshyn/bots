@@ -1,19 +1,19 @@
 from pygame import SRCALPHA
 from visual.UI.constants.colors import CommonColors
-from settings.graphic import GraphicConfig
+from settings.visual.graphic import GraphicConfig
 
 
 class UIDefault:
     Color = (255, 255, 255)
 
     class CollidedElBorder:
-        r_0 = 0
-        g_0 = 0
-        b_0 = 200
+        r_0 = 90
+        g_0 = 90
+        b_0 = 90
 
-        r_1 = 100
-        g_1 = 100
-        b_1 = 56
+        r_1 = 255
+        g_1 = 255
+        b_1 = 255
 
     TextColor = CommonColors.white
     TextBackColor = None

@@ -184,13 +184,12 @@ class MapSave:
         return self.__path
 
     def copy(self):
-        s = MapSave(name=f'{self.__name} copy',
-                    odd=self.odd,
-                    flat=self.flat,
-                    dict_tiles_data=copy.deepcopy(self.__dict_tiles_data),
-                    default=False
-                    )
-        return s
+        return MapSave(name=f'{self.__name} copy',
+                       odd=self.odd,
+                       flat=self.flat,
+                       dict_tiles_data=copy.deepcopy(self.__dict_tiles_data),
+                       default=False
+                       )
 
     def set_name(self, name: str):
         self.__name = name

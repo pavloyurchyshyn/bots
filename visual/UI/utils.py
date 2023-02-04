@@ -59,7 +59,7 @@ def load_image(path: str, size: (int, int) = None, smooth_scale=True) -> surface
             else:
                 pic = transform.scale(pic, size).convert_alpha()
 
-        LOGGER.info(f'Loaded {path} {pic.get_size()}')
+        LOGGER.debug(f'Loaded {path} {pic.get_size()}')
         return pic
     except (error, FileNotFoundError) as e:
         LOGGER.error(f'Failed to load {path}: {e}')

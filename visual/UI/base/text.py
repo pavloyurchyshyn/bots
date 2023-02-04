@@ -9,7 +9,6 @@ from visual.UI.utils import get_surface
 
 class Text(BaseUI):
     TAB_VALUE = '  '
-    MAX_SPEED = 4
 
     def __init__(self, uid: str, text: str = '', raw_text=True, color=None, **kwargs):
 
@@ -50,7 +49,7 @@ class Text(BaseUI):
             x = (self.surface.get_width() - rendered_text.get_width()) // 2
 
         if self.style.from_top:
-            y = 0
+            y = 1
         elif self.style.from_bot:
             y = self.v_size - rendered_text.get_height() if self.v_size > rendered_text.get_height() else 0
         else:

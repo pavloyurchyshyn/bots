@@ -6,3 +6,4 @@ class PlayerAttrs:
     IsAdmin = 'is_admin'
     Ready = 'ready'
     Number = 'number'
+    Spawn = 'spawn'

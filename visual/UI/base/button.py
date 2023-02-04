@@ -8,9 +8,9 @@ from visual.UI.base.text import Text
 from visual.UI.base.abs import ShapeAbs
 from visual.UI.base.style import ButtonStyle
 from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorderMixin, BuildRectShapeMixin
-
-from visual.UI.settings import UIDefault
 from visual.UI.constants.attrs import ButtonAttrs, TextAttrs
+
+from settings.visual.ui_default import UIDefault
 
 
 class BaseButton(BaseUI, DrawBorderMixin, BuildRectShapeMixin, ShapeAbs, GetSurfaceMixin, ABC):

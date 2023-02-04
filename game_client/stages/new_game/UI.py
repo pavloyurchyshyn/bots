@@ -4,7 +4,7 @@ from pygame.draw import rect as draw_rect
 from global_obj.main import Global
 
 from visual.UI.base.menu import Menu
-from visual.UI.settings import UIDefault
+from settings.visual.ui_default import UIDefault
 from visual.UI.base.button import Button
 
 from game_client.stages.new_game.settings.buttons import BUTTONS_DATA

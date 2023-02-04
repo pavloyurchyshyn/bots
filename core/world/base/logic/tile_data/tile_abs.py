@@ -9,9 +9,8 @@ class TileDataAbs:
     eternal: bool = False
     destroyed_type = None
     height: int = 0
-
+    spawn: bool = 0
     img: int = 0
-    direction: int = 0
 
     def __init__(self, **kwargs):
         self.name = kwargs[TileAttrs.Name] if TileAttrs.Name in kwargs else self.name
@@ -24,8 +23,8 @@ class TileDataAbs:
         self.destroyed_type = kwargs.get(TileAttrs.DestroyedType, self.destroyed_type)
         self.height = kwargs.get(TileAttrs.Height, self.height)
         self.init_additional_attrs(**kwargs)
+        self.spawn: bool = kwargs.get(TileAttrs.Spawn, 0)
 
-        self.direction = kwargs.get(TileAttrs.Direction, 0)
         self.img = kwargs.get(TileAttrs.Img, 0)
 
     def init_additional_attrs(self, **kwargs):
@@ -46,7 +45,6 @@ class TileDataAbs:
             TileAttrs.Eternal: self.eternal,
             TileAttrs.DestroyedType: des_type,
             TileAttrs.VerboseName: self.verbose_name,
-            TileAttrs.Direction: self.direction,
             TileAttrs.Height: self.height,
             TileAttrs.Img: self.img,
         }

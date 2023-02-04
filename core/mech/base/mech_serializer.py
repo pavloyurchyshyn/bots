@@ -74,8 +74,9 @@ class MechSerializer:
 if __name__ == '__main__':
     from core.mech.base.test_mech import MetalMech
     from core.mech.base.pools.skills_pool import SkillsPool
+    from core.game_logic.game_components.game_data.id_generator import IdGenerator
 
-    builder = MechSerializer(DetailsPool(SkillsPool()))
+    builder = MechSerializer(DetailsPool(SkillsPool(), IdGenerator()))
     builder.details_pool.load_details_list([
         ('simple_metal_body', 0),
         ('simple_metal_arm', 1),

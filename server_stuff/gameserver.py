@@ -20,7 +20,7 @@ from server_stuff.constants.setup_stage import SetupStgConst as SSC
 
 LOGGER = Global.logger
 
-TIME = time.time() + 300
+TIME = time.time() + 130
 
 
 class GameServer:
@@ -39,14 +39,22 @@ class GameServer:
         self.current_stage: LogicStageAbs = GameSetup(self, self.server)
 
     def start_game_match(self):
-        Global.logger.info('Start game match')
-        self.started_match = True
-        self.send_to_all({
-            SSC.Server.StartMatch: {
-                SSC.Server.MatchArgs.Map: self.current_map.get_save_dict()
-            },
-        }
-        )
+        try:
+            Global.logger.info('Start game match')
+            game = GameMatch(self, self.server, self.current_map)
+            self.started_match = True
+            self.send_to_all({
+                SSC.Server.StartMatch: {
+                    SSC.Server.MatchArgs.Map: self.current_map.get_save_dict()
+                },
+            }
+            )
+            # todo wait for everybody
+            self.current_stage = game
+        except Exception as e:
+            Global.logger.error(str(e))
+            Global.logger.error(traceback.format_exc())
+            self.disconnect_all()
 
     def run(self):
         LOGGER.info('Sever Lobby loop started.')
@@ -64,6 +72,7 @@ class GameServer:
         """
         Should send all needed things to continue game.
         """
+        # TODO handle error
         token = response[LoginArgs.Token]
         self.connections[token] = connection
         self.players_objs[token] = self.get_player_obj(client_data, token, is_admin)
@@ -75,6 +84,7 @@ class GameServer:
     def get_player_obj(self, client_data: dict, token: str, is_admin: bool) -> Player:
         player = Player(token,
                         client_data.get(LoginArgs.NickName, 'NoName'),
+                        (0, 0),  # TODO position
                         is_admin,
                         )
         return player
@@ -106,6 +116,11 @@ class GameServer:
         self.players_objs[to_token] = self.players_objs.pop(from_token)
         Global.logger.info(f'Reassigned player obj from {from_token} to {to_token}')
 
+    def disconnect_all(self):
+        for token in tuple(self.connections.keys()):
+            self.disconnect(token)
+        self.alive = False
+
     def disconnect(self, token: str):
         connection: SocketConnection = self.connections.pop(token)
         if connection:
@@ -119,4 +134,4 @@ class GameServer:
         for connection in self.connections.values():
             if connection.alive:
                 connection.send_json(json_)
-        Global.logger.info(f'Sent ot all: {json_}')
+        Global.logger.debug(f'Sent ot all: {json_}')

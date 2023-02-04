@@ -38,6 +38,9 @@ class GameBody:
 
         from core.world.classic_maps.forest import ForestMap
         from game_client.game_match.stages.match_menu.UI import GameMatch
+
+        # Global.stages.map_editor()
+        # Global.stages.change_current_stage('test')
         self.match_ui = GameMatch(None)
 
         # Global.stages.change_current_stage('test')

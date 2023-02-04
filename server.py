@@ -4,6 +4,7 @@ os.environ['VisualPygameOn'] = 'off'
 
 import time
 import socket
+import traceback
 from _thread import start_new_thread
 from global_obj.logger import get_logger
 
@@ -11,6 +12,7 @@ from server_stuff.gameserver import GameServer
 from server_stuff.server_config import ServerConfig
 from server_stuff.constants.start_and_connect import LoginArgs
 from game_client.server_interactions.network.socket_connection import SocketConnection
+
 LOGGER = get_logger()
 
 
@@ -103,7 +105,6 @@ class Server(ServerConfig):
 
         except Exception as e:
             LOGGER.error(str(e))
-            import traceback
             LOGGER.error(traceback.format_exc())
 
 
@@ -112,6 +113,5 @@ if __name__ == '__main__':
         s = Server()
         s.run()
     except Exception as e:
-        import traceback
         LOGGER.critical(str(e))
         LOGGER.critical(traceback.format_exc())

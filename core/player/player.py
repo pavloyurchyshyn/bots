@@ -1,5 +1,7 @@
 # from core.mech.base.mech import BaseMech
-# from core.player.constants import PlayerAttrs
+from core.player.constants import PlayerAttrs
+
+
 # from core.player.scenario import Scenario
 #
 #
@@ -76,6 +78,7 @@
 class Player:
     def __init__(self, token,
                  nickname,
+                 spawn: tuple[int, int],
                  # number,
                  # actions_count,
                  # mech: BaseMech = None,
@@ -88,3 +91,17 @@ class Player:
         self.token: str = token
         self.ready: bool = ready
         self.nickname: str = nickname
+        self.spawn: tuple[int, int] = spawn
+
+    def get_dict(self):
+        return {
+            PlayerAttrs.Token: self.token,
+            PlayerAttrs.IsAdmin: self.is_admin,
+            PlayerAttrs.Ready: self.ready,
+            PlayerAttrs.Nickname: self.nickname,
+            PlayerAttrs.Spawn: self.spawn,
+        }
+
+    @staticmethod
+    def get_player_from_dict(d: dict) -> 'Player':
+        return Player(**d)
