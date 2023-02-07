@@ -1,5 +1,7 @@
-from global_obj.main import Global
+from global_obj.logger import get_logger
+
 # from core.mech.base.skills.details_manipulations import DisconnectDetailSkill
+LOGGER = get_logger()
 
 
 class SkillsPool:
@@ -16,7 +18,7 @@ class SkillsPool:
         :param skill: already initialized object
         """
         self.id_to_skill[skill.unique_id] = skill
-        Global.logger.info(f'Added skill to skill pool: {skill.__dict__}')  # \n {self.id_to_skill}')
+        LOGGER.info(f'Added skill to skill pool: {skill.__dict__}')  # \n {self.id_to_skill}')
 
     def del_skill_by_id(self, unique_id):
         skill = self.id_to_skill.pop(unique_id, None)

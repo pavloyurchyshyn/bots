@@ -205,11 +205,11 @@ class DrawBorderMixin:
                   color,
                   rect,
                   0,
-                  self.style.dict.get(StyleAttrs.BorderRadius.value, UIDefault.BorderRadius),
-                  self.style.dict.get(StyleAttrs.BorderTopLeftRadius.value, UIDefault.BorderTopLeftRadius),
-                  self.style.dict.get(StyleAttrs.BorderTopRightRadius.value, UIDefault.BorderTopRightRadius),
-                  self.style.dict.get(StyleAttrs.BorderBottomLeftRadius.value, UIDefault.BorderBottomLeftRadius),
-                  self.style.dict.get(StyleAttrs.BorderBottomRightRadius.value, UIDefault.BorderBottomRightRadius),
+                  self.style.dict.get(StyleAttrs.BorderRadius.value, UIDefault.BorderRadius) + 2,
+                  self.style.dict.get(StyleAttrs.BorderTopLeftRadius.value, UIDefault.BorderTopLeftRadius) + 2,
+                  self.style.dict.get(StyleAttrs.BorderTopRightRadius.value, UIDefault.BorderTopRightRadius) + 2,
+                  self.style.dict.get(StyleAttrs.BorderBottomLeftRadius.value, UIDefault.BorderBottomLeftRadius) + 2,
+                  self.style.dict.get(StyleAttrs.BorderBottomRightRadius.value, UIDefault.BorderBottomRightRadius) + 2,
                   )
 
 

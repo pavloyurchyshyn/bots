@@ -3,11 +3,11 @@ from core.mech.base.details.body import BaseBody
 from core.mech.base.pools.details_pool import DetailsPool
 from core.mech.base.details.constants import MechSerializeConst, DetailsTypes, MechAttrs
 
-from global_obj.main import Global
+from global_obj.logger import get_logger
 
 
 class MechSerializer:
-    logger = Global.logger
+    logger = get_logger()
 
     def __init__(self, details_pool: DetailsPool):
         self.details_pool: DetailsPool = details_pool
@@ -44,7 +44,6 @@ class MechSerializer:
         :param data:
         :return:
         """
-        print(data)
         body: BaseBody = self.details_pool.get_detail_by_id(data.get(MechSerializeConst.Body))
         mech = BaseMech(data.get(MechAttrs.Position), body_detail=body)
 

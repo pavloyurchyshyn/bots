@@ -13,6 +13,9 @@ class LogicWorld:
         self.tiles: List[LogicTile] = []
         self.xy_to_tile: Dict[Tuple[int, int], LogicTile] = {}
 
+    def get_tile_by_xy(self, xy):
+        return self.xy_to_tile.get(xy)
+
     def add_tile(self, tile: LogicTile):
         self.tiles.append(tile)
         self.xy_to_tile[(tile.id_x, tile.id_y)] = tile

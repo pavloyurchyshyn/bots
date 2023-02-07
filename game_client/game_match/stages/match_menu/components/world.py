@@ -1,10 +1,15 @@
-from pygame.draw import rect as draw_rect
+from pygame.draw import rect as draw_rect, circle as draw_circle
 
 from global_obj.main import Global
 
 from core.world.base.visual.world import VisualWorld
 from settings.screen.size import scaled_w, scaled_h
 from game_client.game_match.stages.match_menu.settings.windows_sizes import MapRect
+
+from pygame import transform
+from visual.UI.utils import load_image
+
+MECH = transform.smoothscale(load_image('default/mech.png'), (150, 150))
 
 
 class WorldC:
@@ -17,6 +22,12 @@ class WorldC:
 
         self.w.draw()
         draw_rect(Global.display, (255, 255, 255), self.w.window_rect, 1)
+        # draw_circle(Global.display, (255, 0, 0), self.w.get_real_center_of_tile(self.mech.position), 5)
+        # draw_circle(Global.display, (211, 211, 0), self.w.get_real_lt_of_tile(self.mech.position), 3)
+
+        x, y = self.w.get_real_center_of_tile(self.mech.position)
+        mech_img = transform.smoothscale(MECH, (MECH.get_width() * self.w.scale, MECH.get_height() * self.w.scale))
+        Global.display.blit(mech_img, (x - mech_img.get_width() // 2, y - mech_img.get_height() // 2))
         self.w.draw_border_under_mouse()
 
     def check_for_drag(self):

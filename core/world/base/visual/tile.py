@@ -1,9 +1,9 @@
-from pygame import Surface
+from pygame import Surface, transform
 from typing import Union, List, Tuple
 from global_obj.main import Global
 from core.world.base.logic.tile import LogicTile
 from core.world.base.logic.tiles_data import TileDataAbs, TileTypes, EmptyTile
-from visual.tiles_textures import TextureGroup
+from visual.tiles_textures import TextureGroup, ERROR_TEXTURE
 
 
 class VisualTile(LogicTile):

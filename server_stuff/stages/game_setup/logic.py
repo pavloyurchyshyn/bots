@@ -5,7 +5,7 @@ from game_client.server_interactions.network.socket_connection import Connection
 from core.world.maps_manager import MapsManager
 from server_stuff.constants.setup_stage import SetupStgConst as SSC
 
-from core.player import Player
+from core.player.player import Player
 from server_stuff.constants.common import CommonConst
 
 

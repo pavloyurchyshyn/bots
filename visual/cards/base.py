@@ -3,22 +3,21 @@ from core.shape import Vector2DType
 from core.shape.rectangle import Rectangle
 from visual.UI.base.element import DrawBorderMixin
 from visual.UI.base.style import Style
-from settings.visual.cards import CardSize
 from global_obj.main import Global
 from visual.UI.constants.colors import CommonColors
 
 
 class Card(Rectangle, DrawBorderMixin):
     Colors = CommonColors
-    default_style = Style(border_size=1)
+    default_style = Style(border_size=2)
 
     surface: Surface
 
     # TODO think about small surface
     def __init__(self, uid: str,
                  x, y,
-                 style: Style = None,
-                 size_x=CardSize.X_SIZE, size_y=CardSize.Y_SIZE):
+                 size_x, size_y,
+                 style: Style = None):
         self.uid: str = uid
         super().__init__(x, y, size_x, size_y)
         self.style: Style = self.default_style if style is None else style

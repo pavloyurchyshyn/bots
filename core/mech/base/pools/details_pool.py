@@ -1,5 +1,5 @@
 import inspect
-from global_obj.main import Global
+from global_obj.logger import get_logger
 from core.mech import details as details_module
 from core.mech.base.details.detail import BaseDetail
 from core.mech.base.pools.skills_pool import SkillsPool
@@ -9,10 +9,10 @@ from core.game_logic.game_components.game_data.id_generator import IdGenerator
 
 
 class DetailsPool:
-    logger = Global.logger
+    logger = get_logger()
 
-    def __init__(self, skills_pool: SkillsPool, id_generator: IdGenerator):
-        self.skills_pool: SkillsPool = skills_pool
+    def __init__(self, id_generator: IdGenerator):
+        self.skills_pool: SkillsPool = SkillsPool()
         self.details = []
         self.id_to_detail: dict = {}
         self.classes_dict: dict = {}

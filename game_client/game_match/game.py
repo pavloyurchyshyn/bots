@@ -1,15 +1,13 @@
-import socket
-import time
 import _thread
+from typing import Dict
 from global_obj.main import Global
-from game_client.game_match.stages.abs import Processor
-from game_client.game_match.stages.setup_proc import SetupStage
-from game_client.game_match.stages.match_proc import MatchStage
-# from game_client.server_interactions.network.client import SocketConnectionNetwork
-from server_stuff.constants.stages import ServerStages
-from server_stuff.constants.start_and_connect import LoginArgs
+from core.player.player import Player
 from visual.UI.ok_popup import OkPopUp
 from settings.localization.menus.UI import UILocal
+from server_stuff.constants.stages import ServerStages
+from server_stuff.constants.start_and_connect import LoginArgs
+from game_client.game_match.stages.setup_proc import SetupStage
+from game_client.game_match.stages.match_proc import MatchStage
 
 
 class Game:
@@ -23,6 +21,8 @@ class Game:
 
         self.alive: bool = True
         self.kill_thread: bool = False
+        self.player: Player = None
+        self.other_players: Dict[str, Player] = {}
 
     def update(self):
         self.current_processor.update()
@@ -35,6 +35,8 @@ class Game:
         Global.connection.send_json(Global.network_data.credentials)
         response = Global.connection.recv_json()
         Global.logger.debug(f'Response: {response}')
+        Global.logger.info(f"Player obj data: {response.get(LoginArgs.Player)}")
+        self.player = Player.get_player_from_dict(response.get(LoginArgs.Player, {}))
         if response[LoginArgs.Connected]:
             self.process_connection(response)
         else:

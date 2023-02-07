@@ -7,3 +7,4 @@ class PlayerAttrs:
     Ready = 'ready'
     Number = 'number'
     Spawn = 'spawn'
+    Mech = 'mech'

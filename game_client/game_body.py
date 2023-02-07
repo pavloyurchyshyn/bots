@@ -41,12 +41,10 @@ class GameBody:
 
         # Global.stages.map_editor()
         # Global.stages.change_current_stage('test')
-        self.match_ui = GameMatch(None)
-
-        # Global.stages.change_current_stage('test')
-        self.match_ui.w.build_map_from_save(ForestMap())
-        self.match_ui.w.adapt_scale_to_win_size()
-        self.match_ui.define_map_position()
+        # self.match_ui = GameMatch(None)
+        # self.match_ui.w.build_map_from_save(ForestMap())
+        # self.match_ui.w.adapt_scale_to_win_size()
+        # self.match_ui.define_map_position()
 
     def test(self):
         self.match_ui.update()

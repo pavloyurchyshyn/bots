@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from core.player import Player
+from core.player.player import Player
 from core.game_logic.game_components.game_data.game_settings import GameSettings
 from game_client.server_interactions.network.socket_connection import ConnectionWrapperAbs
 

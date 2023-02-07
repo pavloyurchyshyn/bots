@@ -4,7 +4,8 @@ from typing import Dict
 from _thread import start_new_thread
 from global_obj.main import Global
 
-from core.player import Player
+from core.player.player import Player
+from core.mech.base.mech import BaseMech
 from core.world.base.map_save import MapSave
 from core.world.maps_manager import MapsManager
 from core.game_logic.game_components.game_data.game_data import GameData
@@ -75,7 +76,8 @@ class GameServer:
         # TODO handle error
         token = response[LoginArgs.Token]
         self.connections[token] = connection
-        self.players_objs[token] = self.get_player_obj(client_data, token, is_admin)
+        self.players_objs[token] = player_obj = self.get_player_obj(client_data, token, is_admin)
+        response[LoginArgs.Player] = player_obj.get_dict()
         self.current_stage.connect(response, connection)
         LOGGER.debug(f'Final connection response: {response}')
         connection.send_json(response)
@@ -83,9 +85,10 @@ class GameServer:
 
     def get_player_obj(self, client_data: dict, token: str, is_admin: bool) -> Player:
         player = Player(token,
-                        client_data.get(LoginArgs.NickName, 'NoName'),
-                        (0, 0),  # TODO position
-                        is_admin,
+                        nickname=client_data.get(LoginArgs.NickName, 'NoName'),
+                        spawn=(10, 10),  # TODO position
+                        is_admin=is_admin,
+                        mech=BaseMech((10, 10)),
                         )
         return player
 

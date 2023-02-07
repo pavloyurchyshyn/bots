@@ -1,13 +1,13 @@
 from typing import Union
 from core.mech.base.details.constants import *
 from core.mech.base.exceptions import *
-from global_obj.main import Global
+from global_obj.logger import get_logger
 
 __all__ = ['BaseDetail', ]
 
 
 class BaseDetail:
-    logger = Global.logger
+    logger = get_logger()
 
     name: str = None
     original_name: str = None

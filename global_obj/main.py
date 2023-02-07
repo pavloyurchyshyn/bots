@@ -1,8 +1,10 @@
 import os
 from logging import Logger
 from global_obj.clock import Clock
-from global_obj.logger import get_logger
 from global_obj.stages import Stages
+from global_obj.logger import get_logger
+from core.mech.base.pools.details_pool import DetailsPool
+from core.game_logic.game_components.game_data.id_generator import IdGenerator
 
 __all__ = 'Global',
 
@@ -37,7 +39,10 @@ class Global:
         network_data = __NetworkData()
         connection = __SC(logger=logger)
         tiles_textures: __TilesTextures = __TilesTextures()
-        # add sound
+        # TODO add sound
+
+    id_generator = IdGenerator()
+    details_pool: DetailsPool = DetailsPool(id_generator)
 
 
 if __name__ == '__main__':

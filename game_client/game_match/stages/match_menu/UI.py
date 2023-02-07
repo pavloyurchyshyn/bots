@@ -3,7 +3,8 @@ from global_obj.main import Global
 from visual.UI.base.menu import Menu
 from visual.UI.base.pop_up import PopUpsController
 from visual.UI.base.mixins import DrawElementBorderMixin
-from game_client.game_match.stages.match_menu.settings.buttons import BUTTONS_DATA
+
+from core.mech.base.mech import BaseMech
 
 from game_client.game_match.stages.match_menu.components.chat import ChatC
 from game_client.game_match.stages.match_menu.components.mech import MechC
@@ -12,6 +13,7 @@ from game_client.game_match.stages.match_menu.components.world import WorldC
 from game_client.game_match.stages.match_menu.components.ready import ReadyW
 from game_client.game_match.stages.match_menu.components.tile import TileInfoC
 from game_client.game_match.stages.match_menu.components.cards_deck import CardsC
+from game_client.game_match.stages.match_menu.settings.buttons import BUTTONS_DATA
 from game_client.game_match.stages.match_menu.components.used_cards import UsedCardsC
 from game_client.game_match.stages.match_menu.components.hp_and_mana import HpAndManaC
 
@@ -34,7 +36,7 @@ class GameMatch(Menu, PopUpsController,
         TileInfoC.__init__(self)
         TasksC.__init__(self)
         HpAndManaC.__init__(self)
-
+        self.player = processor.player
         self.ready_win = ReadyW(self)
         self.processor = processor
 
@@ -57,8 +59,6 @@ class GameMatch(Menu, PopUpsController,
         self.draw_hp_and_mana_win()
         if collided_popup_btn:
             self.draw_border_around_element(collided_popup_btn)
-        self.card.draw()
-        self.card1.draw()
 
     def update_popups(self):
         collided_popup_btn = None
@@ -77,3 +77,6 @@ class GameMatch(Menu, PopUpsController,
             Global.mouse.l_up = False
             Global.mouse._pos = -10, -10
         return collided_popup_btn
+    @property
+    def mech(self) -> BaseMech:
+        return self.player.mech

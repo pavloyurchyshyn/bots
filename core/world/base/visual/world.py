@@ -1,3 +1,5 @@
+import pygame.transform
+
 if __name__ == '__main__':
     pass
 from pygame.rect import Rect
@@ -14,6 +16,9 @@ from core.world.base.logic.world import LogicWorld
 from core.world.base.logic.tiles_data import EmptyTile
 from core.world.base.logic.tiles_data import TileDataAbs
 from core.world.base.hex_utils import get_hex_math, HexMathAbs
+
+from pygame.draw import rect as draw_rect, circle as draw_circle
+
 
 
 class VisualWorld(LogicWorld):
@@ -113,6 +118,7 @@ class VisualWorld(LogicWorld):
         if tile.tile_data.name == EmptyTile.name:
             # draw.polygon(surface, (0, 0, 0), tile.dots)
             # draw.lines(surface, (0, 0, 0), True, points=tile.dots)
+            draw_circle(surface, (30, 30, 30), tile.center, 3)
             if tile.at_edge:
                 draw.lines(surface, (200, 200, 255), True, points=tile.dots, width=3)
             return
@@ -120,7 +126,7 @@ class VisualWorld(LogicWorld):
         # draw.polygon(surface, tile.tile_data.color, tile.dots)
         # draw.lines(surface, (50, 50, 50), True, points=tile.dots)
         surface.blit(tile.texture, tile.texture_pos)
-
+        draw_circle(surface, (255, 0, 0), tile.center, 3)
         # draw.rect(surface, (255, 255, 255), (tile.texture_pos, tile.texture.get_size()), 1)
         if tile.at_edge:
             draw.lines(surface, (200, 200, 255), True, points=tile.dots, width=3)
@@ -144,9 +150,10 @@ class VisualWorld(LogicWorld):
         self.draw_tile_border(Global.display, self.get_dots_due_to_map_pos(*xy), color=color)
 
     def draw_border_under_mouse(self, color=(255, 255, 255)):
-        pos = self.get_mouse_to_xy()
-        if pos in self.xy_to_tile:
-            self.draw_border_for_xy(pos, color)
+        if self.window_rect.collidepoint(Global.mouse.pos):
+            pos = self.get_mouse_to_xy()
+            if pos in self.xy_to_tile:
+                self.draw_border_for_xy(pos, color)
 
     @staticmethod
     def draw_tile_border(surface, dots, color=(75, 75, 75), width=1):
@@ -163,3 +170,11 @@ class VisualWorld(LogicWorld):
             self.parent_surface.blit(self.surface,
                                      (self.x, self.y),
                                      (0 - self.dx, 0 - self.dy, self.win_x_size, self.win_y_size))
+
+    def get_real_center_of_tile(self, xy: tuple) -> tuple:
+        x, y = self.hex_math.get_center_by_xy_id(*xy, self.tile_r)
+        return int(x * self.scale) + self.dx + self.x, int(y * self.scale) + self.y + self.dy
+
+    def get_real_lt_of_tile(self, xy: tuple) -> tuple:
+        x, y = self.hex_math.get_lt_by_id(*xy, self.tile_r)
+        return int(x * self.scale) + self.dx + self.x, int(y * self.scale) + self.y + self.dy

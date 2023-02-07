@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from pygame import Surface, transform
+from pygame import Surface, transform, draw
 from typing import Tuple, Dict, Union, List
 from pygame.draw import polygon as d_polygon, lines as d_lines
 from settings.base import DEFAULT_TEXTURES_FOLDER, TEXTURES_FOLDER
@@ -11,6 +11,8 @@ from visual.hex_stuff import rotate_hex
 from global_obj.logger import get_logger
 from core.world.base.logic.tile import LogicTile
 
+ERROR_TEXTURE = get_surface(500, 500, 1, color=(0, 0, 0, 0))
+draw.polygon(ERROR_TEXTURE, (200, 0, 0), Hex(0, 0, 250).dots[1:])
 # TODO clean
 LOGGER = get_logger()
 
@@ -87,6 +89,7 @@ class TilesTextures:
 
     def get_texture_group(self, tile: LogicTile) -> TextureGroup:
         return self.textures_groups[tile.name]
+
 
     # def get_texture(self, path: str or Path) -> TextureByPath:
     #     if path not in self.textures:

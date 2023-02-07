@@ -1,10 +1,13 @@
 **TODO**
 - Basic
-  - ~~run server~~
-  - ~~stop server~~
+  - ~~run/stop~~ server
   - host menu
   - game UI
-  - other players connection
+    - main menu
+    - settings
+    - map editor
+    - game
+    
   - nickname edit
   - player obj
   
@@ -16,17 +19,23 @@
   
 
 - Multiplayer
-  - connecting
-  - join
+  - ~~connecting~~
+  - ~~join~~
+  - Setup stage:
+    - connection
+    - reconnection
+  - Game stage:
+    - connection
+    - reconnection
 
 
 - Visual 
   - Tile
-    - direction
+    - ~~direction~~ declined
     - images
-  - tiles textures system
+  - tiles textures _system_
   - tiles textures
-  - tiles texture direction
+  - ~~tiles texture direction~~ _declined_
 
 
 ## Server
@@ -34,3 +43,4 @@
 
 ## BUGS:
  - map scale
+ - map editor crash with empty texture

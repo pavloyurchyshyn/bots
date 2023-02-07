@@ -1,5 +1,5 @@
 from global_obj.main import Global
-from core.player import Player
+from core.player.player import Player
 from server_stuff.stages.abs import LogicStageAbs
 from game_client.server_interactions.network.socket_connection import ConnectionWrapperAbs
 from core.world.base.logic.world import LogicWorld

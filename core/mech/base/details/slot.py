@@ -1,4 +1,4 @@
-from global_obj.main import Global
+from global_obj.logger import get_logger
 from core.mech.base.exceptions import *
 from core.mech.base.details.detail import BaseDetail
 from core.mech.base.details.constants import DetailsTypes
@@ -8,7 +8,7 @@ __all__ = ['BaseSlot', 'ArmSlot', 'LegSlot', 'WeaponSlot']
 
 
 class BaseSlot:
-    logger = Global.logger
+    logger = get_logger()
 
     def __init__(self, detail: BaseDetail = None, detail_types: list[DetailsTypes: str, ] = None, is_open=True):
         self.__open = is_open
