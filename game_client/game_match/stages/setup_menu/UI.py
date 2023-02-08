@@ -11,7 +11,7 @@ from game_client.game_match.stages.setup_menu.settings.maps_stuff import MapRect
 
 from visual.UI.base.menu import Menu
 from visual.UI.base.container import Container
-from visual.UI.base.pop_up import PopUpsController
+from visual.UI.popup_controller import PopUpsController
 from visual.UI.base.mixins import DrawElementBorderMixin
 
 

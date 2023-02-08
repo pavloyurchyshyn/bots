@@ -24,7 +24,7 @@ class GameBody:
             StagesConstants.LoadGame: self.join_game,
             StagesConstants.Game: self.update_game,
             StagesConstants.CloseGame: self.close_game,
-            'test': self.test,
+            # 'test': self.test,
 
         }
 
@@ -46,8 +46,8 @@ class GameBody:
         # self.match_ui.w.adapt_scale_to_win_size()
         # self.match_ui.define_map_position()
 
-    def test(self):
-        self.match_ui.update()
+    # def test(self):
+    #     self.match_ui.update()
 
     def game_loop(self):
         self.stages_dict[Global.stages.current_stage]()
@@ -84,8 +84,18 @@ class GameBody:
         """
         Global.logger.info('Joining game')
         self.game = Game(self)
-        self.game.connect()
-        Global.stages.game()
+        for i in range(3):
+            Global.logger.info(f'Connecting, attempt {i+1}')
+            try:
+                self.game.connect()
+            except Exception as e:
+                Global.logger.warning(f'Failed to connect due to: {e}')
+            else:
+                Global.stages.game()
+                break
+        else:
+            self.main_menu.add_ok_popup('Failed to connect.')
+            Global.stages.main_menu()
 
     def update_game(self):
         self.game.update()

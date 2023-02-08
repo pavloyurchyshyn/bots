@@ -18,11 +18,28 @@ class MechWin:
 
 
 class Tasks:
-    x = scaled_w(0.8)
-    y = scaled_h(0.025)
+    x = scaled_w(0.0)
+    y = scaled_h(0.725)
     h_size = scaled_w(0.20)
-    v_size = scaled_h(0.2)
+    v_size = scaled_h(0.275)
     rect = (x, y, h_size, v_size)
+
+
+class ChatSize:
+    x_k = 0.8
+    y_k = 0.025
+    h_size_k = 0.20
+    v_size_k = 0.175
+
+    inp_x_k = x_k
+    inp_y_k = y_k + v_size_k
+    inp_h_size_k = h_size_k * 0.9
+    inp_v_size_k = 0.025
+
+    send_x_k = x_k + inp_h_size_k
+    send_y_k = y_k + v_size_k
+    send_h_size_k = h_size_k * 0.1
+    send_v_size_k = inp_v_size_k
 
 
 class TileInfo:
@@ -84,20 +101,3 @@ class ReadyWindow:
     Timer_y_k = 0.95
     Timer_h_size = 0.05
     Timer_v_size = 0.02
-
-
-class ChatSize:
-    x_k = 0.0
-    y_k = 0.725
-    h_size_k = 0.20
-    v_size_k = 0.225
-
-    inp_x_k = x_k
-    inp_y_k = y_k + v_size_k
-    inp_h_size_k = h_size_k * 0.9
-    inp_v_size_k = 0.05
-
-    send_x_k = x_k + inp_h_size_k
-    send_y_k = y_k + v_size_k
-    send_h_size_k = h_size_k * 0.1
-    send_v_size_k = inp_v_size_k

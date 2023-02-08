@@ -11,7 +11,11 @@ GLOBAL_SETTINGS = {
 }
 
 
-def get_texture_pack():
+def set_texture_pack(texture_pack):
+    GLOBAL_SETTINGS['texture_pack'] = texture_pack
+
+
+def get_texture_pack() -> str:
     return GLOBAL_SETTINGS['texture_pack']
 
 
@@ -37,7 +41,7 @@ def set_fps(fps):
     save_to_common_config('fps_config', fps)
 
 
-def get_fps():
+def get_fps() -> int:
     return GLOBAL_SETTINGS['fps']
 
 

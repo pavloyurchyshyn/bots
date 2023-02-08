@@ -4,7 +4,7 @@ from global_obj.main import Global
 
 from game_client.stages.join_menu.settings.buttons import BUTTONS_DATA
 from visual.UI.base.mixins import DrawElementBorderMixin
-from visual.UI.base.pop_up import PopUpsController
+from visual.UI.popup_controller import PopUpsController
 
 
 class JoinMenu(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):

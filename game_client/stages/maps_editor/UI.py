@@ -14,7 +14,7 @@ from game_client.stages.maps_editor.settings.pencil_buttons import PENCIL_BUTTON
 from visual.UI.base.menu import Menu
 from visual.UI.base.text import Text
 from visual.UI.base.input import InputBase
-from visual.UI.base.pop_up import PopUpsController
+from visual.UI.popup_controller import PopUpsController
 from visual.UI.base.mixins import DrawElementBorderMixin
 
 from settings.localization.menus.UI import UILocal

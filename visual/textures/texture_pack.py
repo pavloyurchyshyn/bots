@@ -1,8 +1,8 @@
 import os
-from core.shape.hex import Hex
 from pathlib import Path
-from pygame import Surface, transform, draw
-from typing import Tuple, Dict, Union, List
+from typing import Dict, Union
+from pygame import Surface, draw
+from core.shape.hex import Hex
 from visual.UI.utils import get_surface, load_image
 
 
@@ -17,7 +17,15 @@ class TexturePack:
         self.load(self.path)
 
     def get_texture(self, *args) -> Surface:
-        return self.textures.get(Path(*args).as_posix(), self.ERROR_TEXTURE)
+        k = Path(*args).as_posix()
+        if k in self.textures:
+            return self.textures[k]
+        else:
+            keys = tuple(filter(lambda key: key.startswith(k), self.textures.keys()))
+            if keys:
+                return self.textures[keys[0]]
+            else:
+                return self.ERROR_TEXTURE
 
     def load(self, parent_path):
         for file in os.listdir(parent_path):

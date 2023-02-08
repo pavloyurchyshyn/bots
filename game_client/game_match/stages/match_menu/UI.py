@@ -1,7 +1,7 @@
 from global_obj.main import Global
 
 from visual.UI.base.menu import Menu
-from visual.UI.base.pop_up import PopUpsController
+from visual.UI.popup_controller import PopUpsController
 from visual.UI.base.mixins import DrawElementBorderMixin
 
 from core.mech.base.mech import BaseMech

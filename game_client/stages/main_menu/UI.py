@@ -7,7 +7,7 @@ from visual.UI.base.menu import Menu
 from settings.visual.ui_default import UIDefault
 from visual.UI.base.button import Button
 from visual.UI.utils import normalize_color
-from visual.UI.base.pop_up import PopUpsController
+from visual.UI.popup_controller import PopUpsController
 from visual.UI.base.mixins import DrawElementBorderMixin
 
 from game_client.stages.main_menu.settings.menu_abs import MenuAbs
