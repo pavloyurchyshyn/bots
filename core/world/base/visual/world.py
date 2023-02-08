@@ -1,5 +1,3 @@
-import pygame.transform
-
 if __name__ == '__main__':
     pass
 from pygame.rect import Rect
@@ -8,7 +6,6 @@ from _thread import start_new_thread
 from pygame import draw, Surface, transform
 from global_obj.main import Global
 from visual.UI.utils import get_surface
-from visual.tiles_textures import TilesTextures
 from settings.tile_settings import TileSettings
 from core.world.base.logic.tile import LogicTile
 from core.world.base.visual.tile import VisualTile
@@ -17,8 +14,7 @@ from core.world.base.logic.tiles_data import EmptyTile
 from core.world.base.logic.tiles_data import TileDataAbs
 from core.world.base.hex_utils import get_hex_math, HexMathAbs
 
-from pygame.draw import rect as draw_rect, circle as draw_circle
-
+from pygame.draw import circle as draw_circle
 
 
 class VisualWorld(LogicWorld):
@@ -26,7 +22,6 @@ class VisualWorld(LogicWorld):
     def __init__(self, window_rect, tile_r: int = TileSettings.visual_tile_r, parent_surface=Global.display):
         super(VisualWorld, self).__init__(tile_class=VisualTile)
         self.parent_surface = parent_surface
-        self.textures = TilesTextures()
 
         self.window_rect = Rect(window_rect)
         self.x, self.y, self.win_x_size, self.win_y_size = window_rect
@@ -125,7 +120,7 @@ class VisualWorld(LogicWorld):
 
         # draw.polygon(surface, tile.tile_data.color, tile.dots)
         # draw.lines(surface, (50, 50, 50), True, points=tile.dots)
-        surface.blit(tile.texture, tile.texture_pos)
+        surface.blit(Global.textures.get_scaled_tile_texture(tile.name, tile.img, tile.texture_size), tile.texture_pos)
         draw_circle(surface, (255, 0, 0), tile.center, 3)
         # draw.rect(surface, (255, 255, 255), (tile.texture_pos, tile.texture.get_size()), 1)
         if tile.at_edge:

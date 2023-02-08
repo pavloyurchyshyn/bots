@@ -29,7 +29,7 @@ class Global:
         from settings.network import NetworkData as __NetworkData
         from settings.localization import LocalizationLoader as __localization
         from game_client.server_interactions.network.socket_connection import SocketConnection as __SC
-        from visual.tiles_textures import TilesTextures as __TilesTextures
+        from visual.textures.textures import Textures as __Textures
 
         display: __Surface = __display
         keyboard = __keyboard(logger)
@@ -38,7 +38,7 @@ class Global:
         loc = localization
         network_data = __NetworkData()
         connection = __SC(logger=logger)
-        tiles_textures: __TilesTextures = __TilesTextures()
+        textures: __Textures = __Textures()
         # TODO add sound
 
     id_generator = IdGenerator()

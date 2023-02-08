@@ -1,14 +1,19 @@
 from time import time as current_time
 from settings.json_configs_manager import get_from_common_config, save_to_common_config
 
-
 GLOBAL_SETTINGS = {
     'slow_motion': 0,
     'slow_motion_value': 0.05,
     'fps': get_from_common_config('fps_config', 60),
     'language': get_from_common_config('language', 'eng'),
     'scroll_speed': 5,
+    'texture_pack': 'default',
 }
+
+
+def get_texture_pack():
+    return GLOBAL_SETTINGS['texture_pack']
+
 
 def get_scroll_speed():
     return GLOBAL_SETTINGS['scroll_speed']
