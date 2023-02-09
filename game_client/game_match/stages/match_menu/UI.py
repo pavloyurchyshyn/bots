@@ -13,9 +13,10 @@ from game_client.game_match.stages.match_menu.components.world import WorldC
 from game_client.game_match.stages.match_menu.components.ready import ReadyW
 from game_client.game_match.stages.match_menu.components.tile import TileInfoC
 from game_client.game_match.stages.match_menu.components.cards_deck import CardsC
-from game_client.game_match.stages.match_menu.settings.buttons import BUTTONS_DATA
 from game_client.game_match.stages.match_menu.components.used_cards import UsedCardsC
 from game_client.game_match.stages.match_menu.components.hp_and_mana import HpAndManaC
+
+from game_client.game_match.stages.match_menu.settings.buttons import BUTTONS_DATA
 
 
 class GameMatch(Menu, PopUpsController,
@@ -51,12 +52,15 @@ class GameMatch(Menu, PopUpsController,
         self.update_chat()
 
         self.draw_mech_win()
-        self.draw_cards()
+
+        self.move_cards()
         self.draw_used_cards()
+        self.draw_hp_and_mana_win()
+        self.draw_cards()
+
         self.ready_win.update()
         self.draw_tile_info()
         self.draw_tasks()
-        self.draw_hp_and_mana_win()
         if collided_popup_btn:
             self.draw_border_around_element(collided_popup_btn)
 
@@ -77,6 +81,18 @@ class GameMatch(Menu, PopUpsController,
             Global.mouse.l_up = False
             Global.mouse._pos = -10, -10
         return collided_popup_btn
+
+    def move_cards(self):
+        if self.cards_deck_collide_point(Global.mouse.pos):
+            self.deck_cards_move_check()
+        elif self.used_cards_collide_point(Global.mouse.pos):
+            self.used_cards_move_check()
+        else:
+            if self.cards_dy != 0:
+                self.cards_dy += self.CARDS_MOVE_SPEED * Global.clock.d_time * (1 if self.cards_dy < 0 else -1)
+                if -3 <= self.cards_dy <= 3:
+                    self.cards_dy = 0
+
     @property
     def mech(self) -> BaseMech:
         return self.player.mech

@@ -46,13 +46,15 @@ class GameServer:
             self.started_match = True
             self.send_to_all({
                 SSC.Server.StartMatch: {
-                    SSC.Server.MatchArgs.Map: self.current_map.get_save_dict()
+                    SSC.Server.MatchArgs.Map: self.current_map.get_save_dict(),
+                    SSC.Server.MatchArgs.DetailsPool: Global.details_pool.get_dict(),
                 },
             }
             )
             # todo wait for everybody
             self.current_stage = game
         except Exception as e:
+            Global.logger.error('Failed to start game.')
             Global.logger.error(str(e))
             Global.logger.error(traceback.format_exc())
             self.disconnect_all()

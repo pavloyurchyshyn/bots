@@ -35,6 +35,7 @@ class MatchStage(Processor):
     def connect(self, response: dict):
         Global.logger.debug(f'Connecting to match: {response}')
         map_data = response[SSC.Server.StartMatch][SSC.Server.MatchArgs.Map]
+        print(response[SSC.Server.StartMatch][SSC.Server.MatchArgs.DetailsPool])
         self.UI.w.build_map_from_save(MapSave.get_save_from_dict(map_data))
         self.UI.w.adapt_scale_to_win_size()
         self.UI.define_map_position()

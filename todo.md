@@ -1,4 +1,12 @@
-**TODO**
+# **TODO**
+First priority:
+  - ### CREATE DETAILS POOL
+  - mech build
+  - skills cards
+  - use skill functionality
+  - detail wearing
+  - game stages
+----------------------
 - Basic
   - ~~run/stop~~ server
   - host menu

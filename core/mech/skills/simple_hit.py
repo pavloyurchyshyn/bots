@@ -11,7 +11,7 @@ class SimpleStepAttrs:
 
 class SimpleHit(BaseSkill):
     name = 'simple_hit'
-    targets = BaseSkill.Targets.Tile,
+    targets = BaseSkill.TargetsConst.Tile,
 
     def __init__(self, num, unique_id):
         super(SimpleHit, self).__init__(unique_id=unique_id, num=num,

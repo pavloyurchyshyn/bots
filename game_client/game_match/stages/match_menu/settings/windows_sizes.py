@@ -50,7 +50,7 @@ class TileInfo:
     rect = (x, y, h_size, v_size)
 
 
-CARDS_V_SIZE = scaled_h(0.2)
+CARDS_V_SIZE = scaled_h(0.17)
 
 
 class UsedCards:

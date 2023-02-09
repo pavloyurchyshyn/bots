@@ -15,3 +15,4 @@ class SetupStgConst:
 
         class MatchArgs:
             Map = 'map'
+            DetailsPool = 'details_pool'

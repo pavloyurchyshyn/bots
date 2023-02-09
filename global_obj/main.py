@@ -3,6 +3,7 @@ from logging import Logger
 from global_obj.clock import Clock
 from global_obj.stages import Stages
 from global_obj.logger import get_logger
+from core.mech.base.pools.skills_pool import SkillsPool
 from core.mech.base.pools.details_pool import DetailsPool
 from core.game_logic.game_components.game_data.id_generator import IdGenerator
 
@@ -43,6 +44,7 @@ class Global:
 
     id_generator = IdGenerator()
     details_pool: DetailsPool = DetailsPool(id_generator)
+    skill_pool: SkillsPool = details_pool.skills_pool
 
 
 if __name__ == '__main__':

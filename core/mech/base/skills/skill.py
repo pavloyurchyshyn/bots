@@ -8,7 +8,7 @@ class BaseSkill:
     """
     Just logic without visual, description etc.
     """
-    Targets = Targets
+    TargetsConst = Targets
     # StepsClock = GameGlobal.steps_clock
     name = None
     verbal_name = None
@@ -26,14 +26,18 @@ class BaseSkill:
         self.energy_cost = energy_cost
         self.cooldown_value = cooldown
         self.cooldown = 0
+        self.use_dict: dict = {}
 
     def update_cd(self):
         if self.cooldown > 0:
             self.cooldown -= 1
 
     @abstractmethod
-    def use(self, *args, **kwargs) -> dict:
+    def use(self, **kwargs) -> dict:
         raise NotImplementedError
 
     def on_cooldown(self):
         return self.cooldown_value > 0
+
+    def clear_use(self):
+        self.use_dict.clear()

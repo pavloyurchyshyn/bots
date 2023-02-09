@@ -1,26 +1,19 @@
+from core.mech.base.mech import BaseMech
 from core.mech.base.skills.skill import BaseSkill
 from core.mech.base.exceptions import OnCooldownException
-from core.mech.base.mech import BaseMech
-
-
-class SimpleStepAttrs:
-    name = 'simple_step'
-    # verbal_name = 'Simple Step'
-    spell_cost = 1
-    cooldown = 0
 
 
 class SimpleStep(BaseSkill):
-    name = SimpleStepAttrs.name
+    name = 'simple_step'
     verbal_name = 'Step'
-    targets = BaseSkill.Targets.Tile,
+    targets = BaseSkill.TargetsConst.Tile,
 
     def __init__(self, num, unique_id):
         super(SimpleStep, self).__init__(unique_id=unique_id, num=num,
-                                         energy_cost=SimpleStepAttrs.spell_cost,
-                                         cooldown=SimpleStepAttrs.cooldown)
+                                         energy_cost=1,
+                                         cooldown=0)
 
-    def use(self, mech, new_pos, *args, **kwargs):
+    def use(self, **kwargs):
         if not self.on_cooldown():
             mech: BaseMech = kwargs.get('mech')
             mech.change_position(kwargs.get('new_pos'))

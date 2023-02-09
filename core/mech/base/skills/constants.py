@@ -1,3 +1,10 @@
+class SkillAttrs:
+    UID = 'uid'
+    CD = 'cd'
+    ECost = 'ec'
+    UseJson = 'use_j'
+
+
 class Targets:
     SelfMech = 'self_mech'
     AnotherMech = 'another_mech'

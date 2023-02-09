@@ -1,4 +1,5 @@
 from global_obj.logger import get_logger
+from core.mech.base.skills.skill import BaseSkill
 
 # from core.mech.base.skills.details_manipulations import DisconnectDetailSkill
 LOGGER = get_logger()
@@ -10,7 +11,7 @@ class SkillsPool:
         self.id_to_skill: dict = {}
         # self.add_skill(DisconnectDetailSkill())
 
-    def get_skill_by_id(self, unique_id):
+    def get_skill_by_id(self, unique_id) -> BaseSkill:
         return self.id_to_skill.get(unique_id)
 
     def add_skill(self, skill):
