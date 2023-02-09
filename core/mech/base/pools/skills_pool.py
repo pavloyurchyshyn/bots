@@ -19,7 +19,7 @@ class SkillsPool:
         :param skill: already initialized object
         """
         self.id_to_skill[skill.unique_id] = skill
-        LOGGER.info(f'Added skill to skill pool: {skill.__dict__}')  # \n {self.id_to_skill}')
+        LOGGER.debug(f'Added skill to skill pool: {skill.__dict__}')  # \n {self.id_to_skill}')
 
     def del_skill_by_id(self, unique_id):
         skill = self.id_to_skill.pop(unique_id, None)

@@ -11,6 +11,7 @@ class SimpleStepAttrs:
 
 class SimpleHit(BaseSkill):
     name = 'simple_hit'
+    verbal_name = 'Simple Hit'
     targets = BaseSkill.TargetsConst.Tile,
 
     def __init__(self, num, unique_id):

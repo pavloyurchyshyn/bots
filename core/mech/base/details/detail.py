@@ -114,3 +114,6 @@ class BaseDetail:
     @property
     def skills(self) -> list:
         return self._skills
+
+    def __str__(self):
+        return f'{self.__class__.__name__}-{self.__unique_id}'

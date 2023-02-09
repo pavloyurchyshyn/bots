@@ -1,11 +1,11 @@
 import inspect
+from typing import Dict
 from global_obj.logger import get_logger
 from core.mech import details as details_module
 from core.mech.base.details.detail import BaseDetail
 from core.mech.base.pools.skills_pool import SkillsPool
 from core.mech.base.exceptions import ThisDetailClassDoesntExist
 from core.game_logic.game_components.game_data.id_generator import IdGenerator
-# from core.game_logic.game_data import GameGlobal
 
 
 class DetailsPool:
@@ -14,10 +14,10 @@ class DetailsPool:
     def __init__(self, id_generator: IdGenerator):
         self.skills_pool: SkillsPool = SkillsPool()
         self.details = []
-        self.id_to_detail: dict = {}
+        self.id_to_detail: Dict[str, BaseDetail] = {}
         self.classes_dict: dict = {}
         self.collect_details_classes()
-        self.id_generator = id_generator
+        self.id_generator: IdGenerator = id_generator
 
     def get_class_by_name(self, name):
         return self.classes_dict.get(name)
@@ -31,7 +31,7 @@ class DetailsPool:
         self.logger.debug(f'Loading list: {len(details_list)} {details_list}')
         for class_name, unique_id in details_list:
             self.add_detail_to_pool(class_name, unique_id)
-        self.logger.debug(f'Details loaded {self.id_to_detail}')
+        self.logger.info(f'Details loaded {tuple(map(str, self.details))}')
 
     def get_detail_by_id(self, unique_id: str) -> BaseDetail:
         return self.id_to_detail.get(unique_id)

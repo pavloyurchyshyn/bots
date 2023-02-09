@@ -6,6 +6,7 @@ from global_obj.main import Global
 
 from core.player.player import Player
 from core.mech.base.mech import BaseMech
+from core.mech.details.names import DetailNames
 from core.world.base.map_save import MapSave
 from core.world.maps_manager import MapsManager
 from core.game_logic.game_components.game_data.game_data import GameData
@@ -38,6 +39,18 @@ class GameServer:
         self.connected_before = set()
         self.started_match: bool = False
         self.current_stage: LogicStageAbs = GameSetup(self, self.server)
+
+        DEFAULT_DETAILS_POOL_SETTINGS = {
+            DetailNames.SimpleMetal.Body: 1,
+            DetailNames.SimpleMetal.Leg: 2,
+            DetailNames.SimpleMetal.Arm: 2,
+        }
+        l = []
+        for detail_name, count in DEFAULT_DETAILS_POOL_SETTINGS.items():
+            for i in range(count * self.game_data.players_num // 1):
+                l.append((detail_name, None))
+
+        Global.details_pool.load_details_list(l)
 
     def start_game_match(self):
         try:

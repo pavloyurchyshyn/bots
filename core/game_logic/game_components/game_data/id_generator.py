@@ -4,7 +4,7 @@ __all__ = 'IdGenerator',
 
 class IdGenerator:
     def __init__(self, seed=None):
-        self.seed = seed if seed is not None else random.getrandbits(16)
+        self.seed = seed if seed is not None else random.getrandbits(8)
 
     def set_seed(self, seed):
         self.seed = seed
