@@ -9,3 +9,7 @@ settings/common_config.json
 some_code
 maps
 compiled_versions
+dist
+build
+launch.spec
+server.spec
