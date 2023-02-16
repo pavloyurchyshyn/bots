@@ -11,6 +11,15 @@ GLOBAL_SETTINGS = {
 }
 
 
+def save_settings_attr(attr: str):
+    save_to_common_config(attr, GLOBAL_SETTINGS[attr])
+
+
+def save_all_config():
+    for k in GLOBAL_SETTINGS.keys():
+        save_settings_attr(k)
+
+
 def set_texture_pack(texture_pack):
     GLOBAL_SETTINGS['texture_pack'] = texture_pack
 
