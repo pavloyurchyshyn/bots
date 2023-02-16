@@ -1,6 +1,8 @@
 # **TODO**
 First priority:
-  - ### CREATE DETAILS POOL
+  - ### CREATE COMPILER SCRIPTS
+  - ~~CREATE DETAILS POOL~~
+  - create detail pool settings
   - mech build
   - skills cards
   - use skill functionality
@@ -8,7 +10,7 @@ First priority:
   - game stages
 ----------------------
 - Basic
-  - ~~run/stop~~ server
+  - ~~run/stop server~~
   - host menu
   - game UI
     - main menu
@@ -39,15 +41,17 @@ First priority:
 
 - Visual 
   - Tile
-    - ~~direction~~ declined
+    - ~~direction~~ _declined_
     - images
-  - tiles textures _system_
-  - tiles textures
+  - tiles textures system
+  - tiles textures images
   - ~~tiles texture direction~~ _declined_
 
+----------------------
 
 ## Server
   - ping pong
+----------------------
 
 ## BUGS:
  - map scale

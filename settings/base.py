@@ -1,8 +1,6 @@
 import os
 from pathlib import Path
 
-VERSION = '0.0.01'
-
 # ROOT_OF_GAME = os.path.abspath(os.getcwd())
 ROOT_OF_GAME = Path(__file__).parent.parent
 TEXTURES_FOLDER = ROOT_OF_GAME / 'textures'
