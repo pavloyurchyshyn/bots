@@ -1,7 +1,7 @@
 import os
 import sys
 import logging
-from settings.base import LOG_FILE_PATTERN, LOGS_FOLDER
+from settings.base import LOG_FILE_PATTERN, LOGS_FOLDER, LOG_LEVEL, ROOT_OF_GAME
 
 VisualPygameOn = os.environ.get('VisualPygameOn', 'on') == 'on'
 
@@ -9,7 +9,7 @@ VisualPygameOn = os.environ.get('VisualPygameOn', 'on') == 'on'
 def __remember_logger(func):
     logger = []
 
-    def wrap(level=logging.INFO, log_file=None, std_out=True) -> logging.Logger:
+    def wrap(level=LOG_LEVEL, log_file=None, std_out=True) -> logging.Logger:
         if not logger:
             logger.append(func(level, log_file, std_out))
         return logger[0]
@@ -18,7 +18,7 @@ def __remember_logger(func):
 
 
 @__remember_logger
-def get_logger(level=logging.INFO, log_file=None, std_out=True) -> logging.Logger:
+def get_logger(level=LOG_LEVEL, log_file=None, std_out=True) -> logging.Logger:
     log_file = log_file if log_file else ('client_logs' if VisualPygameOn else 'server_logs')
     filename = LOG_FILE_PATTERN.format(log_file)
     if not os.path.exists(LOGS_FOLDER):
@@ -44,4 +44,5 @@ def get_logger(level=logging.INFO, log_file=None, std_out=True) -> logging.Logge
         logger.addHandler(handler)
 
     logger.info(f'{log_file} logger initiated.')
+    logger.info(f'Game root {ROOT_OF_GAME}.')
     return logger

@@ -1,9 +1,11 @@
 import os
 from pathlib import Path
 from typing import Dict, Union
-from pygame import Surface, draw
 from core.shape.hex import Hex
+from pygame import Surface, draw
+from global_obj.logger import get_logger
 from visual.UI.utils import get_surface, load_image
+LOGGER = get_logger()
 
 
 class TexturePack:
@@ -21,10 +23,12 @@ class TexturePack:
         if k in self.textures:
             return self.textures[k]
         else:
+            LOGGER.info(f'Missing texture: {k}')
             keys = tuple(filter(lambda key: key.startswith(k), self.textures.keys()))
             if keys:
                 return self.textures[keys[0]]
             else:
+                LOGGER.warning(f'Returns error texture {k}')
                 return self.ERROR_TEXTURE
 
     def load(self, parent_path):
@@ -33,12 +37,15 @@ class TexturePack:
             if path.is_file():
                 if path.suffix in ('.png', '.jpeg'):
                     path = path.as_posix()
+                    LOGGER.info(f'Loading texture: {path}')
+
                     self.load_img(path)
             else:
                 self.load(path)
 
     def load_img(self, path: str) -> None:
-        self.textures[path.split('.')[0].replace(self.path.as_posix(), '')] = load_image(path)
+        k = path.split(self.name)[-1].replace(Path(path).suffix, '')
+        self.textures[k] = load_image(path)
 
     def __str__(self):
         return str(self.textures)

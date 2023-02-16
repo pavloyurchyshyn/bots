@@ -1,10 +1,9 @@
 import os
 import shutil
-import subprocess
 import datetime
+import subprocess
 from pathlib import Path
 from settings.version import VERSION
-
 
 if __name__ == '__main__':
     root = Path(__file__).parent
@@ -20,7 +19,9 @@ if __name__ == '__main__':
         if not out_folder.exists():
             out_folder.mkdir()
 
-        compiled_out = Path(out_folder, f'v{VERSION}_{datetime.datetime.now().strftime("%m_%d_%Y_%H_%M")}')
+        compiled_out = Path(out_folder, f'v{VERSION}')  # _{datetime.datetime.now().strftime("%m_%d_%Y_%H_%M")}')
+        if compiled_out.exists():
+            shutil.rmtree(compiled_out)
         # args = ['auto-py-to-exe',
         #         launch.as_posix(),
         #         '-c', config.as_posix(),
