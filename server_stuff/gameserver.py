@@ -34,8 +34,8 @@ class GameServer:
 
         self.game_data = GameData()
         self.alive = 1
-        self.connections: Dict[str, SocketConnection] = {}
-        self.players_objs: Dict[str, Player] = {}
+        self.players = Global.players_data
+
         self.connected_before = set()
         self.started_match: bool = False
         self.current_stage: LogicStageAbs = GameSetup(self, self.server)
@@ -153,3 +153,11 @@ class GameServer:
             if connection.alive:
                 connection.send_json(json_)
         Global.logger.debug(f'Sent ot all: {json_}')
+
+    @property
+    def connections(self) -> Dict[str, SocketConnection]:
+        return Global.players_data.connections
+
+    @property
+    def players_objs(self) -> Dict[str, Player]:
+        return Global.players_data.players_objs
