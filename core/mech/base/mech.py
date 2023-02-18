@@ -1,5 +1,6 @@
 from core.mech.base.details.body import BaseBody
-from core.mech.base.exceptions import NotEnoughEnergyError, SlotDoesntExistsError, WrongDetailType
+from core.mech.base.exceptions import SlotDoesntExistsError, WrongDetailType
+from core.mech.base.skills.exceptions import NotEnoughEnergyError
 from core.mech.base.details.constants import DetailsAttrs, MechAttrs, DetailsTypes
 
 

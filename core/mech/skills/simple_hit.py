@@ -1,5 +1,5 @@
 from core.mech.base.skills.skill import BaseSkill
-from core.mech.base.exceptions import OnCooldownException
+from core.mech.base.skills.exceptions import OnCooldownError
 from core.mech.base.mech import BaseMech
 
 
@@ -17,12 +17,12 @@ class SimpleHit(BaseSkill):
     def __init__(self, num, unique_id):
         super(SimpleHit, self).__init__(unique_id=unique_id, num=num,
                                         energy_cost=SimpleStepAttrs.spell_cost,
-                                        cooldown=SimpleStepAttrs.cooldown)
+                                        cooldown=SimpleStepAttrs.cooldown, validators=[])
 
     def use(self, *args, **kwargs):
-        if not self.on_cooldown():
+        if not self.on_cooldown:
             mech: BaseMech = kwargs.get('mech')
             mech.spend_energy(self.energy_cost)
 
         else:
-            raise OnCooldownException
+            raise OnCooldownError

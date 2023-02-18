@@ -1,7 +1,8 @@
+from typing import Iterable
 from abc import abstractmethod
 # from core.game_logic.game_data import GameGlobal
 from core.mech.base.skills.constants import Targets
-from core.mech.base.exceptions import SpellWithoutName, TargetsTypeNotDefined
+from core.mech.base.skills.exceptions import SpellWithoutNameError, TargetsTypeNotDefined
 
 
 class BaseSkill:
@@ -9,14 +10,13 @@ class BaseSkill:
     Just logic without visual, description etc.
     """
     TargetsConst = Targets
-    # StepsClock = GameGlobal.steps_clock
-    name = None
-    verbal_name = None
-    targets = None
+    name: str = None
+    verbal_name: str = None
+    targets: Iterable = None
 
-    def __init__(self, num, unique_id: str, energy_cost: int, cooldown: int = 1):
+    def __init__(self, num, unique_id: str, energy_cost: int, validators: list, cooldown: int = 1):
         if self.name is None or self.verbal_name is None:
-            raise SpellWithoutName
+            raise SpellWithoutNameError
 
         if self.targets is None:
             raise TargetsTypeNotDefined
@@ -27,6 +27,7 @@ class BaseSkill:
         self.cooldown_value = cooldown
         self.cooldown = 0
         self.use_dict: dict = {}
+        self.validators = validators
 
     def update_cd(self):
         if self.cooldown > 0:
@@ -36,7 +37,8 @@ class BaseSkill:
     def use(self, **kwargs) -> dict:
         raise NotImplementedError
 
-    def on_cooldown(self):
+    @property
+    def on_cooldown(self) -> bool:
         return self.cooldown_value > 0
 
     def clear_use(self):

@@ -50,10 +50,6 @@ class SlotDoesntExistsError(Exception):
         return f'Slot {self.slot} does`t exists'
 
 
-class NotEnoughEnergyError(Exception):
-    pass
-
-
 class SlotIsClosed(Exception):
     pass
 
@@ -66,39 +62,3 @@ class WrongDetailType(Exception):
     def __str__(self):
         return f'{self.detail.name} has bad detail type, "{self.detail.detail_type}" not in {self.needed_types}'
 
-
-# class DetailAlreadyConnected(Exception):
-#     def __init__(self, part, detail):
-#         self.part = part
-#         self.detail = detail
-
-#     def __str__(self):
-#         return f'Detail {self.detail} {self.detail.get_unique_id} already connected to {self.part.name}'
-
-
-# class NoSlotsForMods(Exception):
-#     def __init__(self, limb):
-#         self.limb = limb
-#
-#     def __str__(self):
-#         return f'No slots for mods in {self.limb.name}'
-
-
-# class NoSlotsForLimbs(Exception):
-#     def __init__(self, body):
-#         self.body = body
-#
-#     def __str__(self):
-#         return f'No slots in {self.body.name}'
-
-
-class SpellWithoutName(Exception):
-    pass
-
-
-class TargetsTypeNotDefined(Exception):
-    pass
-
-
-class OnCooldownException(Exception):
-    pass

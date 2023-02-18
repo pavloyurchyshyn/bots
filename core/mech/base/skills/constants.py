@@ -24,3 +24,8 @@ class Targets:
 class ReservedSkillsIds:
     SwitchDetailSkillId = 'switch_detail'
     DisconnectDetailSkillId = 'disconnect_detail'
+
+
+class UseKeys:
+    Mech = 'mech'
+    NewPos = 'new_pos'

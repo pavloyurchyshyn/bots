@@ -24,6 +24,13 @@ class Global:
     round_clock: Clock = Clock()  # not counting on pause etc.
     test_draw = False
 
+    id_generator = IdGenerator()
+    details_pool: DetailsPool = DetailsPool(id_generator)
+    skill_pool: SkillsPool = details_pool.skills_pool
+
+    mech_serializer: MechSerializer = MechSerializer(details_pool)
+    players_data: PlayersData = PlayersData()
+
     if VisualPygameOn:
         from pygame import Surface as __Surface
         from global_obj.mouse import Mouse as __mouse
@@ -33,6 +40,7 @@ class Global:
         from settings.localization import LocalizationLoader as __localization
         from game_client.server_interactions.network.socket_connection import SocketConnection as __SC
         from visual.textures.textures import Textures as __Textures
+        #from visual.cards.skill_cards_fabric import SkillsCardsFabric as __SkillsCardsFabric
 
         display: __Surface = __display
         keyboard = __keyboard(logger)
@@ -42,13 +50,8 @@ class Global:
         network_data = __NetworkData()
         connection = __SC(logger=logger)
         textures: __Textures = __Textures()
+        #skill_cards_fabric: __SkillsCardsFabric = __SkillsCardsFabric(skill_pool)
         # TODO add sound
-
-    id_generator = IdGenerator()
-    details_pool: DetailsPool = DetailsPool(id_generator)
-    skill_pool: SkillsPool = details_pool.skills_pool
-    mech_serializer: MechSerializer = MechSerializer(details_pool)
-    players_data: PlayersData = PlayersData()
 
 
 if __name__ == '__main__':
