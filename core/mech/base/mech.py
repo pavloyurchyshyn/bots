@@ -1,6 +1,8 @@
+from typing import List
 from core.mech.base.details.body import BaseBody
-from core.mech.base.exceptions import SlotDoesntExistsError, WrongDetailType
+from core.mech.base.details.detail import BaseDetail
 from core.mech.base.skills.exceptions import NotEnoughEnergyError
+from core.mech.base.exceptions import SlotDoesntExistsError, WrongDetailType
 from core.mech.base.details.constants import DetailsAttrs, MechAttrs, DetailsTypes
 
 
@@ -250,3 +252,15 @@ class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin):
                 (MechAttrs.CurrentEnergy, '_current_energy'),
         ):
             setattr(self, attr, data[key] if data.get(key) is not None else getattr(self, attr))
+
+    def get_details(self) -> List[BaseDetail]:
+        return [slot.detail for slot in [*self._left_slots.values(), *self._right_slots.values()] if slot.is_full]
+
+    def __str__(self):
+        return str(self.attr_dict())
+
+    def make_empty(self):
+        self._skills.clear()
+        self._left_slots.clear()
+        self._right_slots.clear()
+        self.body = None

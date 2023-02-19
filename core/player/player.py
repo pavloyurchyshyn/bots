@@ -35,7 +35,13 @@ class Player(PlayerAbs):
     @staticmethod
     def get_player_from_dict(d: dict) -> 'Player':
         if PlayerAttrs.Mech in d:
+            Global.logger.info(f'Received mech dict: {d[PlayerAttrs.Mech]}')
             mech = Global.mech_serializer.dict_to_mech(d.pop(PlayerAttrs.Mech))
         else:
             mech = None
         return Player(**d, mech=mech)
+
+    def update_attrs(self, attrs_dict: dict):
+        self.mech.set_attrs(attrs_dict.pop(PlayerAttrs.Mech, {}))
+        for attr, val in attrs_dict.items():
+            setattr(self, attr, val)

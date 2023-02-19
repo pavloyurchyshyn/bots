@@ -10,12 +10,15 @@ from game_client.game_match.stages.setup_menu.settings.maps_stuff import MapFunc
 from game_client.game_match.stages.setup_menu.settings.maps_stuff import MapRect, MapsButtonsContainer
 
 from visual.UI.base.menu import Menu
+from visual.UI.base.button import Button
 from visual.UI.base.container import Container
 from visual.UI.popup_controller import PopUpsController
 from visual.UI.base.mixins import DrawElementBorderMixin
 
 
 class SetupMenu(Menu, PopUpsController, ChatPart, DrawElementBorderMixin):
+    start: Button
+
     def __init__(self, setup_stage):
         super(SetupMenu, self).__init__(BUTTONS_DATA)
         PopUpsController.__init__(self)
@@ -30,6 +33,7 @@ class SetupMenu(Menu, PopUpsController, ChatPart, DrawElementBorderMixin):
                                    x_k=MapsButtonsContainer.X, y_k=MapsButtonsContainer.Y,
                                    h_size_k=MapsButtonsContainer.H_size,
                                    v_size_k=MapsButtonsContainer.V_size)
+        self.start.set_active(setup_stage.admin)
 
     def update(self):
         Global.display.fill((0, 0, 0))

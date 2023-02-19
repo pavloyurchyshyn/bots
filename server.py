@@ -68,10 +68,16 @@ class Server(ServerConfig):
                 if client_token in self.game_server.connected_before:
                     LOGGER.info('Player connected before')
                     connection = SocketConnection(LOGGER).set_socket(player_connection)
-                    if client_token in self.game_server.connections:
+                    if client_token in self.game_server.connections:  # if still connected
+                        # create new player
+                        LOGGER.info('Creating new token')
                         client_token = str(hash(str((addr, port))))
                         is_admin = False
-                    self.game_server.reassign_player_obj(client_token, client_token)
+                        player_obj = None
+                    else:
+                        # self.game_server.reassign_player_obj(client_token, client_token)
+                        player_obj = self.game_server.players_objs[client_token]
+
                     response = {LoginArgs.Connected: True,
                                 LoginArgs.Msg: LoginArgs.SuccLogin,
                                 LoginArgs.Token: client_token,
@@ -79,7 +85,7 @@ class Server(ServerConfig):
                                 }
                     LOGGER.info(f'Simple response: {response}')
 
-                    self.game_server.connect(client_data, response, connection, is_admin)
+                    self.game_server.connect(client_data, response, connection, is_admin, player_obj)
 
                 elif self.password is None or client_data.get(LoginArgs.Password) == self.password:
                     if is_admin:

@@ -28,6 +28,7 @@ class MechAttrs:
     Position: str = 'position'
     CurrentHP: str = 'current_hp'
     CurrentEnergy: str = 'current_energy'
+    Attrs = 'attrs'
 
 
 class DetailsTypes:

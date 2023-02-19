@@ -44,6 +44,7 @@ class Game:
             return
 
     def process_connection(self, response: dict):
+        Global.logger.info(f'Connection data: {response}')
         if not response.get(LoginArgs.Connected):
             raise NotImplementedError('Add some info why failed')
 
@@ -71,7 +72,7 @@ class Game:
         self.current_processor.connect(response)
 
     def connect_to_game(self, response):
-        Global.logger.debug(f'Loading game: {response}')
+        Global.logger.info(f'Loading game: {response}')
         self.match_processor = MatchStage(self, response.get(LoginArgs.IsAdmin, False))
         self.match_processor.connect(response)
         self.current_processor = self.match_processor

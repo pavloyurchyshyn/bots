@@ -13,7 +13,7 @@ def exit_to_main_menu(b: Button):
 
 
 def start_game(b: Button):
-    Global.connection.send_json({SSC.Player.StartMatch: True})
+    b.parent.setup_stage.send_start_request()
 
 
 BUTTONS_DATA = {

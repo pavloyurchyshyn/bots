@@ -38,7 +38,6 @@ class TexturePack:
                 if path.suffix in ('.png', '.jpeg'):
                     path = path.as_posix()
                     LOGGER.info(f'Loading texture: {path}')
-
                     self.load_img(path)
             else:
                 self.load(path)

@@ -13,6 +13,3 @@ class SetupStgConst:
         StartMatch = 'start_match'
         ServerMsg = 'server_msg'
 
-        class MatchArgs:
-            Map = 'map'
-            DetailsPool = 'details_pool'

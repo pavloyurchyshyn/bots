@@ -1,5 +1,5 @@
 import inspect
-from typing import Dict
+from typing import Dict, Union
 from global_obj.logger import get_logger
 from core.mech import details as details_module
 from core.mech.base.details.detail import BaseDetail
@@ -33,7 +33,7 @@ class DetailsPool:
             self.add_detail_to_pool(class_name, unique_id)
         self.logger.info(f'Details loaded {tuple(map(str, self.details))}')
 
-    def get_detail_by_id(self, unique_id: str) -> BaseDetail:
+    def get_detail_by_id(self, unique_id: str) -> Union[BaseDetail, 'BaseBody']:
         return self.id_to_detail.get(unique_id)
 
     def add_detail_to_pool(self, detail_class_name: str, unique_id: str = None) -> BaseDetail:

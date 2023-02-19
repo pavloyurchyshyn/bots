@@ -41,7 +41,10 @@ class SetupStage(Processor):
         self.UI.update_chosen_map(r.get(SSC.Server.ChosenMap, self.UI.current_save), force=True)
 
     def start_game(self, r: dict):
-        self.game.connect_to_game(r)
+        self.game.connect_to_game(r[SSC.Server.StartMatch])
 
     def process_player_msg(self, r: dict):
         self.UI.chat.add_msg(r[CommonConst.Chat])
+
+    def send_start_request(self):
+        Global.connection.send_json({SSC.Player.StartMatch: True})

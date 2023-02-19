@@ -1,7 +1,7 @@
 import os
 import logging
 from pathlib import Path
-LOG_LEVEL = logging.WARNING
+LOG_LEVEL = logging.INFO
 
 ROOT_OF_GAME = Path(os.getcwd())
 TEXTURES_FOLDER = ROOT_OF_GAME / 'textures'
@@ -19,5 +19,3 @@ KEYS_CONFIG_FILE = SETTINGS_PATH / 'keyboard_config.json'
 
 for f in (SETTINGS_PATH, MAPS_SAVES):
     f.mkdir(exist_ok=True)
-# patterns
-LOG_FILE_PATTERN = os.path.join(LOGS_FOLDER, '{}.txt')

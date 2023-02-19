@@ -19,3 +19,7 @@ class PlayerAbs:
     @abstractmethod
     def get_player_from_dict(d: dict) -> 'Player':
         raise NotImplementedError
+
+    @abstractmethod
+    def update_attrs(self, attrs_dict: dict):
+        raise NotImplementedError

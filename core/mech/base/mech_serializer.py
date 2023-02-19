@@ -1,9 +1,8 @@
+from global_obj.logger import get_logger
 from core.mech.base.mech import BaseMech
 from core.mech.base.details.body import BaseBody
 from core.mech.base.pools.details_pool import DetailsPool
 from core.mech.base.details.constants import MechSerializeConst, DetailsTypes, MechAttrs
-
-from global_obj.logger import get_logger
 
 
 class MechSerializer:
@@ -15,8 +14,9 @@ class MechSerializer:
     def mech_to_dict(self, mech: BaseMech):
         data = {
             MechAttrs.Position: mech.position,
-            MechAttrs.CurrentHP: mech.health_points,
-            MechAttrs.CurrentEnergy: mech.energy,
+            # MechAttrs.CurrentHP: mech.health_points,
+            # MechAttrs.CurrentEnergy: mech.energy,
+            MechAttrs.Attrs: mech.attr_dict(),
         }
         if mech.body:
             data[MechSerializeConst.Body] = mech.body.unique_id
@@ -47,6 +47,16 @@ class MechSerializer:
         body: BaseBody = self.details_pool.get_detail_by_id(data.get(MechSerializeConst.Body))
         mech = BaseMech(data.get(MechAttrs.Position), body_detail=body)
 
+        self.update_mech_details(mech, data)
+
+        # mech.set_energy(data.get(MechAttrs.CurrentEnergy, 0))
+        # mech.set_health_points(data.get(MechAttrs.CurrentHP, 0))
+        mech.set_attrs(data.get(MechAttrs.Attrs, {}))
+
+        return mech
+
+    def update_mech_details(self, mech: BaseMech, data: dict):
+        mech.make_empty()
         for k, set_slot_detail_func in ((MechSerializeConst.LeftSlots, mech.set_left_detail),
                                         (MechSerializeConst.RightSlots, mech.set_right_detail),
                                         ):
@@ -64,18 +74,12 @@ class MechSerializer:
                         else:
                             detail.remove_weapon()
 
-        mech.set_energy(data.get(MechAttrs.CurrentEnergy, 0))
-        mech.set_health_points(data.get(MechAttrs.CurrentHP, 0))
-
-        return mech
-
 
 if __name__ == '__main__':
     from core.mech.base.test_mech import MetalMech
-    from core.mech.base.pools.skills_pool import SkillsPool
     from core.game_logic.game_components.game_data.id_generator import IdGenerator
 
-    builder = MechSerializer(DetailsPool(SkillsPool(), IdGenerator()))
+    builder = MechSerializer(DetailsPool(IdGenerator()))
     builder.details_pool.load_details_list([
         ('simple_metal_body', 0),
         ('simple_metal_arm', 1),

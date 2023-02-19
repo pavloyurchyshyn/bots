@@ -1,10 +1,10 @@
 from typing import List
 from pygame import Surface, Rect
-from global_obj.main import Global
 from pygame.draw import rect as draw_rect
-from visual.cards.skill import SkillCard
-from game_client.game_match.stages.match_menu.settings.windows_sizes import CardsDeck
+from global_obj.main import Global
 from core.player.player import Player
+from visual.cards.skill.card import SkillCard
+from game_client.game_match.stages.match_menu.settings.windows_sizes import CardsDeck
 
 
 class CardsC:
@@ -33,8 +33,11 @@ class CardsC:
 
     def collect_skills_deck(self):
         self.skills_deck.clear()
-        # if self.player.mech:
-        #     print('AAAAA', self.player.mech.skills)
+        if self.player.mech:
+            pass
+            # print('mech', self.player.mech)
+            # print('details', self.player.mech.get_details())
+            # print('AAAAA', self.player.mech.skills)
         #     # Global.skill_cards_fabric.get_cards_for_skill()
 
     def get_rect(self) -> Rect:

@@ -27,6 +27,9 @@ class GameMatch(Menu, PopUpsController,
                 ):
 
     def __init__(self, processor):
+        self.player = processor.player
+        self.ready_win = ReadyW(self)
+        self.processor = processor
         super(GameMatch, self).__init__(BUTTONS_DATA)
         PopUpsController.__init__(self)
         WorldC.__init__(self)
@@ -37,9 +40,6 @@ class GameMatch(Menu, PopUpsController,
         TileInfoC.__init__(self)
         TasksC.__init__(self)
         HpAndManaC.__init__(self)
-        self.player = processor.player
-        self.ready_win = ReadyW(self)
-        self.processor = processor
 
     def update(self):
         Global.display.fill((0, 0, 0))

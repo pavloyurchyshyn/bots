@@ -1,4 +1,4 @@
-from visual.cards.skill import SkillCard
+from visual.cards.skill.card import SkillCard
 from core.mech.base.skills.skill import BaseSkill
 from core.mech.base.pools.skills_pool import SkillsPool
 

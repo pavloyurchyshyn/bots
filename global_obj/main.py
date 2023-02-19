@@ -40,7 +40,7 @@ class Global:
         from settings.localization import LocalizationLoader as __localization
         from game_client.server_interactions.network.socket_connection import SocketConnection as __SC
         from visual.textures.textures import Textures as __Textures
-        #from visual.cards.skill_cards_fabric import SkillsCardsFabric as __SkillsCardsFabric
+        # from visual.cards.skill_cards_fabric import SkillsCardsFabric as __SkillsCardsFabric
 
         display: __Surface = __display
         keyboard = __keyboard(logger)
@@ -50,7 +50,7 @@ class Global:
         network_data = __NetworkData()
         connection = __SC(logger=logger)
         textures: __Textures = __Textures()
-        #skill_cards_fabric: __SkillsCardsFabric = __SkillsCardsFabric(skill_pool)
+        # skill_cards_fabric: __SkillsCardsFabric = __SkillsCardsFabric(skill_pool)
         # TODO add sound
 
 

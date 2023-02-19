@@ -18,6 +18,7 @@ from server_stuff.stages.abs import LogicStageAbs
 from server_stuff.stages.game_setup.logic import GameSetup
 from server_stuff.stages.game_match.logic import GameMatch
 from server_stuff.constants.start_and_connect import LoginArgs
+from server_stuff.constants.common import CommonConst
 from server_stuff.constants.setup_stage import SetupStgConst as SSC
 
 LOGGER = Global.logger
@@ -57,13 +58,8 @@ class GameServer:
             Global.logger.info('Start game match')
             game = GameMatch(self, self.server, self.current_map)
             self.started_match = True
-            self.send_to_all({
-                SSC.Server.StartMatch: {
-                    SSC.Server.MatchArgs.Map: self.current_map.get_save_dict(),
-                    SSC.Server.MatchArgs.DetailsPool: Global.details_pool.get_dict(),
-                },
-            }
-            )
+
+            self.send_to_all({SSC.Server.StartMatch: game.get_connection_dict()})
             # todo wait for everybody
             self.current_stage = game
         except Exception as e:
@@ -75,23 +71,27 @@ class GameServer:
     def run(self):
         LOGGER.info('Sever Lobby loop started.')
         while self.alive:
-            time.sleep(0.1)
             self.current_stage.update()
-
+            time.sleep(0.1)
             if time.time() > TIME:
                 LOGGER.info('Server stopped by timeout.')
                 self.alive = False
 
         LOGGER.info('Server stopped')
 
-    def connect(self, client_data: dict, response: dict, connection: ConnectionWrapperAbs, is_admin: bool) -> None:
+    def connect(self, client_data: dict,
+                response: dict,
+                connection: ConnectionWrapperAbs,
+                is_admin: bool,
+                player_obj=None) -> None:
         """
         Should send all needed things to continue game.
         """
         # TODO handle error
         token = response[LoginArgs.Token]
         self.connections[token] = connection
-        self.players_objs[token] = player_obj = self.get_player_obj(client_data, token, is_admin)
+        if player_obj is None:
+            self.players_objs[token] = player_obj = self.get_player_obj(client_data, token, is_admin)
         response[LoginArgs.Player] = player_obj.get_dict()
         self.current_stage.connect(response, connection)
         LOGGER.debug(f'Final connection response: {response}')
@@ -129,6 +129,9 @@ class GameServer:
             LOGGER.critical(f'Failed to thread {player_obj.token}.')
             LOGGER.error(e)
             LOGGER.error(traceback.format_exc())
+            self.remove_connection(player_obj.token)
+            if self.alive:
+                self.send_to_all({CommonConst.Chat: f'{player_obj.nickname} disconnected.'})  # TODO add loc
 
     def reassign_player_obj(self, from_token: str, to_token: str):
         self.players_objs[to_token] = self.players_objs.pop(from_token)
@@ -148,11 +151,17 @@ class GameServer:
             self.connected_before.add(token)
 
     def send_to_all(self, json_: dict):
-        Global.logger.debug(f'Send ot all: {json_}')
-        for connection in self.connections.values():
+        Global.logger.info(f'Send ot all: {json_}')
+        for token, connection in self.connections.items():
             if connection.alive:
-                connection.send_json(json_)
+                try:
+                    connection.send_json(json_)
+                except Exception as e:
+                    Global.logger.warning(f'Failed to send to all to {token}')
         Global.logger.debug(f'Sent ot all: {json_}')
+
+    def remove_connection(self, token: str):
+        Global.players_data.connections.pop(token, None)
 
     @property
     def connections(self) -> Dict[str, SocketConnection]:
@@ -161,3 +170,6 @@ class GameServer:
     @property
     def players_objs(self) -> Dict[str, Player]:
         return Global.players_data.players_objs
+
+    def get_dict_players_data(self) -> dict:
+        return {token: player.get_dict() for (token, player) in self.players.players_objs.items()}

@@ -28,7 +28,7 @@ def get_parameter_from_json_config(key, path, def_value=None):
 def save_json_config(data: dict, path: str) -> None:
     with open(path, 'w') as k_conf:
         json.dump(data, k_conf)
-    LOGGER.info(f'Saved {data} to {path}')
+    LOGGER.debug(f'Saved {data} to {path}')
 
 
 def save_to_common_config(key, value):

@@ -24,8 +24,6 @@ class GameBody:
             StagesConstants.LoadGame: self.join_game,
             StagesConstants.Game: self.update_game,
             StagesConstants.CloseGame: self.close_game,
-            # 'test': self.test,
-
         }
 
         self.main_menu = MainMenu()
