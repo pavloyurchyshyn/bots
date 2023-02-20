@@ -17,7 +17,6 @@ class CardsC:
         draw_rect(self.deck_back_surface, (255, 255, 255), (0, 0, CardsDeck.h_size, CardsDeck.v_size), 1)
         self.skills_deck: List[SkillCard] = []
         self.cards_dy = 0
-        self.collect_skills_deck()
 
     def deck_cards_move_check(self):
         if CardsDeck.y + self.cards_dy > Global.display.get_height() - CardsDeck.v_size:
@@ -34,7 +33,10 @@ class CardsC:
     def collect_skills_deck(self):
         self.skills_deck.clear()
         if self.player.mech:
-            pass
+            for skill in self.player.skills:
+                self.skills_deck.append(SkillCard(skill))
+            print(self.player.skills)
+            print(self.skills_deck)
             # print('mech', self.player.mech)
             # print('details', self.player.mech.get_details())
             # print('AAAAA', self.player.mech.skills)

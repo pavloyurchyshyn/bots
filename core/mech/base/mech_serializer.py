@@ -13,7 +13,7 @@ class MechSerializer:
 
     def mech_to_dict(self, mech: BaseMech):
         data = {
-            MechAttrs.Position: mech.position,
+            # MechAttrs.Position: mech.position,
             # MechAttrs.CurrentHP: mech.health_points,
             # MechAttrs.CurrentEnergy: mech.energy,
             MechAttrs.Attrs: mech.attr_dict(),
@@ -35,7 +35,8 @@ class MechSerializer:
                                 slots[slot_n][MechSerializeConst.Weapon] = detail.weapon.unique_id
 
                 data[key] = slots
-
+        self.logger.debug(f'Serialized mech {mech.__dict__} ')
+        self.logger.debug(f'To mech dict {data}')
         return data
 
     def dict_to_mech(self, data: dict) -> BaseMech:
@@ -56,7 +57,6 @@ class MechSerializer:
         return mech
 
     def update_mech_details(self, mech: BaseMech, data: dict):
-        mech.make_empty()
         for k, set_slot_detail_func in ((MechSerializeConst.LeftSlots, mech.set_left_detail),
                                         (MechSerializeConst.RightSlots, mech.set_right_detail),
                                         ):
@@ -65,7 +65,7 @@ class MechSerializer:
                 if detail_data and (detail_uid := detail_data[MechSerializeConst.Detail]):
                     detail = self.details_pool.get_detail_by_id(detail_uid)
 
-                    set_slot_detail_func(slot_num, detail)
+                    set_slot_detail_func(int(slot_num), detail)
                     if detail.detail_type in (DetailsTypes.ARM_TYPE, DetailsTypes.ARM_AND_LEG_TYPE):
                         if detail_data.get(MechSerializeConst.Weapon):
                             detail.set_weapon(

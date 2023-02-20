@@ -9,6 +9,7 @@ from game_client.server_interactions.network.socket_connection import Connection
 from server_stuff.constants.common import CommonConst
 from server_stuff.constants.game_stage import GameStgConst as GSC
 from server_stuff.constants.stages import ServerStages
+from core.mech.details.names import DetailNames
 
 
 class GameMatch(LogicStageAbs):
@@ -16,12 +17,43 @@ class GameMatch(LogicStageAbs):
         super(GameMatch, self).__init__(game_server, server)
         self.w = LogicWorld()
         self.w.build_map(current_map.flat, current_map.odd, current_map.get_tiles_data())
+        self.players_objs = Global.players_data.players_objs
         self.actions = {
             CommonConst.Chat: self.chat,
             GSC.Time: self.get_time,
         }
         self.last_update = time.time()
         self.time_sync = 0
+        self.fill_default_details()
+
+    def fill_default_details(self):
+        # DEFAULT_DETAILS_POOL_SETTINGS = {
+        #     DetailNames.SimpleMetal.Body: 1,
+        #     DetailNames.SimpleMetal.Leg: 2,
+        #     DetailNames.SimpleMetal.Arm: 2,
+        # }
+        # l = []
+        print(self.players_objs)
+        for player in self.players_objs.values():
+            mech = player.mech
+            body = Global.details_pool.add_detail_to_pool(DetailNames.SimpleMetal.Body)
+            mech.set_body(body)
+
+            left_arm = Global.details_pool.add_detail_to_pool(DetailNames.SimpleMetal.Arm)
+            mech.set_left_detail(0, left_arm)
+            right_arm = Global.details_pool.add_detail_to_pool(DetailNames.SimpleMetal.Arm)
+            mech.set_right_detail(0, right_arm)
+
+            left_leg = Global.details_pool.add_detail_to_pool(DetailNames.SimpleMetal.Leg)
+            mech.set_left_detail(1, left_leg)
+            right_leg = Global.details_pool.add_detail_to_pool(DetailNames.SimpleMetal.Leg)
+            mech.set_right_detail(1, right_leg)
+
+        # for detail_name, count in DEFAULT_DETAILS_POOL_SETTINGS.items():
+        #     for i in range(count * self.game_data.players_num // 1):
+        #         l.append((detail_name, None))
+        #
+        # Global.details_pool.load_details_list(l)
 
     def update(self):
         Global.round_clock.update(time.time() - self.last_update)

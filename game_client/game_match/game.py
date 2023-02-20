@@ -35,7 +35,7 @@ class Game:
         Global.connection.send_json(Global.network_data.credentials)
         response = Global.connection.recv_json()
         Global.logger.debug(f'Response: {response}')
-        Global.logger.info(f"Player obj data: {response.get(LoginArgs.Player)}")
+        Global.logger.warning(f"Player obj data: {response.get(LoginArgs.Player)}")
         self.player = Player.get_player_from_dict(response.get(LoginArgs.Player, {}))
         if response[LoginArgs.Connected]:
             self.process_connection(response)

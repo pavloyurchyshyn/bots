@@ -40,7 +40,7 @@ class MechPropertiesMixin:
         return self._hp
 
     @property
-    def skills(self):
+    def skills(self) -> list:
         return self._skills
 
     @property
@@ -171,21 +171,21 @@ class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin):
     def change_position(self, pos):
         self._position = pos
 
-    def set_left_detail(self, slot_id, detail):
+    def set_left_detail(self, slot_id, detail: BaseDetail):
         self.set_detail(self._left_slots, slot_id, detail)
 
-    def set_right_detail(self, slot_id, detail):
+    def set_right_detail(self, slot_id, detail: BaseDetail):
         self.set_detail(self._right_slots, slot_id, detail)
 
-    def set_detail(self, slots: dict, slot_id, detail, update_attr=True):
-        if slots.get(slot_id):
+    def set_detail(self, slots: dict, slot_id, detail: BaseDetail, update_attr=True):
+        if slots.get(slot_id) is not None:
             slots[slot_id].set_detail(detail)
             if update_attr:
                 self.update_details_and_attrs()
         else:
             raise SlotDoesntExistsError(f'{slot_id} in {slots}')
 
-    def switch_part(self, slots, slot_id, detail, update_attr=True):
+    def switch_part(self, slots, slot_id, detail: BaseDetail, update_attr=True):
         slot = slots.get(slot_id)
         if slot:
             d = slot.switch_detail(detail)

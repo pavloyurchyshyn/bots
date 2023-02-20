@@ -74,6 +74,8 @@ class GameBody:
             try:
                 self.game.connect()
             except Exception as e:
+                import traceback
+                Global.logger.warning(traceback.format_exc())
                 Global.logger.warning(f'Failed to connect due to: {e}')
             else:
                 Global.stages.game()

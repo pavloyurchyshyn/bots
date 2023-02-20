@@ -13,3 +13,5 @@ dist
 build
 launch.spec
 server.spec
+game.ico
+server.ico

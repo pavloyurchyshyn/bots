@@ -16,13 +16,14 @@ class SkillCard(SkillCardAbs):
     Colors = CommonColors
     default_style = SkillCardStyle()
 
-    def __init__(self, uid: str,
+    def __init__(self,
                  skill: BaseSkill,
+                 uid: str = None,
                  x: int = 0, y: int = 0,
                  h_size: int = SkillCardSize.X_SIZE,
                  v_size: int = SkillCardSize.Y_SIZE,
                  style=None):
-        self.uid: str = uid
+        self.uid: str = f'{skill.unique_id}_card' if uid is None else uid
         self.x: int = x
         self.y: int = y
         self.h_size: int = h_size

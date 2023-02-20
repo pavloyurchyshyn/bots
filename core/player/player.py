@@ -42,6 +42,14 @@ class Player(PlayerAbs):
         return Player(**d, mech=mech)
 
     def update_attrs(self, attrs_dict: dict):
-        self.mech.set_attrs(attrs_dict.pop(PlayerAttrs.Mech, {}))
+        # self.mech.set_attrs(attrs_dict.pop(PlayerAttrs.Mech, {}))
+        # TODO set details
         for attr, val in attrs_dict.items():
             setattr(self, attr, val)
+
+    @property
+    def skills(self) -> list:
+        if self.mech:
+            return self.mech.skills.copy()
+        else:
+            return []

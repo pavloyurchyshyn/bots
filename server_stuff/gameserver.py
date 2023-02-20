@@ -6,7 +6,6 @@ from global_obj.main import Global
 
 from core.player.player import Player
 from core.mech.base.mech import BaseMech
-from core.mech.details.names import DetailNames
 from core.world.base.map_save import MapSave
 from core.world.maps_manager import MapsManager
 from core.game_logic.game_components.game_data.game_data import GameData
@@ -40,18 +39,6 @@ class GameServer:
         self.connected_before = set()
         self.started_match: bool = False
         self.current_stage: LogicStageAbs = GameSetup(self, self.server)
-
-        DEFAULT_DETAILS_POOL_SETTINGS = {
-            DetailNames.SimpleMetal.Body: 1,
-            DetailNames.SimpleMetal.Leg: 2,
-            DetailNames.SimpleMetal.Arm: 2,
-        }
-        l = []
-        for detail_name, count in DEFAULT_DETAILS_POOL_SETTINGS.items():
-            for i in range(count * self.game_data.players_num // 1):
-                l.append((detail_name, None))
-
-        Global.details_pool.load_details_list(l)
 
     def start_game_match(self):
         try:
@@ -115,6 +102,7 @@ class GameServer:
 
             LOGGER.info(f'Started thread for: {player_obj.token}')
             self.connected_before.add(player_obj.token)
+            self.send_to_all({CommonConst.Chat: f"{player_obj.nickname} {player_obj.token} connected. Admin {player_obj.is_admin}"})
             # connection.send_json({'ready': True})
             while self.alive and connection.alive:
                 player_request = connection.recv_json()
@@ -172,4 +160,4 @@ class GameServer:
         return Global.players_data.players_objs
 
     def get_dict_players_data(self) -> dict:
-        return {token: player.get_dict() for (token, player) in self.players.players_objs.items()}
+        return {token: player.get_dict() for token, player in self.players.players_objs.items()}

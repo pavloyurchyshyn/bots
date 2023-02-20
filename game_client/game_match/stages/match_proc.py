@@ -7,6 +7,7 @@ from game_client.game_match.stages.abs import Processor
 from game_client.game_match.stages.match_menu.UI import GameMatch
 from server_stuff.constants.common import CommonConst
 from server_stuff.constants.game_stage import GameStgConst as GSC
+from core.player.constants import PlayerAttrs
 
 
 class MatchStage(Processor):
@@ -46,17 +47,20 @@ class MatchStage(Processor):
         self.UI.w.build_map_from_save(MapSave.get_save_from_dict(match_data[GSC.MatchArgs.Map]))
         self.UI.w.adapt_scale_to_win_size()
         self.UI.define_map_position()
+        self.UI.collect_skills_deck()
 
     def update_players(self, players_data: dict):
         for token, data in players_data.items():
             if token == self.player.token:
-                Global.logger.info(f'Updating this player: {data}')
+                Global.logger.warning(f'Updating this player: {data}')
+                mech = data.pop(PlayerAttrs.Mech)
                 self.player.update_attrs(data)
+                self.player.mech = Global.mech_serializer.dict_to_mech(mech)
             elif token in Global.players_data.players_objs:
                 Global.logger.info(f'Updating player: {data}')
                 Global.players_data.players_objs[token].update_attrs(data)
             else:
-                Global.logger.info(f'Creating new player: {data}')
+                Global.logger.warning(f'Creating new player: {data}')
                 Global.players_data.players_objs[token] = Player.get_player_from_dict(data)
 
     def process_player_msg(self, r: dict):

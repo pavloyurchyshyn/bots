@@ -31,7 +31,7 @@ class DetailsPool:
         self.logger.debug(f'Loading list: {len(details_list)} {details_list}')
         for class_name, unique_id in details_list:
             self.add_detail_to_pool(class_name, unique_id)
-        self.logger.info(f'Details loaded {tuple(map(str, self.details))}')
+        self.logger.debug(f'Details loaded {tuple(map(str, self.details))}')
 
     def get_detail_by_id(self, unique_id: str) -> Union[BaseDetail, 'BaseBody']:
         return self.id_to_detail.get(unique_id)

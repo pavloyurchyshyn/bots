@@ -21,7 +21,7 @@ def __remember_logger(func):
 @__remember_logger
 def get_logger(level=LOG_LEVEL, log_file=None, std_out=True) -> logging.Logger:
     log_file = log_file if log_file else ('client_logs' if VisualPygameOn else 'server_logs')
-    filename = LOGS_FOLDER / f"{log_file}_{datetime.now().strftime('%m_%d_%H_%M')}.txt"
+    filename = LOGS_FOLDER / f"{log_file}_{datetime.now().strftime('%m_%d_%H_%M_%S')}.txt"
     if not os.path.exists(LOGS_FOLDER):
         os.mkdir(LOGS_FOLDER)
     else:
