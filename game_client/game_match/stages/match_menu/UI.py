@@ -56,7 +56,7 @@ class GameMatch(Menu, PopUpsController,
         self.move_cards()
         self.draw_used_cards()
         self.draw_hp_and_mana_win()
-        self.draw_cards()
+        self.draw_cards(dy=self.cards_dy)
 
         self.ready_win.update()
         self.draw_tile_info()

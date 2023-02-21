@@ -11,6 +11,8 @@ from settings.visual.cards import SkillCardSize
 
 from core.mech.base.skills.skill import BaseSkill
 
+from global_obj.main import Global
+
 
 class SkillCard(SkillCardAbs):
     Colors = CommonColors
@@ -46,13 +48,16 @@ class SkillCard(SkillCardAbs):
         self.surface.fill((0, 0, 0, 0))
         self.draw_back()
         self.text.draw()
-        self.draw_rect()
+        self.draw_border()
 
-    def draw_rect(self):
+    def draw_border(self):
         draw_rect(self.surface, self.style.border_color, (0, 0, self.h_size, self.v_size), 1, self.style.border_radius)
 
     def draw_back(self):
-        draw_rect(self.surface, self.style.border_color, (0, 0, self.h_size, self.v_size), 0, self.style.border_radius)
+        draw_rect(self.surface, self.style.back_color, (0, 0, self.h_size, self.v_size), 0, self.style.border_radius)
 
     def get_rect(self, dx: int = 0, dy: int = 0) -> Rect:
         return Rect(self.x + dx, self.y + dy, self.h_size, self.v_size)
+
+    def draw(self, dx=0, dy=0):
+        Global.display.blit(self.surface, (self.x + dx, self.y + dy))
