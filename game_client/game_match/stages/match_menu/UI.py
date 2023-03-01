@@ -6,15 +6,15 @@ from visual.UI.base.mixins import DrawElementBorderMixin
 
 from core.mech.base.mech import BaseMech
 
-from game_client.game_match.stages.match_menu.components.chat import ChatC
-from game_client.game_match.stages.match_menu.components.mech import MechC
-from game_client.game_match.stages.match_menu.components.tasks import TasksC
-from game_client.game_match.stages.match_menu.components.world import WorldC
-from game_client.game_match.stages.match_menu.components.ready import ReadyW
-from game_client.game_match.stages.match_menu.components.tile import TileInfoC
-from game_client.game_match.stages.match_menu.components.cards_deck import CardsC
-from game_client.game_match.stages.match_menu.components.used_cards import UsedCardsC
-from game_client.game_match.stages.match_menu.components.hp_and_mana import HpAndManaC
+from game_client.game_match.stages.match_menu.UI_components.chat import ChatC
+from game_client.game_match.stages.match_menu.UI_components.mech import MechC
+from game_client.game_match.stages.match_menu.UI_components.tasks import TasksC
+from game_client.game_match.stages.match_menu.UI_components.world import WorldC
+from game_client.game_match.stages.match_menu.UI_components.ready import ReadyW
+from game_client.game_match.stages.match_menu.UI_components.tile import TileInfoC
+from game_client.game_match.stages.match_menu.UI_components.cards_deck import CardsC
+from game_client.game_match.stages.match_menu.UI_components.used_cards import UsedCardsC
+from game_client.game_match.stages.match_menu.UI_components.hp_and_mana import HpAndManaC
 
 from game_client.game_match.stages.match_menu.settings.buttons import BUTTONS_DATA
 
@@ -56,13 +56,18 @@ class GameMatch(Menu, PopUpsController,
         self.move_cards()
         self.draw_used_cards()
         self.draw_hp_and_mana_win()
+
+        self.check_for_card_select()
         self.draw_cards(dy=self.cards_dy)
 
         self.ready_win.update()
         self.draw_tile_info()
+
         self.draw_tasks()
         if collided_popup_btn:
             self.draw_border_around_element(collided_popup_btn)
+
+        self.draw_use_trace()
 
     def update_popups(self):
         collided_popup_btn = None

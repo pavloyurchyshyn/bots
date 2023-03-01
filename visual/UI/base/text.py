@@ -29,9 +29,9 @@ class Text(BaseUI):
 
         self.auto_draw = kwargs.get(Attrs.AutoDraw, True)
 
-        self.from_left = kwargs.get('from_left', False)
+        self.from_left = kwargs.get(TextAttrs.FromLeft, False)
 
-        if not kwargs.get(Attrs.PostponeBuild):
+        if not kwargs.get(Attrs.PostponeBuild, False):
             self.build()
 
     def build(self):
@@ -44,7 +44,7 @@ class Text(BaseUI):
         if self.unlimited_v_size or self.unlimited_h_size:
             self.surface = rendered_text.copy()
         if self.style.from_left or self.from_left:
-            x = int(self.parent_surface.get_width() * 0.02)
+            x = 2
         else:
             x = (self.surface.get_width() - rendered_text.get_width()) // 2
 

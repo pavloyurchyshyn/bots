@@ -59,5 +59,8 @@ class SkillCard(SkillCardAbs):
     def get_rect(self, dx: int = 0, dy: int = 0) -> Rect:
         return Rect(self.x + dx, self.y + dy, self.h_size, self.v_size)
 
+    def get_center(self, dx: int = 0, dy: int = 0) -> tuple:
+        return self.x + dx + self.h_size//2, self.y + dy + self.v_size // 2
+
     def draw(self, dx=0, dy=0):
         Global.display.blit(self.surface, (self.x + dx, self.y + dy))

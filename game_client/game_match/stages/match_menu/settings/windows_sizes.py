@@ -18,10 +18,16 @@ class MechWin:
 
 
 class Tasks:
+    class Title:
+        x = 0.0
+        y = 0.725
+        h_size = 0.20
+        v_size = 0.02
+
     x = scaled_w(0.0)
-    y = scaled_h(0.725)
+    y = scaled_h(0.745)
     h_size = scaled_w(0.20)
-    v_size = scaled_h(0.275)
+    v_size = scaled_h(0.255)
     rect = (x, y, h_size, v_size)
 
 
@@ -101,3 +107,8 @@ class ReadyWindow:
     Timer_y_k = 0.95
     Timer_h_size = 0.05
     Timer_v_size = 0.02
+
+    ReadyPlayers_x = 0.725
+    ReadyPlayers_y = 0.725
+    ReadyPlayers_h_size = 0.05
+    ReadyPlayers_v_size = 0.02

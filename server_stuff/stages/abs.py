@@ -1,5 +1,6 @@
 from abc import abstractmethod
 from core.player.player import Player
+from core.game_logic.game_components.game_data.game_data import GameData
 from core.game_logic.game_components.game_data.game_settings import GameSettings
 from game_client.server_interactions.network.socket_connection import ConnectionWrapperAbs
 
@@ -8,7 +9,7 @@ class LogicStageAbs:
     def __init__(self, game_server, server):
         self.game_server = game_server
         self.server = server
-        self.game_data = game_server.game_data
+        self.game_data: GameData = game_server.game_data
         self.settings: GameSettings = game_server.game_data.settings
 
     @abstractmethod

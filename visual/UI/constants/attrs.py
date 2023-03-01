@@ -62,6 +62,7 @@ class TextAttrs(Attrs):
     ScaleFont = 'scale_font'
     RawText = 'raw_text'
     SplitLines = 'split_lines'
+    FromLeft = 'from_left'
 
 
 class InputAttr(Attrs):

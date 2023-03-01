@@ -12,7 +12,7 @@ class SimpleStepAttrs:
 class SimpleHit(BaseSkill):
     name = 'simple_hit'
     verbal_name = 'Simple Hit'
-    targets = BaseSkill.TargetsConst.Tile,
+    targets = BaseSkill.TargetsConst.AnyMech,
 
     def __init__(self, num, unique_id):
         super(SimpleHit, self).__init__(unique_id=unique_id, num=num,

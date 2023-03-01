@@ -11,5 +11,5 @@ class DetailCardSize:
 class SkillCardSize:
     X = 0
     Y = 0
-    X_SIZE = scaled_w(0.08)
-    Y_SIZE = scaled_h(0.2)
+    X_SIZE = scaled_w(0.06)
+    Y_SIZE = scaled_h(0.16)

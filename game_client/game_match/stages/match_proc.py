@@ -9,8 +9,10 @@ from server_stuff.constants.common import CommonConst
 from server_stuff.constants.game_stage import GameStgConst as GSC
 from core.player.constants import PlayerAttrs
 
+from game_client.game_match.stages.match_menu.proc_components.ready import ReadProc
 
-class MatchStage(Processor):
+
+class MatchStage(Processor, ReadProc):
 
     def __init__(self, game, admin: bool):
         super(MatchStage, self).__init__(admin=admin)
@@ -20,8 +22,9 @@ class MatchStage(Processor):
         self.UI: GameMatch = GameMatch(self)
         self.actions: Dict[str, Callable] = {
             CommonConst.Chat: self.process_player_msg,
-            GSC.Time: self.update_time,
         }
+
+        ReadProc.__init__(self)
 
     def update(self):
         self.UI.update()
@@ -29,10 +32,6 @@ class MatchStage(Processor):
     def process_req(self, r: dict):
         for k in r.keys():
             self.actions.get(k, self.bad_request)(r)
-
-    def update_time(self, r: dict):
-        Global.logger.debug(f'Updated time: {r[GSC.Time]}')
-        Global.round_clock.set_time(r[GSC.Time])
 
     def bad_request(self, r: dict):
         Global.logger.warning(f'Bad request: {r}')
@@ -43,6 +42,7 @@ class MatchStage(Processor):
         Global.details_pool.load_details_list(match_data[GSC.MatchArgs.DetailsPool])
         self.update_players(match_data[GSC.MatchArgs.PlayersData])
         self.update_time(match_data)
+        self.update_players_ready_number(response)
 
         self.UI.w.build_map_from_save(MapSave.get_save_from_dict(match_data[GSC.MatchArgs.Map]))
         self.UI.w.adapt_scale_to_win_size()

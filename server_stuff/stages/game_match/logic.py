@@ -5,14 +5,16 @@ from core.world.base.map_save import MapSave
 from core.world.base.logic.world import LogicWorld
 from server_stuff.stages.abs import LogicStageAbs
 from game_client.server_interactions.network.socket_connection import ConnectionWrapperAbs
+from server_stuff.constants.game_stage import GameStgConst as GSC
 
 from server_stuff.constants.common import CommonConst
-from server_stuff.constants.game_stage import GameStgConst as GSC
 from server_stuff.constants.stages import ServerStages
 from core.mech.details.names import DetailNames
 
+from server_stuff.stages.game_match.components.ready import ReadyLogic
 
-class GameMatch(LogicStageAbs):
+
+class GameMatch(LogicStageAbs, ReadyLogic):
     def __init__(self, game_server, server, current_map: MapSave):
         super(GameMatch, self).__init__(game_server, server)
         self.w = LogicWorld()
@@ -26,14 +28,9 @@ class GameMatch(LogicStageAbs):
         self.time_sync = 0
         self.fill_default_details()
 
+        ReadyLogic.__init__(self)
+
     def fill_default_details(self):
-        # DEFAULT_DETAILS_POOL_SETTINGS = {
-        #     DetailNames.SimpleMetal.Body: 1,
-        #     DetailNames.SimpleMetal.Leg: 2,
-        #     DetailNames.SimpleMetal.Arm: 2,
-        # }
-        # l = []
-        print(self.players_objs)
         for player in self.players_objs.values():
             mech = player.mech
             body = Global.details_pool.add_detail_to_pool(DetailNames.SimpleMetal.Body)
@@ -48,12 +45,6 @@ class GameMatch(LogicStageAbs):
             mech.set_left_detail(1, left_leg)
             right_leg = Global.details_pool.add_detail_to_pool(DetailNames.SimpleMetal.Leg)
             mech.set_right_detail(1, right_leg)
-
-        # for detail_name, count in DEFAULT_DETAILS_POOL_SETTINGS.items():
-        #     for i in range(count * self.game_data.players_num // 1):
-        #         l.append((detail_name, None))
-        #
-        # Global.details_pool.load_details_list(l)
 
     def update(self):
         Global.round_clock.update(time.time() - self.last_update)
@@ -90,7 +81,7 @@ class GameMatch(LogicStageAbs):
         response[ServerStages.SERVER_STAGE] = ServerStages.Game
 
     def get_connection_dict(self) -> dict:
-        return {
+        conn_d = {
             GSC.MatchData: {
                 GSC.MatchArgs.Map: self.game_server.current_map.get_save_dict(),
                 GSC.MatchArgs.DetailsPool: Global.details_pool.get_dict(),
@@ -98,3 +89,7 @@ class GameMatch(LogicStageAbs):
                 GSC.Time: Global.round_clock.time,
             },
         }
+
+        conn_d.update(self.get_ready_players_num_response())
+
+        return conn_d

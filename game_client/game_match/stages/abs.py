@@ -13,7 +13,7 @@ class Processor:
         raise NotImplementedError
 
     @abstractmethod
-    def process_req(self, r: dict):
+    def process_request(self, r: dict, **kwargs):
         raise NotImplementedError
 
     @abstractmethod
