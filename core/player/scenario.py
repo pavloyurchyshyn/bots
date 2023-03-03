@@ -1,15 +1,20 @@
+from typing import List, Dict
+from core.player.action import Action
+from core.player.abs import PlayerAbs
+
+
 class Scenario:
-    def __init__(self, player, actions_count=3):
+    def __init__(self, player: PlayerAbs, actions_count: int = None):
+        actions_count = 3 if actions_count is None else actions_count
         self.__actions_count = actions_count
-        self.player = player
+        self.player: PlayerAbs = player
 
-        self.__actions_keys = tuple(range(self.__actions_count))
-        self.__actions = dict.fromkeys(self.__actions_keys)
+        self.__actions: Dict[str, Action] = dict.fromkeys(tuple(range(self.__actions_count)))
 
-    def cancel_action(self, k):
+    def cancel_action(self, k: str):
         self.__actions[k] = None
 
-    def add(self, action):
+    def add(self, action: Action):
         for k, action_slot in self.__actions.items():
             if action_slot is None:
                 self.add_action(k, action)
@@ -17,13 +22,13 @@ class Scenario:
 
         raise NoEmptyStep
 
-    def add_action(self, k, action):
-        if k not in self.__actions_keys:
-            raise IndexError(f'Wrong scenario key "{k}" not in {self.__actions_keys}')
+    def add_action(self, k: str, action: Action):
+        if k not in self.__actions:
+            raise IndexError(f'Wrong scenario key "{k}" not in {self.__actions}')
 
         self.__actions[k] = action
 
-    def switch(self, k1, k2):
+    def switch(self, k1: str, k2: str):
         self.__actions[k1], self.__actions[k2] = self.__actions[k2], self.__actions[k1]
 
     def reload(self):
@@ -42,6 +47,11 @@ class Scenario:
     @property
     def len(self):
         return self.__actions_count
+
+    def get_dict(self) -> dict:
+        return {
+            'actions_count': self.__actions_count,
+        }
 
 
 class NoEmptyStep(Exception):

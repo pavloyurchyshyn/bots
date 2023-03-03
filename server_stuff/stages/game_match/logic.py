@@ -31,6 +31,7 @@ class GameMatch(LogicStageAbs, ReadyLogic):
         ReadyLogic.__init__(self)
 
     def fill_default_details(self):
+        # TODO move to mech logic class
         for player in self.players_objs.values():
             mech = player.mech
             body = Global.details_pool.add_detail_to_pool(DetailNames.SimpleMetal.Body)

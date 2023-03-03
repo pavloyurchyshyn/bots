@@ -34,7 +34,7 @@ class Game:
         Global.logger.info(f'Sending creds: {Global.network_data.credentials}')
         Global.connection.send_json(Global.network_data.credentials)
         response = Global.connection.recv_json()
-        Global.logger.debug(f'Response: {response}')
+        Global.logger.warning(f'Response: {response}')
         Global.logger.warning(f"Player obj data: {response.get(LoginArgs.Player)}")
         self.player = Player.get_player_from_dict(response.get(LoginArgs.Player, {}))
         if response[LoginArgs.Connected]:
@@ -51,19 +51,20 @@ class Game:
         elif response[ServerStages.SERVER_STAGE] == ServerStages.GameSetup:
             Global.logger.info(f'Connection to {ServerStages.GameSetup} stage')
             self.connect_to_setup(response)
-            self.wait_for_ready_and_start_thread()
+            self.send_ready_and_start_thread()
 
         elif response[ServerStages.SERVER_STAGE] == ServerStages.Game:
             Global.logger.info(f'Connection to {ServerStages.Game} stage')
             self.connect_to_game(response)
-            self.wait_for_ready_and_start_thread()
+            self.send_ready_and_start_thread()
 
         else:
             raise NotImplementedError('Unknown stage')
 
-    def wait_for_ready_and_start_thread(self):
+    def send_ready_and_start_thread(self):
         # while not Global.connection.recv_json().get('ready'):
         #     time.sleep(0.1)
+        Global.connection.send_json({'ready': True})
         Global.logger.info('Player thread on server is ready')
         self.start_recv_thread()
 

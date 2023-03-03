@@ -8,3 +8,4 @@ class PlayerAttrs:
     Number = 'number'
     Spawn = 'spawn'
     Mech = 'mech'
+    Scenario = 'scenario'

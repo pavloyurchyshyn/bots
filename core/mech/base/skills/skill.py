@@ -26,7 +26,6 @@ class BaseSkill:
         self.energy_cost = energy_cost
         self.cooldown_value = cooldown
         self.cooldown = 0
-        self.use_dict: dict = {}
         self.validators = validators
 
     def update_cd(self):
@@ -41,5 +40,5 @@ class BaseSkill:
     def on_cooldown(self) -> bool:
         return self.cooldown_value > 0
 
-    def clear_use(self):
-        self.use_dict.clear()
+    # def clear_use(self):
+    #     self.use_dict.clear()

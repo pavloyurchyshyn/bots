@@ -1,6 +1,7 @@
 from global_obj.main import Global
 
 from visual.UI.base.menu import Menu
+from visual.cards.skill.card import SkillCard
 from visual.UI.popup_controller import PopUpsController
 from visual.UI.base.mixins import DrawElementBorderMixin
 
@@ -68,6 +69,20 @@ class GameMatch(Menu, PopUpsController,
             self.draw_border_around_element(collided_popup_btn)
 
         self.draw_use_trace()
+
+    def check_for_card_select(self):
+        if Global.mouse.l_up:
+            if self.get_rect().collidepoint(Global.mouse.pos):
+                for card in self.skills_deck:
+                    if card.get_rect().collidepoint(Global.mouse.pos):
+                        self.selected_card_to_use: SkillCard = card
+                        break
+                else:
+                    self.selected_card_to_use: SkillCard = None
+            else:
+                self.selected_card_to_use: SkillCard = None
+        elif Global.mouse.r_up:
+            self.selected_card_to_use = None
 
     def update_popups(self):
         collided_popup_btn = None

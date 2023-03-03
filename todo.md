@@ -2,10 +2,12 @@
 First priority:
   - ### CREATE COMPILER SCRIPTS
   - ~~CREATE DETAILS POOL~~
-  - create detail pool settings
-  - mech build
-  - skills cards
+  - ~~create detail pool settings~~
+  - ~~mech build~~
+  - ~~skills cards~~
+  - ### MAKE USED CARDS POSITIONS
   - use skill functionality
+    - skill chain if needed to choose few things
   - detail wearing
   - game stages
 ----------------------
@@ -22,10 +24,20 @@ First priority:
   - player obj
   
   - #### SETUP STAGE
+    - ~~map selection~~
     - connected players
+    - add settings edit
+    - edit players number
+    - kick players
+    - lock connections
+    - set password
+    - edit nickname
+    - game settings
+      - timer
+      - details pool
     
-  - #### JOIN MENU
-    - add nickname edit
+    - #### JOIN MENU
+      - add nickname edit
   
 
 - Multiplayer
@@ -43,8 +55,10 @@ First priority:
   - Tile
     - ~~direction~~ _declined_
     - images
+      - different hp stages for tile
+      - animations
   - tiles textures system
-  - tiles textures images
+      - different hp stages for tile
   - ~~tiles texture direction~~ _declined_
 
 ----------------------
@@ -55,4 +69,6 @@ First priority:
 
 ## BUGS:
  - map scale
- - map editor crash with empty texture
+
+### Fixed bugs 
+- ~~map editor crash with empty texture~~

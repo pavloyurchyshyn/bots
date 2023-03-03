@@ -22,19 +22,7 @@ class CardsC:
 
         self.selected_card_to_use: SkillCard = None
 
-    def check_for_card_select(self):
-        if Global.mouse.l_up:
-            if self.get_rect().collidepoint(Global.mouse.pos):
-                for card in self.skills_deck:
-                    if card.get_rect().collidepoint(Global.mouse.pos):
-                        self.selected_card_to_use: SkillCard = card
-                        break
-                else:
-                    self.selected_card_to_use: SkillCard = None
-            else:
-                self.selected_card_to_use: SkillCard = None
-        elif Global.mouse.r_up:
-            self.selected_card_to_use = None
+
 
     def deck_cards_move_check(self):
         if CardsDeck.y + self.cards_dy > Global.display.get_height() - CardsDeck.v_size:

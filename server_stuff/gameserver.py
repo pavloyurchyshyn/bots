@@ -8,7 +8,7 @@ from core.player.player import Player
 from core.mech.base.mech import BaseMech
 from core.world.base.map_save import MapSave
 from core.world.maps_manager import MapsManager
-from core.game_logic.game_components.game_data.game_data import GameData
+from core.game_logic.game_data.game_data import GameData
 
 from game_client.server_interactions.network.socket_connection import SocketConnection
 from game_client.server_interactions.network.socket_connection import ConnectionWrapperAbs
@@ -91,6 +91,7 @@ class GameServer:
                         spawn=(10, 10),  # TODO position
                         is_admin=is_admin,
                         mech=BaseMech((10, 10)),
+                        actions_count=self.game_data.actions_count,
                         )
         return player
 
@@ -102,7 +103,17 @@ class GameServer:
 
             LOGGER.info(f'Started thread for: {player_obj.token}')
             self.connected_before.add(player_obj.token)
-            self.send_to_all({CommonConst.Chat: f"{player_obj.nickname} {player_obj.token} connected. Admin {player_obj.is_admin}"})
+            while True:
+                # wait for ready
+                player_request = connection.recv_json()
+                if player_request['ready']:
+                    self.send_to_all({CommonConst.Chat:
+                                          f"{player_obj.nickname} {player_obj.token} connected. Admin {player_obj.is_admin}"})
+                    break
+                else:
+                    # TODO failed to connect
+                    return
+
             # connection.send_json({'ready': True})
             while self.alive and connection.alive:
                 player_request = connection.recv_json()

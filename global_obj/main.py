@@ -7,7 +7,7 @@ from core.players import PlayersData
 from core.mech.base.pools.skills_pool import SkillsPool
 from core.mech.base.pools.details_pool import DetailsPool
 from core.mech.base.mech_serializer import MechSerializer
-from core.game_logic.game_components.game_data.id_generator import IdGenerator
+from core.game_logic.game_data.id_generator import IdGenerator
 
 __all__ = 'Global',
 

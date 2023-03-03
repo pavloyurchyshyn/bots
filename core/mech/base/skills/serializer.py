@@ -10,7 +10,7 @@ class SkillSerializer:
         s = Global.skill_pool.get_skill_by_id(json_[SkillAttrs.UID])
         s.cooldown = json_.get(SkillAttrs.CD, s.cooldown)
         s.energy_cost = json_.get(SkillAttrs.ECost, s.energy_cost)
-        s.use_dict = json_.get(SkillAttrs.UseJson, s.use_dict)
+        # s.use_dict = json_.get(SkillAttrs.UseJson, s.use_dict)
         return s
 
     @staticmethod
@@ -19,7 +19,7 @@ class SkillSerializer:
             SkillAttrs.UID: skill.unique_id,
             SkillAttrs.CD: skill.cooldown,
             SkillAttrs.ECost: skill.energy_cost,
-            SkillAttrs.UseJson: skill.use_dict,
+            # SkillAttrs.UseJson: skill.use_dict,
         }
 
     @staticmethod
