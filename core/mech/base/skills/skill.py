@@ -28,6 +28,9 @@ class BaseSkill:
         self.cooldown = 0
         self.validators = validators
 
+    def is_valid_target(self, target: str) -> bool:
+        return target in self.targets
+
     def update_cd(self):
         if self.cooldown > 0:
             self.cooldown -= 1

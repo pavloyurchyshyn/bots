@@ -5,6 +5,7 @@ from visual.cards.skill.card import SkillCard
 from visual.UI.popup_controller import PopUpsController
 from visual.UI.base.mixins import DrawElementBorderMixin
 
+from core.player.player import Player
 from core.mech.base.mech import BaseMech
 
 from game_client.game_match.stages.match_menu.UI_components.chat import ChatC
@@ -13,10 +14,10 @@ from game_client.game_match.stages.match_menu.UI_components.tasks import TasksC
 from game_client.game_match.stages.match_menu.UI_components.world import WorldC
 from game_client.game_match.stages.match_menu.UI_components.ready import ReadyW
 from game_client.game_match.stages.match_menu.UI_components.tile import TileInfoC
+from game_client.game_match.stages.match_menu.UI_components.card_use import CardUseC
 from game_client.game_match.stages.match_menu.UI_components.cards_deck import CardsC
 from game_client.game_match.stages.match_menu.UI_components.used_cards import UsedCardsC
 from game_client.game_match.stages.match_menu.UI_components.hp_and_mana import HpAndManaC
-
 from game_client.game_match.stages.match_menu.settings.buttons import BUTTONS_DATA
 
 
@@ -25,10 +26,11 @@ class GameMatch(Menu, PopUpsController,
                 CardsC, UsedCardsC,
                 TileInfoC, TasksC, HpAndManaC,
                 DrawElementBorderMixin,
+                CardUseC
                 ):
 
     def __init__(self, processor):
-        self.player = processor.player
+        self.player: Player = processor.player
         self.ready_win = ReadyW(self)
         self.processor = processor
         super(GameMatch, self).__init__(BUTTONS_DATA)
@@ -41,6 +43,7 @@ class GameMatch(Menu, PopUpsController,
         TileInfoC.__init__(self)
         TasksC.__init__(self)
         HpAndManaC.__init__(self)
+        CardUseC.__init__(self)
 
     def update(self):
         Global.display.fill((0, 0, 0))

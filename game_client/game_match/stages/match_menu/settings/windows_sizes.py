@@ -64,6 +64,7 @@ class UsedCards:
     y = scaled_h(0.725)
     h_size = scaled_w(0.5)
     v_size = CARDS_V_SIZE  # scaled_h(0.1355)
+    size = h_size, v_size
     rect = (x, y, h_size, v_size)
 
 
@@ -88,6 +89,7 @@ class CardsDeck:
     y = scaled_h(0.725 + 0.1375 + 0.02)
     h_size = scaled_w(0.5)
     v_size = CARDS_V_SIZE  # scaled_h(0.1175)
+    size = h_size, v_size
     rect = (x, y, h_size, v_size)
 
 

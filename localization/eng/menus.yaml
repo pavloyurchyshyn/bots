@@ -59,6 +59,7 @@ UI:
   match_menu:
     size: Size
     tiles: tiles
+    leave_game: You want to leave game?
 
 errors:
   unknown: Unknown error

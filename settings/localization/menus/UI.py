@@ -38,5 +38,7 @@ class UILocal:
         match = build_path(UI_path, 'match_menu')
         Size = build_path(match, 'size')
         Tiles = build_path(match, 'tiles')
+        LeaveGame = build_path(match, 'leave_game')
+
         Height = build_path('menus', 'common', 'height')
         Width = build_path('menus', 'common', 'width')

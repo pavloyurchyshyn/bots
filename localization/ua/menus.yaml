@@ -26,7 +26,7 @@ UI:
   # ----------------------------------
   new_game_menu:
     back: X
-    start: Start
+    start: Поїхали!
 
   # ----------------------------------
   round:
@@ -57,9 +57,9 @@ UI:
   match_menu:
     size: Розмір
     tiles: клітинок
+    leave_game: Покинути гру?
 
 
 errors:
   unknown: 'Невідома халепа'
-  connection_lost: |
-    вишка відрізали світло. Ющенко! Так!
+  connection_lost: Втрачене з'єднання з сервером.
