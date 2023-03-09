@@ -1,6 +1,6 @@
 from typing import Dict
 from core.world.base.logic.world import LogicWorld
-from core.game_logic.game_data.game_data import GameData
+from game_logic.game_data.game_data import GameData
 
 
 class Game(GameData):

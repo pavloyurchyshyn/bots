@@ -5,14 +5,15 @@ from core.mech.base.mech import BaseMech
 from core.world.base.map_save import MapSave
 from game_client.game_match.stages.abs import Processor
 from game_client.game_match.stages.match_menu.UI import GameMatch
+from core.player.constants import PlayerAttrs
 from server_stuff.constants.common import CommonConst
 from server_stuff.constants.game_stage import GameStgConst as GSC
-from core.player.constants import PlayerAttrs
 
-from game_client.game_match.stages.match_menu.proc_components.ready import ReadProc
+from game_client.game_match.stages.match_menu.proc_components.ready import ReadyProc
+from game_client.game_match.stages.match_menu.proc_components.cards import CardsProc
 
 
-class MatchStage(Processor, ReadProc):
+class MatchStage(Processor, ReadyProc, CardsProc):
 
     def __init__(self, game, admin: bool):
         super(MatchStage, self).__init__(admin=admin)
@@ -24,7 +25,8 @@ class MatchStage(Processor, ReadProc):
             CommonConst.Chat: self.process_player_msg,
         }
 
-        ReadProc.__init__(self)
+        ReadyProc.__init__(self)
+        CardsProc.__init__(self)
 
     def update(self):
         self.UI.update()

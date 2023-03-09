@@ -7,10 +7,11 @@ class SkillsCardsFabric:
     def __init__(self, skill_pool: SkillsPool):
         self.skill_pool: SkillsPool = skill_pool
         self.cards = {}
+        self.card_class: SkillCard = SkillCard
 
     def create_card(self, skill_uid: str, x: int = 0, y: int = 0) -> SkillCard:
         skill: BaseSkill = self.skill_pool.get_skill_by_id(skill_uid)
-        card = SkillCard(uid=skill_uid, skill=skill, x=x, y=y)
+        card = self.card_class(uid=skill_uid, skill=skill, x=x, y=y)
         self.add_card(card)
         return card
 
@@ -22,7 +23,7 @@ class SkillsCardsFabric:
 
     def get_cards_for_skill(self, skill: BaseSkill, x: int = 0, y: int = 0) -> SkillCard:
         if skill.unique_id not in self.cards:
-            self.add_card(SkillCard(skill.unique_id, skill, x, y))
+            self.add_card(self.card_class(skill, skill.unique_id, x, y))
 
         return self.cards[skill.unique_id]
 

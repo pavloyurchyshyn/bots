@@ -49,10 +49,16 @@ class Scenario:
         return self.__actions_count
 
     def get_dict(self) -> dict:
+        # TODO move in constant
         return {
             'actions_count': self.__actions_count,
         }
 
+    @property
+    def is_full(self) -> bool:
+        return len(tuple(filter(bool, self.__actions.values()))) == self.__actions_count
+
 
 class NoEmptyStep(Exception):
     pass
+

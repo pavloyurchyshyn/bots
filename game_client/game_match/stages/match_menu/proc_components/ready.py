@@ -2,7 +2,7 @@ from global_obj.main import Global
 from server_stuff.constants.game_stage import GameStgConst as GSC
 
 
-class ReadProc:
+class ReadyProc:
     actions: dict
 
     def __init__(self):

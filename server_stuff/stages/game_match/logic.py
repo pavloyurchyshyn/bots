@@ -4,7 +4,7 @@ from core.player.player import Player
 from core.world.base.map_save import MapSave
 from core.world.base.logic.world import LogicWorld
 from server_stuff.stages.abs import LogicStageAbs
-from game_client.server_interactions.network.socket_connection import ConnectionWrapperAbs
+from game_client.server_interactions.socket_connection import ConnectionWrapperAbs
 from server_stuff.constants.game_stage import GameStgConst as GSC
 
 from server_stuff.constants.common import CommonConst
@@ -12,9 +12,10 @@ from server_stuff.constants.stages import ServerStages
 from core.mech.details.names import DetailNames
 
 from server_stuff.stages.game_match.components.ready import ReadyLogic
+from server_stuff.stages.game_match.components.skills import SkillsLogic
 
 
-class GameMatch(LogicStageAbs, ReadyLogic):
+class GameMatch(LogicStageAbs, ReadyLogic, SkillsLogic):
     def __init__(self, game_server, server, current_map: MapSave):
         super(GameMatch, self).__init__(game_server, server)
         self.w = LogicWorld()
@@ -29,6 +30,7 @@ class GameMatch(LogicStageAbs, ReadyLogic):
         self.fill_default_details()
 
         ReadyLogic.__init__(self)
+        SkillsLogic.__init__(self)
 
     def fill_default_details(self):
         # TODO move to mech logic class

@@ -1,6 +1,6 @@
 from core.player.player import Player
 from server_stuff.constants.game_stage import GameStgConst as GSC
-from game_client.server_interactions.network.socket_connection import ConnectionWrapperAbs
+from game_client.server_interactions.socket_connection import ConnectionWrapperAbs
 
 
 class ReadyLogic:

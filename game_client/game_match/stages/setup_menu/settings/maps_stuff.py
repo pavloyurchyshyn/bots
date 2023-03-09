@@ -4,12 +4,10 @@ from visual.UI.base.text import Text
 from visual.UI.base.abs import ShapeAbs
 from visual.UI.base.button import Button
 from visual.UI.base.container import Container
-from visual.UI.yes_no_popup import YesNoPopUp
 from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorderMixin, BuildRectShapeMixin
 from core.world.base.map_save import MapSave
-from game_client.stages.styles import get_green_btn_style, get_red_btn_style
+from game_client.stages.styles import get_green_btn_style
 from settings.screen.size import scaled_w, scaled_h
-from game_client.server_interactions.network.socket_connection import ConnectionWrapperAbs
 from server_stuff.constants.setup_stage import SetupStgConst
 
 

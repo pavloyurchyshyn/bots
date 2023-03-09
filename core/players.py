@@ -1,6 +1,6 @@
 from typing import Dict, Union
 from core.player.abs import PlayerAbs
-from game_client.server_interactions.network.socket_connection import SocketConnection
+from game_client.server_interactions.socket_connection import SocketConnection
 
 
 class PlayersData:

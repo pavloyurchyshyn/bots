@@ -1,11 +1,12 @@
 from typing import Iterable
 from abc import abstractmethod
-# from core.game_logic.game_data import GameGlobal
-from core.mech.base.skills.constants import Targets
+from global_obj.logger import get_logger
+from core.mech.base.skills.constants import Targets, SkillAttrs
 from core.mech.base.skills.exceptions import SpellWithoutNameError, TargetsTypeNotDefined
 
 
 class BaseSkill:
+    logger = get_logger()
     """
     Just logic without visual, description etc.
     """
@@ -28,8 +29,17 @@ class BaseSkill:
         self.cooldown = 0
         self.validators = validators
 
-    def is_valid_target(self, target: str) -> bool:
-        return target in self.targets
+    def get_base_dict(self) -> dict:
+        return {
+            SkillAttrs.UID: self.unique_id,
+            SkillAttrs.CD: self.cooldown,
+            SkillAttrs.ECost: self.energy_cost,
+            SkillAttrs.OnCD: self.on_cooldown,
+        }
+
+    def update_base_attrs(self, attr: dict) -> None:
+        self.cooldown = attr.get(SkillAttrs.CD, self.cooldown)
+        self.energy_cost = attr.get(SkillAttrs.ECost, self.energy_cost)
 
     def update_cd(self):
         if self.cooldown > 0:
@@ -37,11 +47,30 @@ class BaseSkill:
 
     @abstractmethod
     def use(self, **kwargs) -> dict:
+        """
+        Do action.
+        """
         raise NotImplementedError
 
     @property
     def on_cooldown(self) -> bool:
         return self.cooldown_value > 0
 
-    # def clear_use(self):
-    #     self.use_dict.clear()
+    @abstractmethod
+    def get_dict(self) -> dict:
+        raise NotImplementedError
+
+    @abstractmethod
+    def update_attrs(self, attr: dict) -> None:
+        raise NotImplementedError
+
+    def validate_use(self, player, world, details_pool, players, **kwargs) -> bool:
+        for validation in self.validators:
+            if not validation(player=player, world=world,
+                              details_pool=details_pool,
+                              players=players, skill=self,
+                              skill_uid=self.unique_id,
+                              **kwargs):
+                return False
+
+        return True

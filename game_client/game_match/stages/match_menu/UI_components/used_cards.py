@@ -11,22 +11,24 @@ from core.player.player import Player
 
 class UsedCardsC:
     player: Player
+    cards_dy: int
+    CARDS_MOVE_SPEED: int
 
     def __init__(self):
         self.used_cards_back_surface = None
         self.used_cards_positions_dict: Dict[int, tuple] = {}
         self.used_cards_dict: Dict[int, SkillCard] = {}
-        self.render()
+        self.__render()
 
-    def render(self):
+    def __render(self):
         self.used_cards_back_surface = Surface(UsedCards.size)
         self.used_cards_back_surface.fill((100, 100, 100))
 
-        self.render_rects()
+        self.__render_used_cards_rects()
 
         draw_rect(self.used_cards_back_surface, (255, 255, 255), (0, 0, UsedCards.h_size, UsedCards.v_size), 1)
 
-    def render_rects(self) -> list:
+    def __render_used_cards_rects(self) -> list:
         rects = []
         actions_num = self.player.scenario.len
         free_size = UsedCards.h_size - actions_num * SkillCardSize.X_SIZE
@@ -52,6 +54,7 @@ class UsedCardsC:
 
     def draw_used_cards(self):
         Global.display.blit(self.used_cards_back_surface, (UsedCards.x, UsedCards.y))
+        # for i, pos in self.ca
 
     def used_cards_move_check(self):
         if HpBar.y + self.cards_dy < UsedCards.y + UsedCards.v_size:
@@ -61,3 +64,7 @@ class UsedCardsC:
 
     def used_cards_collide_point(self, pos: tuple) -> bool:
         return Rect(UsedCards.x, UsedCards.y, UsedCards.h_size, UsedCards.v_size).collidepoint(*pos)
+
+    def use_card(self, uid: str):
+        # TODO
+        pass

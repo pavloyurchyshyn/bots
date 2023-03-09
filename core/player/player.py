@@ -22,7 +22,7 @@ class Player(PlayerAbs):
         self.nickname: str = nickname
         self.spawn: tuple[int, int] = spawn
         self.mech: BaseMech = mech
-        self.scenario = Scenario(self, actions_count=actions_count)
+        self.scenario: Scenario = Scenario(self, actions_count=actions_count)
 
     def get_dict(self):
         return {

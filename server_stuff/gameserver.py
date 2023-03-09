@@ -8,10 +8,10 @@ from core.player.player import Player
 from core.mech.base.mech import BaseMech
 from core.world.base.map_save import MapSave
 from core.world.maps_manager import MapsManager
-from core.game_logic.game_data.game_data import GameData
+from game_logic.game_data.game_data import GameData
 
-from game_client.server_interactions.network.socket_connection import SocketConnection
-from game_client.server_interactions.network.socket_connection import ConnectionWrapperAbs
+from game_client.server_interactions.socket_connection import SocketConnection
+from game_client.server_interactions.socket_connection import ConnectionWrapperAbs
 
 from server_stuff.stages.abs import LogicStageAbs
 from server_stuff.stages.game_setup.logic import GameSetup

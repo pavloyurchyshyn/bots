@@ -77,7 +77,7 @@ class MechSerializer:
 
 if __name__ == '__main__':
     from core.mech.base.test_mech import MetalMech
-    from core.game_logic.game_data.id_generator import IdGenerator
+    from game_logic import IdGenerator
 
     builder = MechSerializer(DetailsPool(IdGenerator()))
     builder.details_pool.load_details_list([

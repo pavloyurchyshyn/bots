@@ -3,20 +3,21 @@ class SkillAttrs:
     CD = 'cd'
     ECost = 'ec'
     UseJson = 'use_j'
+    OnCD = 'on_cd'
 
 
 class Targets:
-    SelfMech = 'self_mech'
-    AnotherMech = 'another_mech'
-    AnyMech = 'any_mech'
+    # SelfMech = 'self_mech'
+    # AnotherMech = 'another_mech'
+    AnyMech = 'mech'
 
     Tile = 'tile'
-    Tiles = 'tiles'
+    # Tiles = 'tiles'
 
-    Detail = 'detail'
-    Details = 'details'
+    # Detail = 'detail'
+    # Details = 'details'
 
-    Skill = 'skill'
+    # Skill = 'skill'
 
     NoTarget = 'no_target'
 
@@ -25,7 +26,3 @@ class ReservedSkillsIds:
     SwitchDetailSkillId = 'switch_detail'
     DisconnectDetailSkillId = 'disconnect_detail'
 
-
-class UseKeys:
-    Mech = 'mech'
-    NewPos = 'new_pos'

@@ -1,7 +1,7 @@
 from global_obj.main import Global
 from server_stuff.stages.abs import LogicStageAbs
 from server_stuff.constants.stages import ServerStages
-from game_client.server_interactions.network.socket_connection import ConnectionWrapperAbs
+from game_client.server_interactions.socket_connection import ConnectionWrapperAbs
 from core.world.maps_manager import MapsManager
 from server_stuff.constants.setup_stage import SetupStgConst as SSC
 

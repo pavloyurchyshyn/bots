@@ -6,12 +6,14 @@ from core.player.player import Player
 from visual.cards.skill.card import SkillCard
 from game_client.game_match.stages.match_menu.settings.windows_sizes import CardsDeck
 from settings.visual.cards import SkillCardSize
+from visual.cards.skill.skill_cards_fabric import SkillsCardsFabric
 
 
 class CardsC:
     CARDS_MOVE_SPEED = 250
     player: Player
     selected_card_to_use: SkillCard
+    skill_cards_fabric: SkillsCardsFabric
 
     def __init__(self):
         self.deck_back_surface = Surface(CardsDeck.size)
@@ -59,7 +61,7 @@ class CardsC:
         self.skills_deck.clear()
         if self.player.mech:
             for skill in self.player.skills:
-                self.skills_deck.append(SkillCard(skill))
+                self.skills_deck.append(self.skill_cards_fabric.get_cards_for_skill(skill))  # TODO move to factory
 
             self.calculate_cards_positions()
 

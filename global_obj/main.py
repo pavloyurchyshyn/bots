@@ -7,7 +7,7 @@ from core.players import PlayersData
 from core.mech.base.pools.skills_pool import SkillsPool
 from core.mech.base.pools.details_pool import DetailsPool
 from core.mech.base.mech_serializer import MechSerializer
-from core.game_logic.game_data.id_generator import IdGenerator
+from game_logic.game_data.id_generator import IdGenerator
 
 __all__ = 'Global',
 
@@ -38,9 +38,8 @@ class Global:
         from global_obj.display import MAIN_DISPLAY as __display
         from settings.network import NetworkData as __NetworkData
         from settings.localization import LocalizationLoader as __localization
-        from game_client.server_interactions.network.socket_connection import SocketConnection as __SC
+        from game_client.server_interactions.socket_connection import SocketConnection as __SC
         from visual.textures.textures import Textures as __Textures
-        # from visual.cards.skill_cards_fabric import SkillsCardsFabric as __SkillsCardsFabric
 
         display: __Surface = __display
         keyboard = __keyboard(logger)
@@ -50,7 +49,6 @@ class Global:
         network_data = __NetworkData()
         connection = __SC(logger=logger)
         textures: __Textures = __Textures()
-        # skill_cards_fabric: __SkillsCardsFabric = __SkillsCardsFabric(skill_pool)
         # TODO add sound
 
 

@@ -34,7 +34,7 @@ class SkillCard(SkillCardAbs):
         self.style = style if style else self.default_style
 
         self.skill: BaseSkill = skill
-        self.surface: Surface = get_surface(self.h_size, self.v_size, color=(50, 50, 50))
+        self.surface: Surface = get_surface(self.h_size, self.v_size, transparent=1)
         self.text: Text = Text(uid='',
                                text=skill.verbal_name,  # TODO add localization
                                y_k=0.01,

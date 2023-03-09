@@ -20,6 +20,9 @@ from game_client.game_match.stages.match_menu.UI_components.used_cards import Us
 from game_client.game_match.stages.match_menu.UI_components.hp_and_mana import HpAndManaC
 from game_client.game_match.stages.match_menu.settings.buttons import BUTTONS_DATA
 
+from server_stuff.constants.game_stage import GameStgConst as GSC
+from visual.cards.skill.skill_cards_fabric import SkillsCardsFabric
+
 
 class GameMatch(Menu, PopUpsController,
                 WorldC, ChatC, MechC,
@@ -30,9 +33,10 @@ class GameMatch(Menu, PopUpsController,
                 ):
 
     def __init__(self, processor):
+        self.processor = processor
         self.player: Player = processor.player
         self.ready_win = ReadyW(self)
-        self.processor = processor
+        self.skill_cards_fabric: SkillsCardsFabric = SkillsCardsFabric(Global.skill_pool)
         super(GameMatch, self).__init__(BUTTONS_DATA)
         PopUpsController.__init__(self)
         WorldC.__init__(self)
@@ -61,7 +65,6 @@ class GameMatch(Menu, PopUpsController,
         self.draw_used_cards()
         self.draw_hp_and_mana_win()
 
-        self.check_for_card_select()
         self.draw_cards(dy=self.cards_dy)
 
         self.ready_win.update()
@@ -71,6 +74,13 @@ class GameMatch(Menu, PopUpsController,
         if collided_popup_btn:
             self.draw_border_around_element(collided_popup_btn)
 
+        if self.selected_card_to_use:
+            self.check_for_card_use()
+            self.check_for_card_select()
+        else:
+            self.check_for_card_select()
+            self.check_for_card_use()
+
         self.draw_use_trace()
 
     def check_for_card_select(self):
@@ -78,14 +88,18 @@ class GameMatch(Menu, PopUpsController,
             if self.get_rect().collidepoint(Global.mouse.pos):
                 for card in self.skills_deck:
                     if card.get_rect().collidepoint(Global.mouse.pos):
+                        # Global.connection.send_json({GSC.SkillM.SelectSkill: card.skill.unique_id})
                         self.selected_card_to_use: SkillCard = card
                         break
                 else:
-                    self.selected_card_to_use: SkillCard = None
+                    self.unselect_card_to_use()
             else:
-                self.selected_card_to_use: SkillCard = None
+                self.unselect_card_to_use()
         elif Global.mouse.r_up:
-            self.selected_card_to_use = None
+            self.unselect_card_to_use()
+
+    def unselect_card_to_use(self):
+        self.selected_card_to_use = None
 
     def update_popups(self):
         collided_popup_btn = None
