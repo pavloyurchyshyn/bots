@@ -1,5 +1,5 @@
 from global_obj.main import Global
-from server_stuff.constants.game_stage import GameStgConst as GSC
+from server_stuff.constants.requests import GameStgConst as GSC
 from visual.cards.skill.skill_cards_fabric import SkillsCardsFabric
 
 

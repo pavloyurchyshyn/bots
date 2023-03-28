@@ -1,123 +1,120 @@
 import os
 
 os.environ['VisualPygameOn'] = 'off'
+import _thread
+import uvicorn
+import asyncio
+from typing import Dict
 
-import time
-import socket
-import traceback
-from _thread import start_new_thread
-from global_obj.logger import get_logger
-
-from server_stuff.gameserver import GameServer
+from global_obj.main import Global
+from fastapi import FastAPI, WebSocket
+from server_stuff.player_client import Client
+from server_stuff.abs.server import ServerAbc
+from server_stuff.server_login import ServerConnect
 from server_stuff.server_config import ServerConfig
+from server_stuff.server_game_proxy.main import ServerGameProxy
+from server_stuff.constants.requests import CommonReqConst
 from server_stuff.constants.start_and_connect import LoginArgs
-from game_client.server_interactions.socket_connection import SocketConnection
-
-LOGGER = get_logger()
 
 
-class Server(ServerConfig):
-    """
-    This part responsible about login, reconnect, etc.
-    """
+class PlayerToken(str):
+    pass
 
+
+class GameServer(FastAPI, ServerConnect, ServerAbc):
     def __init__(self):
-        super(Server, self).__init__()
-        self.accepting_connection = True
-        self.socket_opened = True
-        self.socket = None
-        self.address = ''  # socket.gethostbyname(socket.gethostname())
-        self.game_server = GameServer(self)
+        super(GameServer, self).__init__()
+        ServerConnect.__init__(self)
+        self.config: ServerConfig = ServerConfig()
+        self.alive_connections: Dict[PlayerToken, Client] = {}
+        self.game: ServerGameProxy = ServerGameProxy(self)
+        self.server_alive: bool = True
 
-    def run(self):
-        self.setup_socket()
-        self.handle_connections()
-        self.game_server.run()
-        LOGGER.info('Game server loop stopped.')
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        if not self.server_alive:
+            return
 
-    def setup_socket(self):
-        try:
-            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.socket.bind((self.address, self.port))
-            self.socket.listen()
+        status, client = await self.process_auth(websocket)
 
-        except Exception as e:
-            LOGGER.error(e)
-            raise e
+        response = {LoginArgs.Result.Status: status}
+        if status == LoginArgs.Result.Connected:
+            self.alive_connections[client.token] = client
+            self.game.connect(response, client)
+            response[LoginArgs.ClientAttrs.ClientData] = client.dict()
+            await websocket.send_json(response)
+
         else:
-            LOGGER.info('Connection successfully opened.')
+            await websocket.send_json(response)
+            return
 
-    def handle_connections(self):
-        start_new_thread(self.__handle_connections, ())
+        # TODO process connection
+        self.notify_about_new_connection(client)
+        self.send_updated_connection_list()
+        self.send_player_slots()
+        await self.handle_client_thread(client)
 
-    def __handle_connections(self):
+    def send_player_slots(self):
+        self.sync_broadcast(self.game.get_players_slots_dict())
+
+    def send_updated_connection_list(self):
+        self.sync_broadcast(self.game.get_connected_players_dict())
+
+    def notify_about_new_connection(self, client: Client):
+        self.sync_broadcast({CommonReqConst.Chat: f'{client.nickname} connected.'})
+
+    def sync_broadcast(self, data: dict):
+        asyncio.create_task(self.broadcast(data))
+
+    def sync_send_to_client(self, client: Client, data: dict):
+        asyncio.create_task(self.send_to_client(client, data))
+
+    async def handle_client_thread(self, client: Client):
         try:
-            while self.game_server.alive:
-                if not self.accepting_connection:
-                    time.sleep(5)
-                    continue
-
-                LOGGER.info('Waiting for connection')
-                player_connection, (addr, port) = self.socket.accept()
-                client_data = SocketConnection.recv_from_connection(player_connection)
-                client_data = SocketConnection.recv_to_json(client_data)
-                LOGGER.info(f'Client data: {client_data}')
-                client_token = client_data.get(LoginArgs.Token)
-                is_admin = client_token == self.admin_token
-
-                if client_token in self.game_server.connected_before:
-                    LOGGER.info('Player connected before')
-                    connection = SocketConnection(LOGGER).set_socket(player_connection)
-                    if client_token in self.game_server.connections:  # if still connected
-                        # create new player
-                        LOGGER.info('Creating new token')
-                        client_token = str(hash(str((addr, port))))
-                        is_admin = False
-                        player_obj = None
-                    else:
-                        # self.game_server.reassign_player_obj(client_token, client_token)
-                        player_obj = self.game_server.players_objs[client_token]
-
-                    response = {LoginArgs.Connected: True,
-                                LoginArgs.Msg: LoginArgs.SuccLogin,
-                                LoginArgs.Token: client_token,
-                                LoginArgs.IsAdmin: is_admin,
-                                }
-                    LOGGER.info(f'Simple response: {response}')
-
-                    self.game_server.connect(client_data, response, connection, is_admin, player_obj)
-
-                elif self.password is None or client_data.get(LoginArgs.Password) == self.password:
-                    if is_admin:
-                        token = client_token
-                    else:
-                        token = str(hash(str((addr, port))))
-
-                    connection = SocketConnection(LOGGER)
-                    connection.set_socket(player_connection)
-
-                    response = {LoginArgs.Connected: True,
-                                LoginArgs.Msg: LoginArgs.SuccLogin,
-                                LoginArgs.Token: token,
-                                LoginArgs.IsAdmin: is_admin,
-                                }
-                    LOGGER.info(f'Simple response: {response}')
-
-                    self.game_server.connect(client_data, response, connection, is_admin)
-
-                else:
-                    response = {LoginArgs.Connected: False, LoginArgs.Msg: LoginArgs.BadPassword}
-                    SocketConnection(LOGGER).set_socket(player_connection).send_json(response)
-
+            while self.server_alive and client.alive:
+                data = await client.socket.receive_json()
+                self.game.process_player_request(client, data)
         except Exception as e:
-            LOGGER.error(str(e))
-            LOGGER.error(traceback.format_exc())
+            Global.logger.error(f'{Client.token} got error\n{e}')
+            await self.disconnect_client(client)
+            await self.broadcast({CommonReqConst.Chat: f'{client.nickname} disconnected.'})
+            self.send_updated_connection_list()
+
+    async def broadcast(self, data: dict) -> None:
+        for client in self.alive_connections.copy().values():
+            await self.send_to_client(client=client, data=data)
+
+    async def send_to_client(self, client: Client, data: dict):
+        try:
+            await client.socket.send_json(data)
+        except Exception as e:
+            Global.logger.info(f'Failed send to {client.token} because of: {e}')
+            Global.logger.info(f'Disconnecting {client.token}')
+            await self.disconnect_client(client)
+
+    def sync_disconnect_client(self, client: Client):
+        asyncio.create_task(self.disconnect_client(client))
+
+    async def disconnect_client(self, client: Client):
+        client.alive = False
+        self.alive_connections.pop(client.token, None)
+        try:
+            await client.socket.close()
+        except:
+            pass
+
+    def stop(self):
+        self.server_alive = False
+
+
+def main():
+    app = GameServer()
+    app.add_api_websocket_route('/', app.connect)
+    config = uvicorn.Config(app, port=app.config.port)
+    server = uvicorn.Server(config)
+    _thread.start_new_thread(server.run, ())
+    app.game.run()
 
 
 if __name__ == '__main__':
-    try:
-        s = Server()
-        s.run()
-    except Exception as e:
-        LOGGER.critical(str(e))
-        LOGGER.critical(traceback.format_exc())
+    main()

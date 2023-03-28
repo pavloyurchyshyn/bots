@@ -1,5 +1,5 @@
 from visual.UI.base.button import Button
-from game_client.stages.styles import get_green_btn_style
+from visual.styles import get_green_btn_style
 from visual.UI.constants.attrs import ButtonAttrs, TextAttrs
 from game_client.stages.maps_editor.settings.uids import UIDs
 from game_client.stages.maps_editor.settings.menu_abs import MenuAbs
@@ -10,12 +10,11 @@ from global_obj.main import Global
 def save(b: Button, forced=False):
     try:
         menu: MenuAbs = b.parent
-        print(111, menu.current_save.default)
         menu.current_save.set_name(menu.name_inp.str_text)
         menu.current_save.set_world_to_json_data(menu.w)
-
+        menu.current_save.set_spawns_amount(menu.spawns_amount)
         menu.current_save.save(forced)
-        menu.fill_container()
+        menu.fill_saves_container()
         menu.unsaved_edit = False
     except FileExistsError:
         b.parent.add_popup(YesNoPopUp(f'{menu.current_save.name}_pop',
@@ -158,10 +157,10 @@ BUTTONS_DATA = {
         'kwargs': {
             ButtonAttrs.UID: UIDs.Exit,
             ButtonAttrs.Text: 'X',
-            ButtonAttrs.XK: 0.960,
+            ButtonAttrs.XK: 0.970,
             ButtonAttrs.YK: 0.005,
-            ButtonAttrs.HSizeK: 0.03,
-            ButtonAttrs.VSizeK: 0.04,
+            ButtonAttrs.HSizeK: 0.02,
+            ButtonAttrs.VSizeK: 0.03,
             ButtonAttrs.OnClickAction: exit_to_main_menu,
         }
     },

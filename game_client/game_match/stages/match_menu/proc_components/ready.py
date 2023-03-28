@@ -1,5 +1,5 @@
 from global_obj.main import Global
-from server_stuff.constants.game_stage import GameStgConst as GSC
+from server_stuff.constants.requests import GameStgConst as GSC
 
 
 class ReadyProc:

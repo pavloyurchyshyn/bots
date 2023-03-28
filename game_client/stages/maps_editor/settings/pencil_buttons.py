@@ -1,13 +1,6 @@
 from visual.UI.base.button import Button
-from game_client.stages.styles import get_green_btn_style
-from visual.UI.constants.attrs import ButtonAttrs, TextAttrs
-from game_client.stages.maps_editor.settings.uids import UIDs
-from game_client.stages.maps_editor.settings.menu_abs import MenuAbs
-from visual.UI.yes_no_popup import YesNoPopUp
+from visual.UI.constants.attrs import ButtonAttrs
 from core.world.base.logic.tiles_data import TileTypes, EmptyTile, SpawnTile
-
-from visual.UI.base.style import ButtonStyle
-from visual.UI.constants.attrs import ButtonStyleAttrs as BtnSA, StyleAttrs as SA
 
 
 def change_tile_type(tile_type):

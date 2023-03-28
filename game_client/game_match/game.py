@@ -1,10 +1,11 @@
+import json
 import _thread
 from typing import Dict
 from global_obj.main import Global
-from core.player.player import Player
+from core.player.player import PlayerObj
 from visual.UI.ok_popup import OkPopUp
 from settings.localization.menus.UI import UILocal
-from server_stuff.constants.stages import ServerStages
+from game_logic.constants.stages import ServerStages
 from server_stuff.constants.start_and_connect import LoginArgs
 from game_client.game_match.stages.setup_proc import SetupStage
 from game_client.game_match.stages.match_proc import MatchStage
@@ -20,24 +21,28 @@ class Game:
         self.current_processor: SetupStage = None
 
         self.alive: bool = True
-        self.kill_thread: bool = False
-        self.player: Player = None
-        self.other_players: Dict[str, Player] = {}
+        # self.kill_thread: bool = False
+        # self.client = None
+        # self.player: PlayerObj = None
+        # self.other_players: Dict[str, PlayerObj] = {}
 
     def update(self):
         self.current_processor.update()
 
     def connect(self):
         Global.logger.info(f'Connecting to {Global.network_data.anon_host}')
-        Global.connection.connect(Global.network_data.server_addr)
+        Global.connection.connect(f'ws://{Global.network_data.address}:{Global.network_data.port}')
         Global.logger.info('Socket connection created')
         Global.logger.info(f'Sending creds: {Global.network_data.credentials}')
         Global.connection.send_json(Global.network_data.credentials)
         response = Global.connection.recv_json()
         Global.logger.warning(f'Response: {response}')
-        Global.logger.warning(f"Player obj data: {response.get(LoginArgs.Player)}")
-        self.player = Player.get_player_from_dict(response.get(LoginArgs.Player, {}))
-        if response[LoginArgs.Connected]:
+        Global.logger.warning(f"Player client data: {response.get(LoginArgs.ClientAttrs.ClientData)}")
+
+        client_data = response.get(LoginArgs.ClientAttrs.ClientData, {})
+        Global.network_data.token = client_data[LoginArgs.Token]
+        Global.network_data._is_admin = client_data[LoginArgs.ClientAttrs.IsAdmin]
+        if response[LoginArgs.Result.Status] == LoginArgs.Result.Connected:
             self.process_connection(response)
         else:
             Global.stages.close_game()
@@ -45,7 +50,7 @@ class Game:
 
     def process_connection(self, response: dict):
         Global.logger.info(f'Connection data: {response}')
-        if not response.get(LoginArgs.Connected):
+        if not response.get(LoginArgs.Result.Status):
             raise NotImplementedError('Add some info why failed')
 
         elif response[ServerStages.SERVER_STAGE] == ServerStages.GameSetup:
@@ -69,12 +74,12 @@ class Game:
         self.start_recv_thread()
 
     def connect_to_setup(self, response):
-        self.current_processor = self.setup_processor = SetupStage(self, response.get(LoginArgs.IsAdmin, False))
+        self.current_processor = self.setup_processor = SetupStage(self, Global.network_data.is_admin)
         self.current_processor.connect(response)
 
     def connect_to_game(self, response):
         Global.logger.info(f'Loading game: {response}')
-        self.match_processor = MatchStage(self, response.get(LoginArgs.IsAdmin, False))
+        self.match_processor = MatchStage(self, Global.network_data.is_admin)
         self.match_processor.connect(response)
         self.current_processor = self.match_processor
 
@@ -83,16 +88,16 @@ class Game:
 
     def recv_thread(self):
         Global.logger.info('Started recv thread')
-        num = Global.connection.conn_num
         while self.alive and Global.connection:
             try:
                 r = Global.connection.recv_json()
+            except ConnectionError as e:
+                Global.logger.info(f'Got thread error: {e}')
+                if self.alive:
+                    self.process_thread_exception(e)
+                break
             except Exception as e:
                 Global.logger.info(f'Got thread error: {e}')
-                Global.logger.info(f'Kill thread: {self.kill_thread}')
-                Global.logger.info(f'Current conn num: {Global.connection.conn_num} and old {num}')
-                if self.kill_thread or not Global.connection or Global.connection.conn_num != num:
-                    return
                 self.process_thread_exception(e)
             else:
                 self.current_processor.process_req(r)
@@ -103,7 +108,7 @@ class Game:
         Global.logger.error(f'Thread exception: {e}')
         try:
             raise e
-        except (ConnectionError, ConnectionResetError):
+        except (ConnectionError, ConnectionResetError, json.JSONDecodeError):
             self.alive = False
             Global.stages.close_game()
             self.add_popup_to_mmenu(UILocal.Errors.ConnectionLost)
@@ -116,7 +121,6 @@ class Game:
 
     def close(self):
         self.alive = False
-        self.kill_thread = True
 
     def __del__(self):
         self.close()

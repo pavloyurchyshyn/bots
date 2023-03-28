@@ -5,7 +5,7 @@ from visual.UI.base.button import Button
 from visual.UI.base.pop_up import PopUpBase
 from visual.UI.constants.attrs import Attrs
 from settings.localization.menus.common import CommonText
-from game_client.stages.styles import get_btn_style
+from visual.styles import get_btn_style
 
 
 class YesNoPopUp(PopUpBase):

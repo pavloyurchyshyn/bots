@@ -2,9 +2,9 @@ from visual.UI.base.button import Button
 from visual.UI.constants.attrs import ButtonAttrs
 from game_client.game_match.stages.setup_menu.settings.uids import UIDs
 from global_obj.main import Global
-from game_client.stages.styles import get_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
+from visual.styles import get_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
 from settings.localization.menus.UI import UILocal
-from server_stuff.constants.setup_stage import SetupStgConst as SSC
+# from server_stuff.constants.requests import SetupStageReq
 
 
 # TODO
@@ -35,7 +35,7 @@ BUTTONS_DATA = {
             ButtonAttrs.HSizeK: DEFAULT_H_SIZE,
             ButtonAttrs.VSizeK: DEFAULT_V_SIZE,
             ButtonAttrs.UID: UIDs.Start,
-            ButtonAttrs.Text: UILocal.NewGameMenu.start,
+            ButtonAttrs.Text: UILocal.SetupStageMenu.start,
             ButtonAttrs.OnClickAction: start_game,
             ButtonAttrs.Style: get_btn_style(),
         }

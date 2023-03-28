@@ -13,6 +13,7 @@ class SaveDictConst:
     Name = 'name'
     Metadata = 'metadata'
     Created = 'created'
+    SpawnsAmount = 'spawns_amount'
     DictTilesData = 'dict_tiles_data'
 
 
@@ -22,12 +23,14 @@ class MapSave:
                  odd: bool = True, flat: bool = True,
                  dict_tiles_data: List[List[dict | int | None]] = None,
                  created: str = None,
+                 spawns_amount: int = 0,
                  default=False):
         self.default = default
         self.__odd = odd
         self.__flat = flat
         self.__name: str = name
         self.__created = created
+        self.__spawns_amount = spawns_amount
         if self.default:
             self.__path = ''
         else:
@@ -42,9 +45,11 @@ class MapSave:
 
     def load_save_from_file(self, path: str):
         data = self.load_json_data_from_file(path)
-        self.__name = data['name']
+        self.__name = data[SaveDictConst.Name]
+        self.__created = data[SaveDictConst.Metadata][SaveDictConst.Created]
+        self.__spawns_amount = data[SaveDictConst.Metadata][SaveDictConst.SpawnsAmount]
         self.__path = path
-        self.__dict_tiles_data = data['dict_tiles_data']
+        self.__dict_tiles_data = data[SaveDictConst.DictTilesData]
 
     @property
     def json_tiles_data(self):
@@ -57,8 +62,8 @@ class MapSave:
 
     def load(self):
         data = self.load_json_data_from_file(self.__path)
-        self.__name = data['name']
-        self.__dict_tiles_data = data['dict_tiles_data']
+        self.__name = data[SaveDictConst.Name]
+        self.__dict_tiles_data = data[SaveDictConst.DictTilesData]
 
     def save(self, forced=False):
         if self.default:
@@ -113,6 +118,7 @@ class MapSave:
             SaveDictConst.Name: self.__name,
             SaveDictConst.Metadata: {
                 SaveDictConst.Created: self.__created if self.__created else str(datetime.datetime.now()),
+                SaveDictConst.SpawnsAmount: self.__spawns_amount,
             },
             SaveDictConst.DictTilesData: self.__dict_tiles_data,
         }
@@ -123,6 +129,7 @@ class MapSave:
         return MapSave(
             name=d[SaveDictConst.Name],
             created=d[SaveDictConst.Metadata][SaveDictConst.Created],
+            spawns_amount=d[SaveDictConst.Metadata][SaveDictConst.SpawnsAmount],
             dict_tiles_data=d[SaveDictConst.DictTilesData],
         )
 
@@ -188,7 +195,8 @@ class MapSave:
                        odd=self.odd,
                        flat=self.flat,
                        dict_tiles_data=copy.deepcopy(self.__dict_tiles_data),
-                       default=False
+                       default=False,
+                       spawns_amount=self.__spawns_amount,
                        )
 
     def set_name(self, name: str):
@@ -200,6 +208,13 @@ class MapSave:
             return self.__dict__ == other.__dict__
         else:
             return False
+
+    @property
+    def spawns_amount(self) -> int:
+        return self.__spawns_amount
+
+    def set_spawns_amount(self, amount: int) -> None:
+        self.__spawns_amount = amount
 
 
 if __name__ == '__main__':

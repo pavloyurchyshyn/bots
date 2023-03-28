@@ -3,11 +3,11 @@ from logging import Logger
 from global_obj.clock import Clock
 from global_obj.stages import Stages
 from global_obj.logger import get_logger
-from core.players import PlayersData
-from core.mech.base.pools.skills_pool import SkillsPool
-from core.mech.base.pools.details_pool import DetailsPool
-from core.mech.base.mech_serializer import MechSerializer
-from game_logic.game_data.id_generator import IdGenerator
+
+# from core.mech.base.pools.skills_pool import SkillsPool
+# from core.mech.base.pools.details_pool import DetailsPool
+# from core.mech.base.mech_serializer import MechSerializer
+# from game_logic.game_data.id_generator import IdGenerator
 
 __all__ = 'Global',
 
@@ -23,13 +23,13 @@ class Global:
     stages: Stages = Stages(logger)
     round_clock: Clock = Clock()  # not counting on pause etc.
     test_draw = False
+    game = None
+    # id_generator = IdGenerator()
+    # details_pool: DetailsPool = DetailsPool(id_generator)
+    # skill_pool: SkillsPool = details_pool.skills_pool
 
-    id_generator = IdGenerator()
-    details_pool: DetailsPool = DetailsPool(id_generator)
-    skill_pool: SkillsPool = details_pool.skills_pool
-
-    mech_serializer: MechSerializer = MechSerializer(details_pool)
-    players_data: PlayersData = PlayersData()
+    # mech_serializer: MechSerializer = MechSerializer(details_pool)
+    # players_data: PlayersData = PlayersData()
 
     if VisualPygameOn:
         from pygame import Surface as __Surface
@@ -38,8 +38,8 @@ class Global:
         from global_obj.display import MAIN_DISPLAY as __display
         from settings.network import NetworkData as __NetworkData
         from settings.localization import LocalizationLoader as __localization
-        from game_client.server_interactions.socket_connection import SocketConnection as __SC
         from visual.textures.textures import Textures as __Textures
+        from game_client.server_interactions.websocket_connection import WebSocketConnection as __WebSocketConnection
 
         display: __Surface = __display
         keyboard = __keyboard(logger)
@@ -47,16 +47,18 @@ class Global:
         localization = __localization()
         loc = localization
         network_data = __NetworkData()
-        connection = __SC(logger=logger)
         textures: __Textures = __Textures()
+        connection: __WebSocketConnection = __WebSocketConnection()
         # TODO add sound
+
+    @classmethod
+    def set_game_obj(cls, game):
+        cls.game = game
+
+    @classmethod
+    def del_game_obj(cls):
+        cls.game = None
 
 
 if __name__ == '__main__':
-    Global.logger.info(f'Connecting to {Global.network_data.anon_host}')
-    Global.connection.connect(Global.network_data.server_addr)
-    Global.logger.info('Socket connection created')
-    Global.logger.info(f'Sending creds: {Global.network_data.credentials}')
-    Global.connection.send_json(Global.network_data.credentials)
-    response = Global.connection.recv_json()
-    print(response)
+    pass

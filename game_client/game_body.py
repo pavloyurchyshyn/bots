@@ -69,7 +69,7 @@ class GameBody:
         """
         Global.logger.info('Joining game')
         self.game = Game(self)
-        for i in range(3):
+        for i in range(1):
             Global.logger.info(f'Connecting, attempt {i+1}')
             try:
                 self.game.connect()
@@ -89,10 +89,12 @@ class GameBody:
 
     def close_game(self):
         Global.logger.info('Closing game')
-        self.game.close()
+        if self.game:
+            self.game.close()
         self.game: Game = None
         self.server_runner = None
-        Global.connection.close()
+        if Global.connection:
+            Global.connection.close()
         Global.stages.main_menu()
 
     def check_alt_and_f4(self):

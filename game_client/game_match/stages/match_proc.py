@@ -1,13 +1,13 @@
 from typing import Callable, Dict
 from global_obj.main import Global
-from core.player.player import Player
+from core.player.player import PlayerObj
 from core.mech.base.mech import BaseMech
 from core.world.base.map_save import MapSave
 from game_client.game_match.stages.abs import Processor
 from game_client.game_match.stages.match_menu.UI import GameMatch
 from core.player.constants import PlayerAttrs
-from server_stuff.constants.common import CommonConst
-from server_stuff.constants.game_stage import GameStgConst as GSC
+from server_stuff.constants.requests import CommonReqConst
+from server_stuff.constants.requests import GameStgConst as GSC
 
 from game_client.game_match.stages.match_menu.proc_components.ready import ReadyProc
 from game_client.game_match.stages.match_menu.proc_components.cards import CardsProc
@@ -18,11 +18,11 @@ class MatchStage(Processor, ReadyProc, CardsProc):
     def __init__(self, game, admin: bool):
         super(MatchStage, self).__init__(admin=admin)
         self.game = game
-        self.player: Player = game.player
+        self.player: PlayerObj = game.player
 
         self.UI: GameMatch = GameMatch(self)
         self.actions: Dict[str, Callable] = {
-            CommonConst.Chat: self.process_player_msg,
+            CommonReqConst.Chat: self.process_player_msg,
         }
 
         ReadyProc.__init__(self)
@@ -63,10 +63,10 @@ class MatchStage(Processor, ReadyProc, CardsProc):
                 Global.players_data.players_objs[token].update_attrs(data)
             else:
                 Global.logger.warning(f'Creating new player: {data}')
-                Global.players_data.players_objs[token] = Player.get_player_from_dict(data)
+                Global.players_data.players_objs[token] = PlayerObj.get_player_from_dict(data)
 
     def process_player_msg(self, r: dict):
-        self.UI.chat.add_msg(r[CommonConst.Chat])
+        self.UI.chat.add_msg(r[CommonReqConst.Chat])
 
     @property
     def mech(self) -> BaseMech:

@@ -2,7 +2,7 @@ from visual.UI.chat import Chat
 from global_obj.main import Global
 from visual.UI.base.button import Button
 from visual.UI.base.input import InputBase
-from server_stuff.constants.common import CommonConst
+from server_stuff.constants.requests import CommonReqConst
 
 
 class ChatPart:
@@ -38,7 +38,7 @@ class ChatPart:
 
     def send(self, b: Button = None):
         if self.input.text.str_text:
-            Global.connection.send_json({CommonConst.Chat: self.input.text.str_text})
+            Global.connection.send_json({CommonReqConst.Chat: self.input.text.str_text})
             self.input.change_text('')
 
     def upd_draw_input(self):

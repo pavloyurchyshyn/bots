@@ -7,7 +7,7 @@ from visual.UI.base.text import Text
 from visual.UI.base.button import Button
 from visual.UI.base.window import Window
 from game_client.game_match.stages.match_menu.settings.windows_sizes import ReadyWindow
-from server_stuff.constants.game_stage import GameStgConst as GSC
+from server_stuff.constants.requests import GameStgConst as GSC
 
 
 class ReadyW(Window):

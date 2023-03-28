@@ -6,11 +6,11 @@ from game_client.game_match.stages.match_menu.settings.windows_sizes import Used
 from settings.visual.cards import SkillCardSize
 from visual.cards.skill.card import SkillCard
 
-from core.player.player import Player
+from core.player.player import PlayerObj
 
 
 class UsedCardsC:
-    player: Player
+    player: PlayerObj
     cards_dy: int
     CARDS_MOVE_SPEED: int
 

@@ -1,12 +1,8 @@
-from visual.UI.base.button import Button
-from game_client.stages.styles import get_green_btn_style
-from visual.UI.constants.attrs import ButtonAttrs, TextAttrs
+from visual.UI.constants.attrs import ButtonAttrs
 # from game_client.stages.maps_editor.settings.uids import UIDs
 from game_client.stages.join_menu.settings.uids import UIDs
-from game_client.stages.maps_editor.settings.menu_abs import MenuAbs
-from visual.UI.yes_no_popup import YesNoPopUp
 from global_obj.main import Global
-from game_client.stages.styles import get_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
+from visual.styles import get_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
 from settings.localization.menus.UI import UILocal
 
 
