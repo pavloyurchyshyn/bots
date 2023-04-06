@@ -25,10 +25,11 @@ class WorldC:
         # draw_circle(Global.display, (255, 0, 0), self.w.get_real_center_of_tile(self.mech.position), 5)
         # draw_circle(Global.display, (211, 211, 0), self.w.get_real_lt_of_tile(self.mech.position), 3)
 
-        x, y = self.w.get_real_center_of_tile(self.mech.position)
-        mech_img = transform.smoothscale(MECH, (MECH.get_width() * self.w.scale, MECH.get_height() * self.w.scale))
-        Global.display.blit(mech_img, (x - mech_img.get_width() // 2, y - mech_img.get_height() // 2))
-        self.w.draw_border_under_mouse()
+        if self.mech:
+            x, y = self.w.get_real_center_of_tile(self.mech.position)
+            mech_img = transform.smoothscale(MECH, (MECH.get_width() * self.w.scale, MECH.get_height() * self.w.scale))
+            Global.display.blit(mech_img, (x - mech_img.get_width() // 2, y - mech_img.get_height() // 2))
+            self.w.draw_border_under_mouse()
 
     def check_for_drag(self):
         if Global.mouse.m_hold:
@@ -65,3 +66,7 @@ class WorldC:
             self.w.dy = 0
         elif self.w.surface.get_height() + self.w.dy < MapRect.v_size:
             self.w.dy = MapRect.v_size - self.w.surface.get_height()
+
+    @property
+    def mech(self):
+        return Global.game.players[Global.network_data.slot].mech

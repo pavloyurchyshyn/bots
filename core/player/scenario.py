@@ -4,12 +4,12 @@ from core.player.abs import PlayerAbs
 
 
 class Scenario:
-    def __init__(self, player: PlayerAbs, actions_count: int = None):
-        actions_count = 3 if actions_count is None else actions_count
-        self.__actions_count = actions_count
+    def __init__(self, player: PlayerAbs, scenario: Dict[int, dict] = None):
+        scenario = {} if scenario is None else scenario
+        self.__actions_count = len(scenario)
         self.player: PlayerAbs = player
 
-        self.__actions: Dict[str, Action] = dict.fromkeys(tuple(range(self.__actions_count)))
+        self.__actions: Dict[str, Action] = scenario if scenario else dict.fromkeys(tuple(range(self.__actions_count)))
 
     def cancel_action(self, k: str):
         self.__actions[k] = None
@@ -51,7 +51,7 @@ class Scenario:
     def get_dict(self) -> dict:
         # TODO move in constant
         return {
-            'actions_count': self.__actions_count,
+            'scenario': self.__actions,
         }
 
     @property

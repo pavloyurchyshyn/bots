@@ -50,7 +50,7 @@ class ServerGameProxy:
 
                 player_obj = PlayerObj(nickname=nickname,
                                        spawn=self.setup_logic.current_map.spawns[slot],
-                                       actions_count=self.setup_logic.settings.actions_count,
+                                       scenario=dict.fromkeys(tuple(range(self.setup_logic.settings.actions_count))),
                                        )
 
                 bots.append(BotPlayer(slot=slot, player_obj=player_obj))

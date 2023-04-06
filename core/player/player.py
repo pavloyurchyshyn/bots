@@ -1,3 +1,4 @@
+from typing import Dict
 from global_obj.main import Global
 from core.mech.base.mech import BaseMech
 from core.player.abs import PlayerAbs
@@ -9,7 +10,7 @@ class PlayerObj(PlayerAbs):
     def __init__(self,
                  nickname,
                  spawn: tuple[int, int],
-                 actions_count: int = 3,
+                 scenario: Dict[int, dict] = None,
                  mech: BaseMech = None,
                  ready: bool = False,
                  ):
@@ -17,7 +18,7 @@ class PlayerObj(PlayerAbs):
         self.nickname: str = nickname
         self.spawn: tuple[int, int] = spawn
         self.mech: BaseMech = mech
-        self.scenario: Scenario = Scenario(self, actions_count=actions_count)
+        self.scenario: Scenario = Scenario(self, scenario=scenario)
 
     def get_dict(self):
         return {
@@ -30,13 +31,14 @@ class PlayerObj(PlayerAbs):
 
     @staticmethod
     def get_player_from_dict(d: dict) -> 'PlayerObj':
-        if PlayerAttrs.Mech in d:
+        print('-->', d)
+        if PlayerAttrs.Mech in d and d[PlayerAttrs.Mech]:
             Global.logger.info(f'Received mech dict: {d[PlayerAttrs.Mech]}')
             mech = Global.mech_serializer.dict_to_mech(d.pop(PlayerAttrs.Mech))
         else:
+            d.pop(PlayerAttrs.Mech, None)
             mech = None
-        scenario = d.pop(PlayerAttrs.Scenario, {})
-        return PlayerObj(**d, actions_count=scenario.get('actions_count'), mech=mech)
+        return PlayerObj(**d, mech=mech)
 
     def update_attrs(self, attrs_dict: dict):
         # self.mech.set_attrs(attrs_dict.pop(PlayerAttrs.Mech, {}))

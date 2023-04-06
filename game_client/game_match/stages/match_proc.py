@@ -50,8 +50,21 @@ class MatchStage(Processor):  # , ReadyProc, CardsProc):
         save = MapSave.get_save_from_dict(response[GameStgConst.Map])
         self.UI = GameMatch(self)
         self.UI.w.build_map(save.flat, save.odd, save.get_tiles_data())
-        self.game_object: Game = Game(world=self.UI.w, setting=self.settings)
 
+        players_data = response[GameStgConst.PlayersData]
+
+        self.game_object: Game = Game(world=self.UI.w, setting=self.settings,
+                                      players={}, bots=[])
+        Global.set_game_obj(self.game_object)
+        players = {int(slot): PlayerObj.get_player_from_dict(player_data)
+                   for slot, player_data
+                   in players_data.items()}
+        self.game_object.players = players
+        print('=' * 20)
+        print(players_data)
+
+        print(players)
+        print('=' * 20)
         # Global.details_pool.load_details_list(match_data[GSC.MatchArgs.DetailsPool])
         # self.update_time(match_data)
         # self.update_players_ready_number(response)

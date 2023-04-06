@@ -23,7 +23,7 @@ class GameMatch:
         }
         self.server: ServerAbc = server
         self.server_game_proxy = server_game_proxy
-        self.game_obj: Game = None
+        self.game_logic: Game = None
         self.current_map_save: MapSave = MapSave()
 
     def connect(self, response: dict, client: Client):
@@ -32,8 +32,9 @@ class GameMatch:
     def get_game_dict(self) -> dict:
         return {
             ServerStages.SERVER_STAGE: ServerStages.Game,
-            GameStgConst.Settings: self.game_obj.settings.dict(),
+            GameStgConst.Settings: self.game_logic.settings.dict(),
             GameStgConst.Map: self.current_map_save.get_save_dict(),
+            GameStgConst.PlayersData: {k: player.get_dict() for k, player in self.game_logic.players.items()},
         }
 
     def setup(self, map_save: MapSave, settings: GameSettings,
@@ -44,8 +45,8 @@ class GameMatch:
 
         self.current_map_save.set_name(map_save.name)
         self.current_map_save.set_world_to_json_data(world)
-        self.game_obj: Game = Game(world=world, setting=settings, players=players, bots=bots)
-        Global.set_game_obj(self.game_obj)
+        self.game_logic: Game = Game(world=world, setting=settings, players=players, bots=bots)
+        Global.set_game_obj(self.game_logic)
 
     def update(self):
         pass
