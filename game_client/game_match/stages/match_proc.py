@@ -6,32 +6,34 @@ from core.world.base.map_save import MapSave
 from game_client.game_match.stages.abs import Processor
 from game_client.game_match.stages.match_menu.UI import GameMatch
 from core.player.constants import PlayerAttrs
-from server_stuff.constants.requests import CommonReqConst
 from server_stuff.constants.requests import GameStgConst as GSC
+from server_stuff.constants.requests import CommonReqConst, GameStgConst
+
+from game_logic.game_data.game_settings import GameSettings
+from game_logic.game import Game
 
 from game_client.game_match.stages.match_menu.proc_components.ready import ReadyProc
 from game_client.game_match.stages.match_menu.proc_components.cards import CardsProc
 
 
-class MatchStage(Processor, ReadyProc, CardsProc):
-
-    def __init__(self, game, admin: bool):
+class MatchStage(Processor):  # , ReadyProc, CardsProc):
+    def __init__(self, stages_controller, admin: bool):
         super(MatchStage, self).__init__(admin=admin)
-        self.game = game
-        self.player: PlayerObj = game.player
-
-        self.UI: GameMatch = GameMatch(self)
+        self.stages_controller = stages_controller
+        self.game_object: Game = None
+        self.settings: GameSettings = None
+        self.UI: GameMatch = None
         self.actions: Dict[str, Callable] = {
             CommonReqConst.Chat: self.process_player_msg,
         }
 
-        ReadyProc.__init__(self)
-        CardsProc.__init__(self)
+        # ReadyProc.__init__(self)
+        # CardsProc.__init__(self)
 
     def update(self):
         self.UI.update()
 
-    def process_req(self, r: dict):
+    def process_request(self, r: dict, **kwargs):
         for k in r.keys():
             self.actions.get(k, self.bad_request)(r)
 
@@ -39,35 +41,25 @@ class MatchStage(Processor, ReadyProc, CardsProc):
         Global.logger.warning(f'Bad request: {r}')
 
     def connect(self, response: dict):
-        Global.logger.debug(f'Connecting to match: {response}')
-        match_data = response[GSC.MatchData]
-        Global.details_pool.load_details_list(match_data[GSC.MatchArgs.DetailsPool])
-        self.update_players(match_data[GSC.MatchArgs.PlayersData])
-        self.update_time(match_data)
-        self.update_players_ready_number(response)
+        Global.logger.info(f'Connecting to match: {response}')
+        # match_data = response[GSC.MatchData]
+        self.settings: GameSettings = GameSettings(players_num=response[GameStgConst.Settings].pop('players_num', 0),
+                                                   real_players_num=response[GameStgConst.Settings].pop(
+                                                       'real_players_num', 0),
+                                                   **response[GameStgConst.Settings])
+        save = MapSave.get_save_from_dict(response[GameStgConst.Map])
+        self.UI = GameMatch(self)
+        self.UI.w.build_map(save.flat, save.odd, save.get_tiles_data())
+        self.game_object: Game = Game(world=self.UI.w, setting=self.settings)
 
-        self.UI.w.build_map_from_save(MapSave.get_save_from_dict(match_data[GSC.MatchArgs.Map]))
-        self.UI.w.adapt_scale_to_win_size()
-        self.UI.define_map_position()
-        self.UI.collect_skills_deck()
+        # Global.details_pool.load_details_list(match_data[GSC.MatchArgs.DetailsPool])
+        # self.update_time(match_data)
+        # self.update_players_ready_number(response)
 
-    def update_players(self, players_data: dict):
-        for token, data in players_data.items():
-            if token == self.player.token:
-                Global.logger.warning(f'Updating this player: {data}')
-                mech = data.pop(PlayerAttrs.Mech)
-                self.player.update_attrs(data)
-                self.player.mech = Global.mech_serializer.dict_to_mech(mech)
-            elif token in Global.players_data.players_objs:
-                Global.logger.info(f'Updating player: {data}')
-                Global.players_data.players_objs[token].update_attrs(data)
-            else:
-                Global.logger.warning(f'Creating new player: {data}')
-                Global.players_data.players_objs[token] = PlayerObj.get_player_from_dict(data)
+        # self.UI.w.build_map_from_save(MapSave.get_save_from_dict(match_data[GSC.Map]))
+        # self.UI.w.adapt_scale_to_win_size()
+        # self.UI.define_map_position()
+        # self.UI.collect_skills_deck()
 
     def process_player_msg(self, r: dict):
         self.UI.chat.add_msg(r[CommonReqConst.Chat])
-
-    @property
-    def mech(self) -> BaseMech:
-        return self.player.mech

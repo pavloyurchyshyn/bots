@@ -7,10 +7,10 @@ from server_stuff.constants.requests import CommonReqConst, SetupStageReq as SSR
 
 
 class SetupStage(Processor):
-    def __init__(self, game, admin: bool):
+    def __init__(self, stages_controller, admin: bool):
         super(SetupStage, self).__init__(admin=admin)
         self.exception = None
-        self.game = game
+        self.stages_controller = stages_controller
         self.maps_mngr: MapsManager = MapsManager()
         self.UI: SetupMenu = SetupMenu(self)
         self.actions: Dict[str, Callable] = {
@@ -21,6 +21,7 @@ class SetupStage(Processor):
             CommonReqConst.Disconnect: self.disconnect_me,
             CommonReqConst.PlayersSlots: self.process_players_slots,
             CommonReqConst.ConnectedPlayers: self.update_connected_players,
+            CommonReqConst.SendSlotToPlayer: self.get_my_slot,
         }
 
     def process_req(self, r: dict):
@@ -41,6 +42,10 @@ class SetupStage(Processor):
         self.update_connected_players(response)
         self.chosen_map(response)
 
+    def get_my_slot(self, r: dict):
+        Global.logger.info(f'My new slot {r[CommonReqConst.SendSlotToPlayer]}')
+        Global.network_data.slot = r[CommonReqConst.SendSlotToPlayer]
+
     def update_connected_players(self, r: dict):
         self.UI.fill_connected(r[CommonReqConst.ConnectedPlayers])
 
@@ -48,7 +53,7 @@ class SetupStage(Processor):
         self.UI.update_chosen_map(r.get(SSR.Server.ChosenMap, self.UI.current_save), force=True)
 
     def start_game(self, r: dict):
-        self.game.connect_to_game(r[SSR.Server.StartMatch])
+        self.stages_controller.connect_to_game(r[SSR.Server.StartMatch])
 
     def process_player_msg(self, r: dict):
         self.UI.chat.add_msg(r[CommonReqConst.Chat])
@@ -58,8 +63,8 @@ class SetupStage(Processor):
 
     def disconnect_me(self, r: dict):
         Global.stages.close_game()
-        self.game.alive = False
-        self.game.add_popup_to_mmenu(r[CommonReqConst.Disconnect])
+        self.stages_controller.alive = False
+        self.stages_controller.add_popup_to_mmenu(r[CommonReqConst.Disconnect])
 
     def process_players_slots(self, r: dict):
         self.UI.fill_players_slots(r[CommonReqConst.PlayersSlots])

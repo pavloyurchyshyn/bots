@@ -4,9 +4,10 @@ from global_obj.clock import Clock
 from global_obj.stages import Stages
 from global_obj.logger import get_logger
 
-# from core.mech.base.pools.skills_pool import SkillsPool
-# from core.mech.base.pools.details_pool import DetailsPool
-# from core.mech.base.mech_serializer import MechSerializer
+from core.mech.base.pools.skills_pool import SkillsPool
+from core.mech.base.pools.details_pool import DetailsPool
+from core.mech.base.mech_serializer import MechSerializer
+
 # from game_logic.game_data.id_generator import IdGenerator
 
 __all__ = 'Global',
@@ -23,12 +24,13 @@ class Global:
     stages: Stages = Stages(logger)
     round_clock: Clock = Clock()  # not counting on pause etc.
     test_draw = False
-    game = None
-    # id_generator = IdGenerator()
-    # details_pool: DetailsPool = DetailsPool(id_generator)
-    # skill_pool: SkillsPool = details_pool.skills_pool
 
-    # mech_serializer: MechSerializer = MechSerializer(details_pool)
+    game = None
+    details_pool: DetailsPool = None
+    skill_pool: SkillsPool = None
+    mech_serializer: MechSerializer = None  # MechSerializer(details_pool)
+
+    # id_generator = IdGenerator()
     # players_data: PlayersData = PlayersData()
 
     if VisualPygameOn:
@@ -54,6 +56,9 @@ class Global:
     @classmethod
     def set_game_obj(cls, game):
         cls.game = game
+        cls.details_pool: DetailsPool = game.details_pool
+        cls.skill_pool: SkillsPool = game.skills_pool
+        cls.mech_serializer: MechSerializer = MechSerializer(game.details_pool)
 
     @classmethod
     def del_game_obj(cls):

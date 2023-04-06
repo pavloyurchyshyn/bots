@@ -34,7 +34,6 @@ class GameMatch(Menu, PopUpsController,
 
     def __init__(self, processor):
         self.processor = processor
-        self.player: PlayerObj = processor.player
         self.ready_win = ReadyW(self)
         self.skill_cards_fabric: SkillsCardsFabric = SkillsCardsFabric(Global.skill_pool)
         super(GameMatch, self).__init__(BUTTONS_DATA)
@@ -130,6 +129,3 @@ class GameMatch(Menu, PopUpsController,
                 if -3 <= self.cards_dy <= 3:
                     self.cards_dy = 0
 
-    @property
-    def mech(self) -> BaseMech:
-        return self.player.mech

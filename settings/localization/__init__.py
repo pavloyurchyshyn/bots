@@ -76,7 +76,7 @@ class LocalizationLoader(metaclass=Singleton):
 
         LOGGER.debug(f'Loading {lang} language')
         self.loaded_languages[lang] = LocalizationConfig(lang)
-        LOGGER.debug(f'Language {lang} successfully loaded.')
+        LOGGER.info(f'Language {lang} successfully loaded.')
 
     def reload_lang(self, lang):
         LOGGER.debug(f'Reloading {lang} language')

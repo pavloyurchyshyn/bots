@@ -42,6 +42,7 @@ class PlayerSlot(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBor
         self.slot: int = int(slot)
         self.slot_text: Text = Text('',
                                     x_k=0.02,
+                                    h_size_k=0.5,
                                     text=f'{self.slot + 1}. {self.nickname}',
                                     parent=self,
                                     from_left=True,
@@ -57,6 +58,7 @@ class PlayerSlot(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBor
                                            style=get_red_btn_style(),
                                            active=show_button and self.token,
                                            on_click_action=self.deselect_slot,
+                                           # postpone_build=True,
                                            )
 
         self.pick_slot_btn: Button = Button('',
@@ -68,9 +70,26 @@ class PlayerSlot(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBor
                                             active=self.token is None,
                                             visible=self.token is None,
                                             on_click_action=self.pick_slot,
+                                            # postpone_build=True,
                                             )
+        self.set_bot_btn: Button = Button('',
+                                          x_k=0.735,
+                                          h_size_k=0.1,
+                                          v_size_k=0.92,
+                                          text=UILocal.SetupStageMenu.bot,
+                                          parent=self,
+                                          active=self.token is None and Global.network_data.is_admin,
+                                          visible=self.token is None and Global.network_data.is_admin,
+                                          on_click_action=self.set_bot,
+                                          # postpone_build=True,
+                                          )
 
+        self.buttons = self.deselect_btn, self.pick_slot_btn, self.set_bot_btn
         self.build()
+
+    def set_bot(self, b: Button):
+        if self.token is None and Global.network_data.is_admin:
+            Global.connection.send_json({SetupStageReq.SetBot: self.slot})
 
     def pick_slot(self, b: Button):
         if self.token is None:
@@ -90,10 +109,11 @@ class PlayerSlot(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBor
         return self.default_get_y()
 
     def build(self, **kwargs):
-        self.render()
         self.init_shape()
-        self.deselect_btn.build()
-        self.pick_slot_btn.build()
+        # self.deselect_btn.build()
+        # self.pick_slot_btn.build()
+        # self.set_bot_btn.build()
+        self.render()
         return self
 
     def render(self, **kwargs):
@@ -101,6 +121,7 @@ class PlayerSlot(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBor
         self.slot_text.draw()
         self.deselect_btn.draw()
         self.pick_slot_btn.draw()
+        self.set_bot_btn.draw()
         self.draw_border()
 
     def move(self, xy):
@@ -108,6 +129,7 @@ class PlayerSlot(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBor
         self.init_shape()
         self.deselect_btn.init_shape()
         self.pick_slot_btn.init_shape()
+        self.set_bot_btn.init_shape()
 
     def get_surface(self, **kwargs) -> Surface:
         return self.get_rect_surface(self.h_size, self.v_size,
@@ -137,7 +159,7 @@ class PlayersSlots:
     def fill_players_slots(self, conn_players: dict):
         self.players_slots.clear()
         for slot, (token, nickname) in conn_players.items():
-            self.players_slots.add_element(PlayerSlot(uid=f"{nickname}_slot_uid",
+            self.players_slots.add_element(PlayerSlot(uid=f"{slot}_slot_uid",
                                                       nickname=nickname,
                                                       token=token,
                                                       slot=slot,
@@ -155,14 +177,11 @@ class PlayersSlots:
             for el in self.players_slots.elements:
                 if el.collide_point(mouse_pos):
                     el: PlayerSlot
-                    if el.deselect_btn.collide_point(mouse_pos) and el.deselect_btn.active:
-                        self.draw_border_around_element(el.deselect_btn)
-                        if Global.mouse.l_up:
-                            el.deselect_btn.do_action()
-
-                    elif el.pick_slot_btn.collide_point(mouse_pos) and el.pick_slot_btn.active:
-                        self.draw_border_around_element(el.pick_slot_btn)
-                        if Global.mouse.l_up:
-                            el.pick_slot_btn.do_action()
+                    for btn in el.buttons:
+                        if btn.collide_point(mouse_pos) and btn.active:
+                            self.draw_border_around_element(btn)
+                            if Global.mouse.l_up:
+                                btn.do_action()
+                            break
 
                     self.draw_border_around_element(el)

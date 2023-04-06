@@ -1,3 +1,4 @@
+from typing import List, Tuple
 from pygame.draw import rect as draw_rect
 
 from core.world.maps_manager import MapsManager
@@ -76,7 +77,7 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         map_save = None
         if self.maps_mngr.maps:
             map_save = self.maps_mngr.maps[0].copy()
-        self.spawns_amount: int = None if map_save is None else map_save.spawns_amount
+        self.spawns: List[Tuple[int, int]] = None if map_save is None else map_save.spawns
         self.load_save(map_save)
 
         self.maps_container = Container('container', True,
@@ -94,7 +95,7 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
     def load_save(self, map_save: MapSave):
         self.name_inp.change_text(map_save.name)
         self.current_save: MapSave = map_save
-        self.spawns_amount = None if map_save is None else map_save.spawns_amount
+        self.spawns = () if map_save is None else map_save.spawns
         self.init_map(map_save)
         self.define_map_position()
         self.update_sizes_texts()
@@ -136,7 +137,7 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         self.w_h_size_txt.change_text(f'{Global.loc.get_text_wloc(UILocal.Match.Height).capitalize()}: {self.w.y_size}')
 
     def update_spawns_text(self):
-        self.spawns_amount_txt.change_text(f'Spawns amount: {self.spawns_amount}')
+        self.spawns_amount_txt.change_text(f'Spawns : {len(self.spawns)}')
 
     def update(self):
         Global.display.fill((0, 0, 0))
@@ -221,11 +222,12 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
                 if not tile.at_edge:
                     if tile.name == SpawnTile.name:
                         if self.current_pencil_type.name != SpawnTile.name:
-                            self.spawns_amount -= 1
+                            if tile.id_xy in self.spawns:
+                                self.spawns.remove(tile.id_xy)
                             self.update_spawns_text()
                     else:
                         if self.current_pencil_type.name == SpawnTile.name:
-                            self.spawns_amount += 1
+                            self.spawns.append(tile.id_xy)
                             self.update_spawns_text()
 
                     tile.apply_type(self.current_pencil_type)

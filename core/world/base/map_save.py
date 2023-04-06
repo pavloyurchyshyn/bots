@@ -2,7 +2,7 @@ import json
 import os
 import copy
 import datetime
-from typing import List
+from typing import List, Tuple
 from global_obj.main import Global
 from settings.base import MAPS_SAVES
 from core.world.base.logic.world import LogicWorld
@@ -13,7 +13,9 @@ class SaveDictConst:
     Name = 'name'
     Metadata = 'metadata'
     Created = 'created'
-    SpawnsAmount = 'spawns_amount'
+    Odd = 'odd'
+    Flat = 'flat'
+    Spawns = 'spawns'
     DictTilesData = 'dict_tiles_data'
 
 
@@ -23,14 +25,14 @@ class MapSave:
                  odd: bool = True, flat: bool = True,
                  dict_tiles_data: List[List[dict | int | None]] = None,
                  created: str = None,
-                 spawns_amount: int = 0,
+                 spawns: List[Tuple[int, int]] = None,
                  default=False):
         self.default = default
         self.__odd = odd
         self.__flat = flat
         self.__name: str = name
         self.__created = created
-        self.__spawns_amount = spawns_amount
+        self.__spawns: List[Tuple[int, int]] = [] if spawns is None else spawns
         if self.default:
             self.__path = ''
         else:
@@ -47,7 +49,7 @@ class MapSave:
         data = self.load_json_data_from_file(path)
         self.__name = data[SaveDictConst.Name]
         self.__created = data[SaveDictConst.Metadata][SaveDictConst.Created]
-        self.__spawns_amount = data[SaveDictConst.Metadata][SaveDictConst.SpawnsAmount]
+        self.__spawns = data[SaveDictConst.Metadata][SaveDictConst.Spawns]
         self.__path = path
         self.__dict_tiles_data = data[SaveDictConst.DictTilesData]
 
@@ -116,9 +118,11 @@ class MapSave:
             raise Exception
         return {
             SaveDictConst.Name: self.__name,
+            SaveDictConst.Odd: self.__odd,
+            SaveDictConst.Flat: self.__flat,
             SaveDictConst.Metadata: {
                 SaveDictConst.Created: self.__created if self.__created else str(datetime.datetime.now()),
-                SaveDictConst.SpawnsAmount: self.__spawns_amount,
+                SaveDictConst.Spawns: self.__spawns,
             },
             SaveDictConst.DictTilesData: self.__dict_tiles_data,
         }
@@ -128,8 +132,10 @@ class MapSave:
         Global.logger.debug(f'Map save dict: {d}')
         return MapSave(
             name=d[SaveDictConst.Name],
+            flat=d[SaveDictConst.Flat],
+            odd=d[SaveDictConst.Odd],
             created=d[SaveDictConst.Metadata][SaveDictConst.Created],
-            spawns_amount=d[SaveDictConst.Metadata][SaveDictConst.SpawnsAmount],
+            spawns=d[SaveDictConst.Metadata][SaveDictConst.Spawns],
             dict_tiles_data=d[SaveDictConst.DictTilesData],
         )
 
@@ -196,7 +202,7 @@ class MapSave:
                        flat=self.flat,
                        dict_tiles_data=copy.deepcopy(self.__dict_tiles_data),
                        default=False,
-                       spawns_amount=self.__spawns_amount,
+                       spawns=self.__spawns,
                        )
 
     def set_name(self, name: str):
@@ -210,16 +216,16 @@ class MapSave:
             return False
 
     @property
-    def spawns_amount(self) -> int:
-        return self.__spawns_amount
+    def spawns(self) -> List[Tuple[int, int]]:
+        return self.__spawns
 
-    def set_spawns_amount(self, amount: int) -> None:
-        self.__spawns_amount = amount
+    def set_spawns(self, spawns: List[Tuple[int, int]]) -> None:
+        self.__spawns = spawns
 
 
 if __name__ == '__main__':
     s = MapSave(path='Forest')
-    new_s = copy.deepcopy(s)
+    new_s = s.copy()
     print(s, new_s)
     print(s.__dict__)
     print(new_s.__dict__)

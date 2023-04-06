@@ -35,7 +35,7 @@ class LogicWorld:
 
         self.add_tile(tile)
 
-    def build_map(self, flat, odd, data: List[List[TileDataAbs]]):
+    def build_map(self, flat: bool, odd: bool, data: List[List[TileDataAbs]]):
         self.flat = flat
         self.odd = odd
         self.y_size = len(data)

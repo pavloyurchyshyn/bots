@@ -8,6 +8,8 @@ class CommonReqConst:
     Disconnect = 'disconnect'
     Error = 'error'
 
+    SendSlotToPlayer = 'your_slot'
+
 
 class SetupStageReq:
     CurrentSave = 'current_save'
@@ -15,10 +17,13 @@ class SetupStageReq:
     SelectSlot = 'select_slot'
     DeselectSlot = 'deselect_slot'
 
+    SetBot = 'set_bot'
+
     class Player:
         ChooseMap = 'choose_map'
         Ready = 'ready'
         StartMatch = 'start_match'
+        NewNickname = 'new_nickname'
 
     class Server:
         ChosenMap = 'chosen_map'
@@ -32,18 +37,18 @@ class GameStgConst:
     Time = 'time'
     ReadyPlayersNumber = 'ready_players_number'
 
-    class MatchArgs:
-        Map = 'map'
-        DetailsPool = 'details_pool'
-        PlayersData = 'players_data'
+    Map = 'map'
+    DetailsPool = 'details_pool'
+    PlayersData = 'players_data'
+
+    Settings = 'game_settings'
 
     class Server:
         UpdateMech = 'update_mech'
 
     class Player:
-        ChooseMap = 'choose_map'
         ReadyStatus = 'ready_status'
-        StartMatch = 'start_match'
+        Ready = 'ready'
 
     class SkillM:  # SkillManipulations
         SkillStats = 'skill_stats'

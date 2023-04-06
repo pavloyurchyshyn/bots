@@ -7,28 +7,22 @@ from core.player.constants import PlayerAttrs
 
 class PlayerObj(PlayerAbs):
     def __init__(self,
-                 # token,
-                 # nickname,
+                 nickname,
                  spawn: tuple[int, int],
                  actions_count: int = 3,
                  mech: BaseMech = None,
-                 is_admin: bool = False,
                  ready: bool = False,
                  ):
-        self.is_admin: bool = is_admin
-        # self.token: str = token
         self.ready: bool = ready
-        # self.nickname: str = nickname
+        self.nickname: str = nickname
         self.spawn: tuple[int, int] = spawn
         self.mech: BaseMech = mech
         self.scenario: Scenario = Scenario(self, actions_count=actions_count)
 
     def get_dict(self):
         return {
-            # PlayerAttrs.Token: self.token,
-            PlayerAttrs.IsAdmin: self.is_admin,
             PlayerAttrs.Ready: self.ready,
-            # PlayerAttrs.Nickname: self.nickname,
+            PlayerAttrs.Nickname: self.nickname,
             PlayerAttrs.Spawn: self.spawn,
             PlayerAttrs.Mech: Global.mech_serializer.mech_to_dict(self.mech) if self.mech else None,
             PlayerAttrs.Scenario: self.scenario.get_dict(),

@@ -5,16 +5,18 @@ from game_logic.game_data.game_settings import GameSettings
 
 
 class SettingsStage:
+    BOT_TOKEN = 'bot'
+
     def __init__(self):
-        self.settings: GameSettings = GameSettings()
+        self.settings: GameSettings = GameSettings(0, 0)
         self.maps_mngr: MapsManager = MapsManager()
         self.maps_mngr.load_maps()
         self.chosen_map: int = 0
         self.current_map: MapSave = self.maps_mngr.maps[0]
-        self.players_slots: Dict[int, Optional[str]] = {i: None for i in range(self.current_map.spawns_amount)}
+        self.players_slots: Dict[int, Optional[str]] = {i: None for i in range(len(self.current_map.spawns))}
 
     def recreate_slots(self):
-        self.players_slots = {i: self.players_slots.get(i) for i in range(self.current_map.spawns_amount)}
+        self.players_slots = {i: self.players_slots.get(i) for i in range(len(self.current_map.spawns))}
 
     def slot_is_free(self, slot_number: int):
         return self.players_slots[slot_number] is None
@@ -49,8 +51,8 @@ class SettingsStage:
     def set_actions_count(self, value_: int):
         self.settings.actions_count = value_
 
-    def set_max_players_num(self, value_: int):
-        self.settings.max_players_num = value_
+    def set_real_players(self, real_players: int):
+        self.settings.real_players_num = real_players
 
-    # details_pool_settings=None,
-    # default_details_settings=None
+    def set_players_num(self, num: int):
+        self.settings.players_num = num

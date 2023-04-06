@@ -30,7 +30,7 @@ class UsedCardsC:
 
     def __render_used_cards_rects(self) -> list:
         rects = []
-        actions_num = self.player.scenario.len
+        actions_num = self.processor.settings.actions_count
         free_size = UsedCards.h_size - actions_num * SkillCardSize.X_SIZE
         step = free_size / (actions_num + 1)
         x = 0 if free_size < 0 else step

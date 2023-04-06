@@ -1,11 +1,12 @@
 import os
+import time
 import shutil
 import subprocess
 from pathlib import Path
 from settings.version import VERSION
 import traceback
 
-
+start = time.time()
 try:
     GAME_ICO = 'game.ico'
     SERVER_ICO = 'server.ico'
@@ -77,3 +78,5 @@ try:
 except Exception as e:
     print(e)
     print(traceback.format_exc())
+
+print(f'Time spent: {time.time() - start} seconds.')

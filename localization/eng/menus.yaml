@@ -29,6 +29,7 @@ UI:
     back: X
     pick: Pick
     select: Selected
+    bot: Bot
 
   # ----------------------------------
 

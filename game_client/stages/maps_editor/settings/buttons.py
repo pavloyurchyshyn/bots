@@ -12,7 +12,7 @@ def save(b: Button, forced=False):
         menu: MenuAbs = b.parent
         menu.current_save.set_name(menu.name_inp.str_text)
         menu.current_save.set_world_to_json_data(menu.w)
-        menu.current_save.set_spawns_amount(menu.spawns_amount)
+        menu.current_save.set_spawns(menu.spawns)
         menu.current_save.save(forced)
         menu.fill_saves_container()
         menu.unsaved_edit = False

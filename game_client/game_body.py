@@ -1,7 +1,7 @@
 from global_obj.main import Global
 from constants.stages import StagesConstants
 from game_client.stages import *
-from game_client.game_match.game import Game
+from game_client.game_match.stages_controller import StagesController
 from game_client.server_interactions.server_runner import ServerRunner
 
 
@@ -32,7 +32,7 @@ class GameBody:
         self.join_menu: JoinMenu = JoinMenu()
 
         self.server_runner: ServerRunner = None
-        self.game: Game = None
+        self.game: StagesController = None
 
     def game_loop(self):
         self.stages_dict[Global.stages.current_stage]()
@@ -68,7 +68,7 @@ class GameBody:
         Connect to game.
         """
         Global.logger.info('Joining game')
-        self.game = Game(self)
+        self.game = StagesController(self)
         for i in range(1):
             Global.logger.info(f'Connecting, attempt {i+1}')
             try:
@@ -91,7 +91,7 @@ class GameBody:
         Global.logger.info('Closing game')
         if self.game:
             self.game.close()
-        self.game: Game = None
+        self.game: StagesController = None
         self.server_runner = None
         if Global.connection:
             Global.connection.close()

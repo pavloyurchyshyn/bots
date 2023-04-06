@@ -1,4 +1,5 @@
 import os
+import traceback
 
 os.environ['VisualPygameOn'] = 'off'
 import _thread
@@ -6,8 +7,8 @@ import uvicorn
 import asyncio
 from typing import Dict
 
-from global_obj.main import Global
 from fastapi import FastAPI, WebSocket
+from global_obj.main import Global
 from server_stuff.player_client import Client
 from server_stuff.abs.server import ServerAbc
 from server_stuff.server_login import ServerConnect
@@ -70,12 +71,14 @@ class GameServer(FastAPI, ServerConnect, ServerAbc):
         asyncio.create_task(self.send_to_client(client, data))
 
     async def handle_client_thread(self, client: Client):
+        Global.logger.info(f'Started thread for {client.token} {client.nickname}')
         try:
             while self.server_alive and client.alive:
                 data = await client.socket.receive_json()
                 self.game.process_player_request(client, data)
         except Exception as e:
             Global.logger.error(f'{Client.token} got error\n{e}')
+            Global.logger.error(traceback.format_exc())
             await self.disconnect_client(client)
             await self.broadcast({CommonReqConst.Chat: f'{client.nickname} disconnected.'})
             self.send_updated_connection_list()
@@ -117,4 +120,10 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception as e:
+        Global.logger.error(e)
+        Global.logger.error(traceback.format_exc())
+        Global.logger.error('Game closed by error')
+        exit(1)

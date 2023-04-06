@@ -67,6 +67,7 @@ class TextAttrs(Attrs):
 
 class InputAttr(Attrs):
     OnEnterAction = 'on_enter_action'
+    OnUnfocusAction = 'on_unfocus_action'
     DefaultText = 'default_text'
     DefaultTextColor = 'default_text_color'
 

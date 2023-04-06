@@ -8,7 +8,8 @@ class GameData:
     settings: GameSettings
 
     def __init__(self):
-        self.players_num: int = self.settings.max_players_num
+        self.real_players_num: int = self.settings.real_players_num
+        self.players_num: int = self.settings.players_num
         self.players_ready: int = 0
         self.steps_clock = StepsClock(self.settings.actions_count)
         self.id_generator: IdGenerator = IdGenerator(self.settings.seed)

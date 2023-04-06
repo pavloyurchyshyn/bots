@@ -15,5 +15,5 @@ launch.spec
 server.spec
 game.ico
 server.ico
-server_stuff_bad
-server_stuff_bad/*
+some_code/server_stuff_bad
+some_code/server_stuff_bad/*

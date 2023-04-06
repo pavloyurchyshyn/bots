@@ -25,6 +25,7 @@ class UILocal:
         start = build_path(setup_stage_menu, 'start')
         back = build_path(setup_stage_menu, 'back')
         pick = build_path(setup_stage_menu, 'pick')
+        bot = build_path(setup_stage_menu, 'bot')
         select = build_path(setup_stage_menu, 'select')
 
     class JoinMenu:

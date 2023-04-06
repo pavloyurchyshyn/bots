@@ -30,3 +30,6 @@ class Client:
             LoginArgs.ClientAttrs.NickName: self.nickname,
             LoginArgs.Token: self.token,
         }
+
+    def __str__(self):
+        return f'{self.nickname}<->{self.token[:4]}...'

@@ -651,7 +651,7 @@ class ForestMap(MapSave):
                                         odd=True,
                                         flat=True,
                                         default=True,
-                                        spawns_amount=2,
+                                        spawns=[],
                                         )
 
 
