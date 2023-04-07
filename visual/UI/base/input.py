@@ -17,7 +17,8 @@ class InputBase(BaseUI, DrawBorderMixin, BuildRectShapeMixin, GetSurfaceMixin, S
 
         txt_data = kwargs.get(Attrs.TextKwargs, {})
         txt_uid = txt_data.pop(Attrs.UID, f'{self.uid}_txt')
-        self.on_enter_action = kwargs.get(InputAttr.OnEnterAction)
+        self.on_enter_action: callable = kwargs.get(InputAttr.OnEnterAction)
+        self.on_unfocus_action: callable = kwargs.get(InputAttr.OnUnfocusAction)
 
         def_text_data = txt_data.copy()
         self.default_text = Text(
@@ -90,6 +91,8 @@ class InputBase(BaseUI, DrawBorderMixin, BuildRectShapeMixin, GetSurfaceMixin, S
         self.input_is_active = 1
 
     def unfocus(self) -> None:
+        if self.on_unfocus_action:
+            self.on_unfocus_action(self)
         self.input_is_active = 0
 
     def get_surface(self, **kwargs) -> Surface:

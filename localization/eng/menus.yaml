@@ -27,6 +27,9 @@ UI:
   new_game_menu:
     start: Start
     back: X
+    pick: Pick
+    select: Selected
+    bot: Bot
 
   # ----------------------------------
 

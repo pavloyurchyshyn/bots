@@ -140,7 +140,7 @@ class ForestMap(MapSave):
               "dir": 0, "hgt": 0},
              {"n": "forest", "hp": 10, "mek": 0.0, "etrn": False, "dest_t": 0,
               "dir": 0, "hgt": 0}, 0,
-             {"n": "forest", "hp": 10, "mek": 0.0, "etrn": False, "dest_t": 0,
+             {"n": "spawn", "hp": 10, "mek": 0.0, "etrn": False, "dest_t": 0,
               "dir": 0, "hgt": 0},
              {"n": "forest", "hp": 10, "mek": 0.0, "etrn": False, "dest_t": 0,
               "dir": 0, "hgt": 0}, 0, 0,
@@ -183,7 +183,7 @@ class ForestMap(MapSave):
               "dir": 0, "hgt": 0}, 0,
              {"n": "forest", "hp": 10, "mek": 0.0, "etrn": False, "dest_t": 0,
               "dir": 0, "hgt": 0},
-             {"n": "forest", "hp": 10, "mek": 0.0, "etrn": False, "dest_t": 0,
+             {"n": "spawn", "hp": 10, "mek": 0.0, "etrn": False, "dest_t": 0,
               "dir": 0, "hgt": 0},
              {"n": "forest", "hp": 10, "mek": 0.0, "etrn": False, "dest_t": 0,
               "dir": 0, "hgt": 0}, 0, 0, 0,
@@ -651,6 +651,7 @@ class ForestMap(MapSave):
                                         odd=True,
                                         flat=True,
                                         default=True,
+                                        spawns=[],
                                         )
 
 

@@ -20,10 +20,13 @@ class UILocal:
         NewGame = build_path(menu, 'new_game')
         LoadGame = build_path(menu, 'load_game')
 
-    class NewGameMenu:
-        new_game_menu = build_path(UI_path, 'new_game_menu')
-        start = build_path(new_game_menu, 'start')
-        back = build_path(new_game_menu, 'back')
+    class SetupStageMenu:
+        setup_stage_menu = build_path(UI_path, 'new_game_menu')
+        start = build_path(setup_stage_menu, 'start')
+        back = build_path(setup_stage_menu, 'back')
+        pick = build_path(setup_stage_menu, 'pick')
+        bot = build_path(setup_stage_menu, 'bot')
+        select = build_path(setup_stage_menu, 'select')
 
     class JoinMenu:
         join_menu = build_path(UI_path, 'join_menu')

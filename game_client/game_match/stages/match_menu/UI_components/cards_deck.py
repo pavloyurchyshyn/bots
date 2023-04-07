@@ -2,7 +2,7 @@ from typing import List
 from pygame import Surface, Rect
 from pygame.draw import rect as draw_rect
 from global_obj.main import Global
-from core.player.player import Player
+from core.player.player import PlayerObj
 from visual.cards.skill.card import SkillCard
 from game_client.game_match.stages.match_menu.settings.windows_sizes import CardsDeck
 from settings.visual.cards import SkillCardSize
@@ -11,7 +11,7 @@ from visual.cards.skill.skill_cards_fabric import SkillsCardsFabric
 
 class CardsC:
     CARDS_MOVE_SPEED = 250
-    player: Player
+    player: PlayerObj
     selected_card_to_use: SkillCard
     skill_cards_fabric: SkillsCardsFabric
 

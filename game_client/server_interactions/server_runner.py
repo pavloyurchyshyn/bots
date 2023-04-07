@@ -47,7 +47,6 @@ class ServerRunner(ServerRunnerAbs):
 
     def get_arguments(self):
         args = [
-            f"--{StartArgs.Solo}", str(self.solo),
             f"--{StartArgs.Port}", str(self.port),
             f"--{StartArgs.AdminToken}", str(self.token),
             f"--{StartArgs.Password}", str(self.password),

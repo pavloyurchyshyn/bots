@@ -5,7 +5,7 @@ from visual.cards.skill.card import SkillCard
 from visual.UI.popup_controller import PopUpsController
 from visual.UI.base.mixins import DrawElementBorderMixin
 
-from core.player.player import Player
+from core.player.player import PlayerObj
 from core.mech.base.mech import BaseMech
 
 from game_client.game_match.stages.match_menu.UI_components.chat import ChatC
@@ -20,7 +20,7 @@ from game_client.game_match.stages.match_menu.UI_components.used_cards import Us
 from game_client.game_match.stages.match_menu.UI_components.hp_and_mana import HpAndManaC
 from game_client.game_match.stages.match_menu.settings.buttons import BUTTONS_DATA
 
-from server_stuff.constants.game_stage import GameStgConst as GSC
+from server_stuff.constants.requests import GameStgConst as GSC
 from visual.cards.skill.skill_cards_fabric import SkillsCardsFabric
 
 
@@ -34,7 +34,6 @@ class GameMatch(Menu, PopUpsController,
 
     def __init__(self, processor):
         self.processor = processor
-        self.player: Player = processor.player
         self.ready_win = ReadyW(self)
         self.skill_cards_fabric: SkillsCardsFabric = SkillsCardsFabric(Global.skill_pool)
         super(GameMatch, self).__init__(BUTTONS_DATA)
@@ -131,5 +130,9 @@ class GameMatch(Menu, PopUpsController,
                     self.cards_dy = 0
 
     @property
-    def mech(self) -> BaseMech:
-        return self.player.mech
+    def player(self):
+        return self.processor.player
+
+    @property
+    def mech(self):
+        return self.processor.mech

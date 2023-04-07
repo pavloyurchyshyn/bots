@@ -27,6 +27,9 @@ UI:
   new_game_menu:
     back: X
     start: Поїхали!
+    pick: Тут
+    select: Обрано
+    bot: Бот
 
   # ----------------------------------
   round:

@@ -112,6 +112,9 @@ class BaseUI(BaseUIAbs, ABC):
     def inactive(self) -> bool:
         return not self.active
 
+    def set_visible(self, state: bool):
+        self.visible = state
+
     def make_visible(self) -> None:
         self.visible = 1
 
@@ -150,6 +153,10 @@ class BaseUI(BaseUIAbs, ABC):
     def real_position(self) -> Vector2DType:
         x, y = self.parent.real_position if self.parent else (0, 0)
         return x + self.x, y + self.y
+
+    def draw_at_global_screen(self):
+        if self.visible:
+            Global.display.blit(self.surface, self.real_position)
 
 
 class UpdateInterface:

@@ -6,7 +6,7 @@ from settings.localization.menus.UI import UILocal
 
 from game_client.stages.main_menu.settings.uids import UIDs
 from global_obj.main import Global
-from game_client.stages.styles import get_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
+from visual.styles import get_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
 
 MENU_UIDS = (
     # UIDs.NewGame,

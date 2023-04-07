@@ -3,7 +3,7 @@ from visual.cards.skill.card import SkillCard
 from pygame.draw import rect as draw_rect, line as draw_line, circle as draw_circle
 from core.world.base.visual.world import VisualWorld
 from core.mech.base.skills.constants import Targets
-from server_stuff.constants.game_stage import GameStgConst as GSC
+from server_stuff.constants.requests import GameStgConst as GSC
 from core.world.base.logic.tile import LogicTile
 
 

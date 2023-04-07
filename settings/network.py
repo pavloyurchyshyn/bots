@@ -1,16 +1,15 @@
-import socket
 import random
+from typing import Optional
 from core.player.constants import PlayerAttrs
 from server_stuff.constants.start_and_connect import LoginArgs
 from settings.json_configs_manager import get_from_common_config, save_to_common_config
-
-DEFAULT_PORT = 8002
+from server_stuff.constants.start_and_connect import StartArgs
 
 
 class NetworkData:
     def __init__(self):
-        self.address = socket.gethostbyname(socket.gethostname())
-        self.port = DEFAULT_PORT
+        self.address = 'localhost'  # socket.gethostbyname(socket.gethostname())
+        self.port = StartArgs.DefaultPort
         self._nickname = ''
         self.nickname = get_from_common_config(PlayerAttrs.Nickname, 'NoNickname?:(')
         self._password = None
@@ -20,9 +19,19 @@ class NetworkData:
             self._token = str(hash(str((fake, random.randint(1000, 9999)))))
 
         save_to_common_config(LoginArgs.Token, self._token)
-        save_to_common_config(LoginArgs.NickName, self.nickname)
+        save_to_common_config(LoginArgs.ClientAttrs.NickName, self.nickname)
 
         self._is_admin: bool = False
+        self._slot: int = get_from_common_config(PlayerAttrs.Slot)
+
+    @property
+    def slot(self) -> Optional[int]:
+        return self._slot
+
+    @slot.setter
+    def slot(self, slot: int):
+        self._slot = slot
+        save_to_common_config(PlayerAttrs.Slot, slot)
 
     @property
     def is_admin(self) -> bool:
@@ -56,7 +65,7 @@ class NetworkData:
     @nickname.setter
     def nickname(self, name: str):
         self._nickname = name
-        save_to_common_config(LoginArgs.NickName, name)
+        save_to_common_config(LoginArgs.ClientAttrs.NickName, name)
 
     @property
     def token(self):

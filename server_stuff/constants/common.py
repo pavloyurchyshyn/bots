@@ -1,2 +1,0 @@
-class CommonConst:
-    Chat = 'chat'

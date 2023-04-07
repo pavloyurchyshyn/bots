@@ -7,7 +7,7 @@ from visual.UI.base.container import Container
 from visual.UI.yes_no_popup import YesNoPopUp
 from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorderMixin, BuildRectShapeMixin
 from core.world.base.map_save import MapSave
-from game_client.stages.styles import get_green_btn_style, get_red_btn_style
+from visual.styles import get_green_btn_style, get_red_btn_style
 from settings.screen.size import scaled_w, scaled_h
 
 
@@ -47,13 +47,15 @@ class MapFuncElCons:
     DltBtnX = 0.895
     DltBtnY = 0.015
     DltBtnH_size = 0.1
-    DltBtnV_size = 0.97
+    DltBtnV_size = 0.96
 
 
 class MapFuncUI(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBorderMixin):
     parent: Container
 
-    def __init__(self, uid, map_save: MapSave, editor_ui,
+    def __init__(self, uid,
+                 map_save: MapSave,
+                 editor_ui,
                  x_k=MapFuncElCons.X,
                  y_k=MapFuncElCons.Y,
                  h_size_k=MapFuncElCons.H_size,

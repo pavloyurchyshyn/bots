@@ -6,11 +6,11 @@ from game_client.game_match.stages.match_menu.settings.windows_sizes import Used
 from settings.visual.cards import SkillCardSize
 from visual.cards.skill.card import SkillCard
 
-from core.player.player import Player
+from core.player.player import PlayerObj
 
 
 class UsedCardsC:
-    player: Player
+    player: PlayerObj
     cards_dy: int
     CARDS_MOVE_SPEED: int
 
@@ -30,7 +30,7 @@ class UsedCardsC:
 
     def __render_used_cards_rects(self) -> list:
         rects = []
-        actions_num = self.player.scenario.len
+        actions_num = self.processor.settings.actions_count
         free_size = UsedCards.h_size - actions_num * SkillCardSize.X_SIZE
         step = free_size / (actions_num + 1)
         x = 0 if free_size < 0 else step

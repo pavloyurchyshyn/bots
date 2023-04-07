@@ -1,9 +1,11 @@
+from typing import List, Tuple
 from pygame.draw import rect as draw_rect
 
 from core.world.maps_manager import MapsManager
 from core.world.classic_maps.empty import Empty
 from core.world.base.visual.world import VisualWorld
-from core.world.base.logic.tiles_data import EmptyTile, TileTypes
+from core.world.base.logic.tiles_data import EmptyTile, TileTypes, SpawnTile
+from core.world.base.logic.tile_data.tile_abs import TileDataAbs
 
 from game_client.stages.maps_editor.settings.other import *
 from game_client.stages.maps_editor.settings.uids import UIDs
@@ -39,23 +41,32 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
                              from_left=True,
                              parent=self,
                              font_size=scaled_w(0.009),
-                             x_k=0.785, y_k=0.07,
+                             x_k=0.8, y_k=0.07,
                              h_size_k=0.2, v_size_k=0.1)
 
         self.w_h_size_txt = Text('h_size',
                                  from_left=True,
                                  parent=self,
                                  font_size=scaled_w(0.009),
-                                 x_k=0.785, y_k=0.105,
+                                 x_k=0.8, y_k=0.105,
                                  h_size_k=0.1, v_size_k=0.1,
                                  )
         self.w_v_size_txt = Text('v_size',
                                  from_left=True,
                                  parent=self,
                                  font_size=scaled_w(0.009),
-                                 x_k=0.785, y_k=0.14,
+                                 x_k=0.8, y_k=0.14,
                                  h_size_k=0.1, v_size_k=0.1,
                                  )
+
+        self.spawns_amount_txt = Text('spawn_amount',
+                                      from_left=True,
+                                      parent=self,
+                                      font_size=scaled_w(0.009),
+                                      x_k=0.8, y_k=0.17,
+                                      h_size_k=0.1, v_size_k=0.1,
+                                      )
+
         self.w: VisualWorld = VisualWorld(MapRect.rect)
         self.maps_mngr: MapsManager = MapsManager()
         self.maps_mngr.load_maps()
@@ -66,34 +77,40 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         map_save = None
         if self.maps_mngr.maps:
             map_save = self.maps_mngr.maps[0].copy()
+        self.spawns: List[Tuple[int, int]] = None if map_save is None else map_save.spawns
         self.load_save(map_save)
 
-        self.maps_cont = Container('container', True,
-                                   parent=self,
-                                   x_k=MapsButtonsContainer.X, y_k=MapsButtonsContainer.Y,
-                                   h_size_k=MapsButtonsContainer.H_size,
-                                   v_size_k=MapsButtonsContainer.V_size)
-        self.fill_container()
+        self.maps_container = Container('container', True,
+                                        parent=self,
+                                        x_k=MapsButtonsContainer.X, y_k=MapsButtonsContainer.Y,
+                                        h_size_k=MapsButtonsContainer.H_size,
+                                        v_size_k=MapsButtonsContainer.V_size)
+        self.fill_saves_container()
 
         self.unsaved_edit = False
 
-        self.current_pencil_type = TileTypes.Forest.name
+        self.current_pencil_type: TileDataAbs = TileTypes.Forest
+        self.update_spawns_text()
 
     def load_save(self, map_save: MapSave):
         self.name_inp.change_text(map_save.name)
         self.current_save: MapSave = map_save
-        self.init_map(map_save, )
+        self.spawns = () if map_save is None else map_save.spawns
+        self.init_map(map_save)
+        self.define_map_position()
+        self.update_sizes_texts()
+        self.update_spawns_text()
 
-    def fill_container(self):
+    def fill_saves_container(self):
         self.maps_mngr.load_maps()
-        self.maps_cont.clear()
+        self.maps_container.clear()
         for map_save in self.maps_mngr.maps:
-            self.maps_cont.add_element(MapFuncUI(uid=map_save.name, map_save=map_save,
-                                                 parent=self.maps_cont, editor_ui=self))
+            self.maps_container.add_element(MapFuncUI(uid=map_save.name, map_save=map_save,
+                                                      parent=self.maps_container, editor_ui=self))
 
-        self.maps_cont.add_element(MapFuncUI(uid=Empty.name, map_save=Empty(),
-                                             parent=self.maps_cont, editor_ui=self))
-        self.maps_cont.build()
+        self.maps_container.add_element(MapFuncUI(uid=Empty.name, map_save=Empty(),
+                                                  parent=self.maps_container, editor_ui=self))
+        self.maps_container.build()
 
     def init_map(self, map_save: MapSave):
         x_size = int(MapRect.H_size // self.w.hex_math.horizontal_spacing(self.w.tile_r)) - 2
@@ -111,9 +128,6 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         self.w.build_map(flat, odd, map_tiles_data)
         self.w.adapt_scale_to_win_size()
 
-        self.define_map_position()
-        self.update_sizes_texts()
-
     def update_sizes_texts(self):
         self.size_txt.change_text(f'{Global.localization.get_text_wloc(UILocal.Match.Size)}:'
                                   f' {self.w.x_size}x{self.w.y_size}'
@@ -122,6 +136,9 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         self.w_v_size_txt.change_text(f'{Global.loc.get_text_wloc(UILocal.Match.Width).capitalize()}: {self.w.x_size}')
         self.w_h_size_txt.change_text(f'{Global.loc.get_text_wloc(UILocal.Match.Height).capitalize()}: {self.w.y_size}')
 
+    def update_spawns_text(self):
+        self.spawns_amount_txt.change_text(f'Spawns : {len(self.spawns)}')
+
     def update(self):
         Global.display.fill((0, 0, 0))
         collided_popup_btn = self.update_popups()
@@ -129,6 +146,7 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         self.size_txt.draw()
         self.w_v_size_txt.draw()
         self.w_h_size_txt.draw()
+        self.spawns_amount_txt.draw()
         self.update_and_draw_map()
         self.upd_draw_input()
         self.upd_draw_buttons()
@@ -158,19 +176,20 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         return collided_popup_btn
 
     def upd_draw_map_container(self):
-        self.maps_cont.draw()
-        if self.maps_cont.collide_point(Global.mouse.pos):
+        self.maps_container.draw()
+        if self.maps_container.collide_point(Global.mouse.pos):
             if Global.mouse.scroll:
-                self.maps_cont.change_dx(Global.mouse.scroll)
+                self.maps_container.change_dx(Global.mouse.scroll)
 
             mouse_pos = Global.mouse.pos
-            for el in self.maps_cont.elements:
+            for el in self.maps_container.elements:
+                el: MapFuncUI
                 if el.collide_point(mouse_pos):
                     if el.load_btn.collide_point(mouse_pos) and el.load_btn.active:
                         self.draw_border_around_element(el.load_btn)
                         if Global.mouse.l_up:
                             el.load_btn.do_action()
-                            el: MapFuncUI
+
                     elif el.delete_btn.collide_point(mouse_pos) and el.delete_btn.active:
                         self.draw_border_around_element(el.delete_btn)
                         if Global.mouse.l_up:
@@ -195,11 +214,22 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         self.name_inp.update()
 
     def update_and_draw_map(self):
+        """Change tile type under mouse"""
         self.check_for_drag()
         self.check_for_scale()
-        if Global.mouse.l_hold and self.w.window_rect.collidepoint(*Global.mouse.pos):
+        if (Global.mouse.l_up or Global.mouse.l_hold) and self.w.window_rect.collidepoint(*Global.mouse.pos):
             if tile := self.w.get_tile_under_mouse():
                 if not tile.at_edge:
+                    if tile.name == SpawnTile.name:
+                        if self.current_pencil_type.name != SpawnTile.name:
+                            if tile.id_xy in self.spawns:
+                                self.spawns.remove(tile.id_xy)
+                            self.update_spawns_text()
+                    else:
+                        if self.current_pencil_type.name == SpawnTile.name:
+                            self.spawns.append(tile.id_xy)
+                            self.update_spawns_text()
+
                     tile.apply_type(self.current_pencil_type)
                     self.w.rerender_tile((tile.id_x, tile.id_y))
                     self.unsaved_edit = True

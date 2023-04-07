@@ -1,7 +1,7 @@
 import os
 import logging
 from pathlib import Path
-LOG_LEVEL = logging.WARNING
+LOG_LEVEL = logging.INFO
 
 ROOT_OF_GAME = Path(os.getcwd())
 TEXTURES_FOLDER = ROOT_OF_GAME / 'textures'

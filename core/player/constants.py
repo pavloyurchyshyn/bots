@@ -1,11 +1,14 @@
 class PlayerAttrs:
     Token = 'token'
     Nickname = 'nickname'
-    Position = 'position'
-    Color = 'color'
     IsAdmin = 'is_admin'
+    Slot = 'slot'
+
     Ready = 'ready'
-    Number = 'number'
     Spawn = 'spawn'
     Mech = 'mech'
     Scenario = 'scenario'
+
+    # Number = 'number'
+    # Position = 'position'
+    # Color = 'color'

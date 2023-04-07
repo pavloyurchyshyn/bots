@@ -6,9 +6,10 @@ from visual.UI.base.button import Button
 from visual.UI.base.container import Container
 from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorderMixin, BuildRectShapeMixin
 from core.world.base.map_save import MapSave
-from game_client.stages.styles import get_green_btn_style
+from visual.styles import get_green_btn_style
 from settings.screen.size import scaled_w, scaled_h
-from server_stuff.constants.setup_stage import SetupStgConst
+from server_stuff.constants.requests import SetupStageReq
+from settings.localization.menus.UI import UILocal
 
 
 class MapRect:
@@ -43,7 +44,7 @@ class MapFuncElCons:
     DltBtnV_size = 0.97
 
 
-class MapFuncUI(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBorderMixin):
+class MapChooseUI(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBorderMixin):
     parent: Container
 
     def __init__(self, uid,
@@ -55,12 +56,12 @@ class MapFuncUI(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBord
                  h_size_k=MapFuncElCons.H_size,
                  v_size_k=MapFuncElCons.V_size,
                  **kwargs):
-        super(MapFuncUI, self).__init__(uid,
-                                        x_k=x_k,
-                                        y_k=y_k,
-                                        h_size_k=h_size_k,
-                                        v_size_k=v_size_k,
-                                        **kwargs)
+        super(MapChooseUI, self).__init__(uid,
+                                          x_k=x_k,
+                                          y_k=y_k,
+                                          h_size_k=h_size_k,
+                                          v_size_k=v_size_k,
+                                          **kwargs)
         ShapeAbs.__init__(self, **kwargs)
         self.save: MapSave = map_save
         self.menu_ui = menu
@@ -79,6 +80,8 @@ class MapFuncUI(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBord
                                          text='+',
                                          inactive_text='-',
                                          parent=self,
+                                         active=Global.network_data.is_admin,
+                                         visible=Global.network_data.is_admin,
                                          x_k=MapFuncElCons.LBtnX,
                                          y_k=MapFuncElCons.LBtnY,
                                          h_size_k=MapFuncElCons.LBtnH_size,
@@ -88,10 +91,9 @@ class MapFuncUI(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBord
         self.build()
 
     def choose_btn_action(self, b: Button):
-        Global.connection.send_json({SetupStgConst.Player.ChooseMap: self.index})
+        if Global.network_data.is_admin:
+            Global.connection.send_json({SetupStageReq.Player.ChooseMap: self.index})
 
-    # ИИИ ЛЯТЬ ПЕРЕПИСАТИ, НАВЕСТИ ПОРЯДОК В ФАЙЛАХ КРИМІНАЛЬНИХ, НЕ КРИМІНАЛЬНИХ
-    # додати індекс
     def choose(self):
         self.chosen_btn.activate()
         self.render()

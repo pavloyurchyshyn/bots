@@ -12,5 +12,5 @@ class MenuAbs:
     maps_mngr: MapsManager
     current_save: MapSave
     name_inp: InputBase
-    maps_cont: Container
+    maps_container: Container
     unsaved_edit: bool
