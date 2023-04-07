@@ -20,3 +20,11 @@ class Game(GameData):
         self.bots = bots
         self.players: Dict[int, PlayerObj] = players  # player number -> player
         self.world: LogicWorld = world
+
+    @property
+    def everybody_ready(self) -> bool:
+        return all(map(lambda p: p.ready, self.players.values()))
+
+    @property
+    def ready_players_number(self) -> int:
+        return len(tuple(filter(lambda p: p.ready or p.under_bot_control, self.players.values())))

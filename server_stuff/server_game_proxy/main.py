@@ -16,6 +16,7 @@ from game_logic.settings_stage import SettingsStage
 SERVER_LIVE_TIME = 60
 
 
+# TODO make abstract
 class ServerGameProxy:
     def __init__(self, server):
         self.server: ServerAbc = server
@@ -39,23 +40,31 @@ class ServerGameProxy:
             players = {}
             bots = []
 
+            real_players_num = 0
+            players_num = 0
             for slot, token in self.setup_stage.game_logic.players_slots.items():
                 if token is None:
                     continue
+                players_num += 1
 
                 if token == self.setup_stage.game_logic.BOT_TOKEN:
                     nickname = f'Bot_{slot}'
                 else:
                     nickname = self.server.alive_connections[token].nickname
+                    real_players_num += 1
 
                 player_obj = PlayerObj(nickname=nickname,
                                        spawn=self.setup_logic.current_map.spawns[slot],
                                        scenario=dict.fromkeys(tuple(range(self.setup_logic.settings.actions_count))),
+                                       under_bot_control=token == self.setup_stage.game_logic.BOT_TOKEN,
                                        )
-
-                bots.append(BotPlayer(slot=slot, player_obj=player_obj))
+                if token == self.setup_stage.game_logic.BOT_TOKEN:
+                    bots.append(BotPlayer(slot=slot, player_obj=player_obj))
 
                 players[slot] = player_obj
+
+            self.setup_logic.settings.real_players_num = real_players_num
+            self.setup_logic.settings.players_num = players_num
 
             game.setup(self.setup_stage.game_logic.current_map,
                        settings=self.setup_logic.settings,
@@ -66,7 +75,9 @@ class ServerGameProxy:
             self.server.sync_broadcast({SetupStageReq.Server.StartMatch: game.get_game_dict()})
 
             self.current_stage = game
-            del self.setup_stage
+            self.current_stage.game_logic.players_slots = self.setup_stage.game_logic.players_slots
+            game.send_ready_players_num()
+            # del self.setup_stage
         except Exception as e:
             Global.logger.error('Failed to start game.')
             Global.logger.error(str(e))

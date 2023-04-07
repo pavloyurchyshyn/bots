@@ -6,7 +6,6 @@ from server_stuff.abs.server import ServerAbc
 from server_stuff.player_client import Client
 from server_stuff.constants.requests import CommonReqConst
 from game_logic.settings_stage import SettingsStage
-from game_logic.bots.bot_player import BotPlayer
 
 
 class GameSetup:

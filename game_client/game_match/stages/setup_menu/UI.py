@@ -46,8 +46,8 @@ class SetupMenu(Menu,
                                                    x_k=MapsButtonsContainer.X, y_k=MapsButtonsContainer.Y,
                                                    h_size_k=MapsButtonsContainer.H_size,
                                                    v_size_k=MapsButtonsContainer.V_size)
-        self.start.set_active(setup_stage.admin)
-        self.start.set_visible(setup_stage.admin)
+        self.start.set_active(Global.network_data.is_admin)
+        self.start.set_visible(Global.network_data.is_admin)
 
         self.nickname_input: InputBase = InputBase('nickname_input',
                                                    text=Global.network_data.nickname,

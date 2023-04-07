@@ -74,12 +74,12 @@ class StagesController:
         self.start_recv_thread()
 
     def connect_to_setup(self, response):
-        self.current_processor = self.setup_processor = SetupStage(self, Global.network_data.is_admin)
+        self.current_processor = self.setup_processor = SetupStage(self)
         self.current_processor.connect(response)
 
     def connect_to_game(self, response):
         Global.logger.info(f'Loading game: {response}')
-        self.match_processor = MatchStage(self, Global.network_data.is_admin)
+        self.match_processor = MatchStage(self)
         self.match_processor.connect(response)
         self.current_processor = self.match_processor
 
@@ -100,7 +100,7 @@ class StagesController:
                 Global.logger.info(f'Got thread error: {e}')
                 self.process_thread_exception(e)
             else:
-                self.current_processor.process_req(r)
+                self.current_processor.process_request(r)
 
         Global.logger.info(f'Recv server stopped')
 

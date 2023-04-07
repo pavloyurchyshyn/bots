@@ -20,7 +20,7 @@ class ReadyW(Window):
                          surface=surface,
                          h_size=ReadyWindow.h_size, v_size=ReadyWindow.v_size)
         self.ready_players: Text = Text('ready_players_text', '0/0',
-                                        raw_text=Text,
+                                        raw_text=True,
                                         x_k=ReadyWindow.ReadyPlayers_x,
                                         y_k=ReadyWindow.ReadyPlayers_y,
                                         h_size_k=ReadyWindow.ReadyPlayers_h_size,
@@ -44,7 +44,7 @@ class ReadyW(Window):
         self.ready_btn.render()
 
     def ready_click_action(self, b: Button):
-        Global.logger.debug(f'Request ready to {not self.parent.player.ready}')
+        Global.logger.info(f'Request ready to {not self.parent.player.ready}')
         Global.connection.send_json({GSC.Player.ReadyStatus: not self.parent.player.ready})
 
     def update(self):

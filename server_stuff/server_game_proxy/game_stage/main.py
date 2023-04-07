@@ -14,13 +14,17 @@ from game_logic.game_data.game_settings import GameSettings
 
 from core.player.player import PlayerObj
 
+from server_stuff.server_game_proxy.game_stage.components.ready import ReadyLogic
 
-class GameMatch:
+
+class GameMatch(ReadyLogic):
 
     def __init__(self, server_game_proxy, server):
         self.actions = {
             CommonReqConst.Chat: self.chat,
         }
+        ReadyLogic.__init__(self)
+
         self.server: ServerAbc = server
         self.server_game_proxy = server_game_proxy
         self.game_logic: Game = None
@@ -37,8 +41,10 @@ class GameMatch:
             GameStgConst.PlayersData: {k: player.get_dict() for k, player in self.game_logic.players.items()},
         }
 
-    def setup(self, map_save: MapSave, settings: GameSettings,
-              players: Dict[int, PlayerObj], bots: List[BotPlayer]
+    def setup(self, map_save: MapSave,
+              settings: GameSettings,
+              players: Dict[int, PlayerObj],
+              bots: List[BotPlayer]
               ):
         world = LogicWorld()
         world.build_map(flat=map_save.flat, odd=map_save.odd, data=map_save.get_tiles_data())
@@ -56,7 +62,7 @@ class GameMatch:
             self.actions.get(action, self.bad_action)(action=action,
                                                       request=request,
                                                       client=client,
-                                                      player_obj=None)
+                                                      player_obj=self.get_player_obj(client))
 
     def bad_action(self, action: str, client: Client, **kwargs):
         Global.logger.warning(f'Bad request from {client.token} with action "{action}"')
@@ -66,3 +72,6 @@ class GameMatch:
         Global.logger.info(f'{client.token} send a message {msg}')
         if msg:
             self.server.sync_broadcast({CommonReqConst.Chat: f'{client.nickname}: {msg}'})
+
+    def get_player_obj(self, client: Client) -> PlayerObj:
+        return self.game_logic.players.get(client.slot)

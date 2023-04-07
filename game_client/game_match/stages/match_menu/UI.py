@@ -129,3 +129,10 @@ class GameMatch(Menu, PopUpsController,
                 if -3 <= self.cards_dy <= 3:
                     self.cards_dy = 0
 
+    @property
+    def player(self):
+        return self.processor.player
+
+    @property
+    def mech(self):
+        return self.processor.mech

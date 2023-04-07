@@ -8,10 +8,15 @@ class GameData:
     settings: GameSettings
 
     def __init__(self):
-        self.real_players_num: int = self.settings.real_players_num
-        self.players_num: int = self.settings.players_num
-        self.players_ready: int = 0
         self.steps_clock = StepsClock(self.settings.actions_count)
         self.id_generator: IdGenerator = IdGenerator(self.settings.seed)
         self.details_pool: DetailsPool = DetailsPool(self.id_generator)
         self.skills_pool: SkillsPool = self.details_pool.skills_pool
+
+    @property
+    def real_players_num(self) -> int:
+        return self.settings.real_players_num
+
+    @property
+    def players_num(self) -> int:
+        return self.settings.players_num

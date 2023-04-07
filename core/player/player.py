@@ -7,17 +7,20 @@ from core.player.constants import PlayerAttrs
 
 
 class PlayerObj(PlayerAbs):
+    """Internal player object"""
     def __init__(self,
                  nickname,
                  spawn: tuple[int, int],
                  scenario: Dict[int, dict] = None,
                  mech: BaseMech = None,
                  ready: bool = False,
+                 under_bot_control: bool = False,
                  ):
         self.ready: bool = ready
         self.nickname: str = nickname
         self.spawn: tuple[int, int] = spawn
         self.mech: BaseMech = mech
+        self.under_bot_control: bool = under_bot_control
         self.scenario: Scenario = Scenario(self, scenario=scenario)
 
     def get_dict(self):
@@ -31,7 +34,6 @@ class PlayerObj(PlayerAbs):
 
     @staticmethod
     def get_player_from_dict(d: dict) -> 'PlayerObj':
-        print('-->', d)
         if PlayerAttrs.Mech in d and d[PlayerAttrs.Mech]:
             Global.logger.info(f'Received mech dict: {d[PlayerAttrs.Mech]}')
             mech = Global.mech_serializer.dict_to_mech(d.pop(PlayerAttrs.Mech))

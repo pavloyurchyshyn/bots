@@ -16,9 +16,8 @@ from game_client.game_match.stages.match_menu.proc_components.ready import Ready
 from game_client.game_match.stages.match_menu.proc_components.cards import CardsProc
 
 
-class MatchStage(Processor):  # , ReadyProc, CardsProc):
-    def __init__(self, stages_controller, admin: bool):
-        super(MatchStage, self).__init__(admin=admin)
+class MatchStage(Processor, ReadyProc):  # , CardsProc):
+    def __init__(self, stages_controller):
         self.stages_controller = stages_controller
         self.game_object: Game = None
         self.settings: GameSettings = None
@@ -27,22 +26,29 @@ class MatchStage(Processor):  # , ReadyProc, CardsProc):
             CommonReqConst.Chat: self.process_player_msg,
         }
 
-        # ReadyProc.__init__(self)
+        ReadyProc.__init__(self)
         # CardsProc.__init__(self)
+
+    @property
+    def player(self) -> PlayerObj:
+        return self.game_object.players[Global.network_data.slot]
+
+    @property
+    def mech(self) -> BaseMech:
+        return self.player.mech
 
     def update(self):
         self.UI.update()
 
-    def process_request(self, r: dict, **kwargs):
+    def process_request(self, r: dict):
         for k in r.keys():
-            self.actions.get(k, self.bad_request)(r)
+            self.actions.get(k, self.bad_request)(r, request_data=r[k])
 
     def bad_request(self, r: dict):
         Global.logger.warning(f'Bad request: {r}')
 
     def connect(self, response: dict):
         Global.logger.info(f'Connecting to match: {response}')
-        # match_data = response[GSC.MatchData]
         self.settings: GameSettings = GameSettings(players_num=response[GameStgConst.Settings].pop('players_num', 0),
                                                    real_players_num=response[GameStgConst.Settings].pop(
                                                        'real_players_num', 0),
@@ -50,6 +56,7 @@ class MatchStage(Processor):  # , ReadyProc, CardsProc):
         save = MapSave.get_save_from_dict(response[GameStgConst.Map])
         self.UI = GameMatch(self)
         self.UI.w.build_map(save.flat, save.odd, save.get_tiles_data())
+        self.UI.w.adapt_scale_to_win_size()
 
         players_data = response[GameStgConst.PlayersData]
 
@@ -60,11 +67,7 @@ class MatchStage(Processor):  # , ReadyProc, CardsProc):
                    for slot, player_data
                    in players_data.items()}
         self.game_object.players = players
-        print('=' * 20)
-        print(players_data)
 
-        print(players)
-        print('=' * 20)
         # Global.details_pool.load_details_list(match_data[GSC.MatchArgs.DetailsPool])
         # self.update_time(match_data)
         # self.update_players_ready_number(response)
@@ -74,5 +77,5 @@ class MatchStage(Processor):  # , ReadyProc, CardsProc):
         # self.UI.define_map_position()
         # self.UI.collect_skills_deck()
 
-    def process_player_msg(self, r: dict):
-        self.UI.chat.add_msg(r[CommonReqConst.Chat])
+    def process_player_msg(self, r: dict, request_data, **kwargs):
+        self.UI.chat.add_msg(request_data)

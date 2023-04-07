@@ -7,8 +7,7 @@ from server_stuff.constants.requests import CommonReqConst, SetupStageReq as SSR
 
 
 class SetupStage(Processor):
-    def __init__(self, stages_controller, admin: bool):
-        super(SetupStage, self).__init__(admin=admin)
+    def __init__(self, stages_controller):
         self.exception = None
         self.stages_controller = stages_controller
         self.maps_mngr: MapsManager = MapsManager()
@@ -24,7 +23,7 @@ class SetupStage(Processor):
             CommonReqConst.SendSlotToPlayer: self.get_my_slot,
         }
 
-    def process_req(self, r: dict):
+    def process_request(self, r: dict, **kwargs):
         for k in r.keys():
             self.actions.get(k, self.bad_request)(r)
 
