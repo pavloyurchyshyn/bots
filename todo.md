@@ -7,10 +7,10 @@ First priority:
   - ~~skills cards~~
   - ~~MAKE USED CARDS POSITIONS~~
   - ~~make cards factory~~
-  - ## REFACTOR separate game logic to a module
-  - make bridge for online and offline play
+  - ~~REFACTOR separate game logic to a module~~
+  - ~~make bridge for online and offline play~~ not complete but anyway
   - use skill functionality
-    - ~~send request to server~~
+    - send request to server
     - create validators system
     - validate on server side
     - add card to used cards deck
@@ -32,13 +32,14 @@ First priority:
   
   - #### SETUP STAGE
     - ~~map selection~~
-    - connected players
+    - ~~connected players~~
     - add settings edit
     - edit players number
-    - kick players
+    - ~~kick players~~
+    - ban players
     - lock connections
     - set password
-    - edit nickname
+    - ~~edit nickname~~
     - game settings
       - timer
       - details pool
