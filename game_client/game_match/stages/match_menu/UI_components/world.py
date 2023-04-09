@@ -1,12 +1,15 @@
-from pygame.draw import rect as draw_rect, circle as draw_circle
+from math import cos
+from pygame import transform
+from pygame.draw import rect as draw_rect, circle as draw_circle, lines as draw_lines
 
 from global_obj.main import Global
 
+from core.world.base.visual.tile import VisualTile
 from core.world.base.visual.world import VisualWorld
+
 from settings.screen.size import scaled_w, scaled_h
 from game_client.game_match.stages.match_menu.settings.windows_sizes import MapRect
 
-from pygame import transform
 from visual.UI.utils import load_image
 
 MECH = transform.smoothscale(load_image('default/mech.png'), (150, 150))
@@ -25,11 +28,19 @@ class WorldC:
         # draw_circle(Global.display, (255, 0, 0), self.w.get_real_center_of_tile(self.mech.position), 5)
         # draw_circle(Global.display, (211, 211, 0), self.w.get_real_lt_of_tile(self.mech.position), 3)
 
-        if self.mech:
-            x, y = self.w.get_real_center_of_tile(self.mech.position)
-            mech_img = transform.smoothscale(MECH, (MECH.get_width() * self.w.scale, MECH.get_height() * self.w.scale))
-            Global.display.blit(mech_img, (x - mech_img.get_width() // 2, y - mech_img.get_height() // 2))
-            self.w.draw_border_under_mouse()
+        for player in Global.game.players.values():
+            if player.mech:
+                x, y = self.w.get_real_center_of_tile(player.mech.position)
+                if player.mech == self.mech:
+                    draw_lines(Global.display,
+                               (55, int(55 + 200 * abs(cos(Global.clock.time))), 55),
+                               True,
+                               self.w.get_dots_due_to_map_pos(*player.mech.position), 3)
+
+                mech_img = transform.smoothscale(MECH,
+                                                 (MECH.get_width() * self.w.scale, MECH.get_height() * self.w.scale))
+                Global.display.blit(mech_img, (x - mech_img.get_width() // 2, y - mech_img.get_height() // 2))
+        self.w.draw_border_under_mouse()
 
     def check_for_drag(self):
         if Global.mouse.m_hold:

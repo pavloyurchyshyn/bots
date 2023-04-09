@@ -27,7 +27,7 @@ class SetupMenu(Menu,
                 ConnectedPlayers,
                 PlayersSlots,
                 DrawElementBorderMixin):
-    start: Button
+    start_btn: Button
 
     def __init__(self, setup_stage):
         super(SetupMenu, self).__init__(BUTTONS_DATA)
@@ -46,8 +46,8 @@ class SetupMenu(Menu,
                                                    x_k=MapsButtonsContainer.X, y_k=MapsButtonsContainer.Y,
                                                    h_size_k=MapsButtonsContainer.H_size,
                                                    v_size_k=MapsButtonsContainer.V_size)
-        self.start.set_active(Global.network_data.is_admin)
-        self.start.set_visible(Global.network_data.is_admin)
+        self.start_btn.set_active(Global.network_data.is_admin)
+        self.start_btn.set_visible(Global.network_data.is_admin)
 
         self.nickname_input: InputBase = InputBase('nickname_input',
                                                    text=Global.network_data.nickname,

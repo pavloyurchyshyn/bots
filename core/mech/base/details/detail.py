@@ -24,12 +24,8 @@ class BaseDetail:
     body_types = (DetailsTypes.BODY,)
     body_mod_types = (DetailsTypes.BODY_MOD_TYPE,)
 
-    def __init__(self, unique_id=None, **kwargs):
-        """
-        :param unique_id:
-        :param kwargs:
-        """
-        self.__unique_id = unique_id
+    def __init__(self, unique_id: str = None, **kwargs):
+        self.__unique_id: str = unique_id
         if self.name is None:
             raise NoDetailNameError(self)
 
@@ -88,7 +84,7 @@ class BaseDetail:
         return self._energy_regen
 
     @property
-    def unique_id(self) -> Union[float, int]:
+    def unique_id(self) -> str:
         return self.__unique_id
 
     @property

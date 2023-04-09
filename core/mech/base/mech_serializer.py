@@ -46,7 +46,7 @@ class MechSerializer:
         :return:
         """
         body: BaseBody = self.details_pool.get_detail_by_id(data.get(MechSerializeConst.Body))
-        mech = BaseMech(data.get(MechAttrs.Position), body_detail=body)
+        mech = BaseMech(tuple(data.get(MechAttrs.Position, (-100, -100))), body_detail=body)
 
         self.update_mech_details(mech, data)
 
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     from game_logic import IdGenerator
 
     builder = MechSerializer(DetailsPool(IdGenerator()))
-    builder.details_pool.load_details_list([
+    builder.details_pool.load_details_classes_list([
         ('simple_metal_body', 0),
         ('simple_metal_arm', 1),
         ('simple_metal_arm', 2),

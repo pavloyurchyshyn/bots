@@ -45,7 +45,7 @@ class MechPropertiesMixin:
 
     @property
     def position(self):
-        return self._position
+        return tuple(self._position)
 
     @property
     def details(self):
@@ -110,7 +110,7 @@ class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin):
     def __init__(self, position, body_detail: BaseBody = None):
         self.body = body_detail
 
-        self._position = position
+        self._position = tuple(position) if position else None
 
         # - slots -
         self._left_slots = {}
@@ -169,7 +169,7 @@ class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin):
             side[i] = slot
 
     def change_position(self, pos):
-        self._position = pos
+        self._position = tuple(pos)
 
     def set_left_detail(self, slot_id, detail: BaseDetail):
         self.set_detail(self._left_slots, slot_id, detail)

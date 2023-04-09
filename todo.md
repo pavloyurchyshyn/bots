@@ -31,6 +31,7 @@ First priority:
   - player obj
   
   - #### SETUP STAGE
+    - block game start if no slots selected 
     - ~~map selection~~
     - ~~connected players~~
     - add settings edit
@@ -44,9 +45,13 @@ First priority:
       - timer
       - details pool
     
-    - #### JOIN MENU
-      - add nickname edit
+      - #### JOIN MENU
+        - add nickname edit
   
+  - #### GAME stage
+    - draw meches
+    - start details selection
+    - sync time
 
 - Multiplayer
   - ~~connecting~~

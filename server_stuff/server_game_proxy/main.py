@@ -3,6 +3,9 @@ import traceback
 from typing import Dict
 from global_obj.main import Global
 from core.player.player import PlayerObj
+from core.mech.base.mech import BaseMech
+from core.mech.base.pools import DetailsPool
+
 
 from server_stuff.player_client import Client
 from server_stuff.abs.server import ServerAbc
@@ -12,6 +15,7 @@ from server_stuff.constants.requests import CommonReqConst, GameStgConst, SetupS
 
 from game_logic.bots.bot_player import BotPlayer
 from game_logic.settings_stage import SettingsStage
+from game_logic.game_data.id_generator import IdGenerator
 
 SERVER_LIVE_TIME = 60
 
@@ -36,6 +40,9 @@ class ServerGameProxy:
     def start_game_match(self):
         try:
             Global.logger.info('Start game match')
+            id_generator: IdGenerator = IdGenerator()
+            details_pool: DetailsPool = DetailsPool(id_generator=id_generator)
+
             game: GameMatch = GameMatch(server_game_proxy=self, server=self.server)
             players = {}
             bots = []
@@ -53,8 +60,11 @@ class ServerGameProxy:
                     nickname = self.server.alive_connections[token].nickname
                     real_players_num += 1
 
+                position = self.setup_logic.current_map.spawns[slot]
+                mech: BaseMech = details_pool.get_simple_mech(position=position)
                 player_obj = PlayerObj(nickname=nickname,
-                                       spawn=self.setup_logic.current_map.spawns[slot],
+                                       mech=mech,
+                                       spawn=position,
                                        scenario=dict.fromkeys(tuple(range(self.setup_logic.settings.actions_count))),
                                        under_bot_control=token == self.setup_stage.game_logic.BOT_TOKEN,
                                        )
@@ -70,6 +80,8 @@ class ServerGameProxy:
                        settings=self.setup_logic.settings,
                        players=players,
                        bots=bots,
+                       id_generator=id_generator,
+                       details_pool=details_pool,
                        )
 
             self.server.sync_broadcast({SetupStageReq.Server.StartMatch: game.get_game_dict()})
@@ -83,6 +95,9 @@ class ServerGameProxy:
             Global.logger.error(str(e))
             Global.logger.error(traceback.format_exc())
             # TODO disconnect all
+
+    def send_broadcast_chat(self, msg: str):
+        self.server.sync_broadcast({CommonReqConst.Chat: msg})
 
     def connect(self, response: dict, client: Client):
         self.current_stage.connect(response=response, client=client)

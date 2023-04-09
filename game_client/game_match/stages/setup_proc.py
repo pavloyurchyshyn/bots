@@ -25,9 +25,9 @@ class SetupStage(Processor):
 
     def process_request(self, r: dict, **kwargs):
         for k in r.keys():
-            self.actions.get(k, self.bad_request)(r)
+            self.actions.get(k, self.bad_request)(r, request_data=r[k])
 
-    def bad_request(self, r: dict):
+    def bad_request(self, r: dict, request_data):
         Global.logger.warning(f'Bad request: {r}')
 
     def update(self):
@@ -38,32 +38,35 @@ class SetupStage(Processor):
     def connect(self, response: dict):
         self.UI.maps_mngr.load_from_dict(response[SSR.Maps])
         self.UI.fill_container()
-        self.update_connected_players(response)
-        self.chosen_map(response)
+        self.update_connected_players(response, response[CommonReqConst.ConnectedPlayers])
+        self.chosen_map(response, response[SSR.Server.ChosenMap])
 
-    def get_my_slot(self, r: dict):
-        Global.logger.info(f'My new slot {r[CommonReqConst.SendSlotToPlayer]}')
-        Global.network_data.slot = r[CommonReqConst.SendSlotToPlayer]
+    def get_my_slot(self, r: dict, request_data):
+        Global.logger.info(f'My new slot {request_data}')
+        Global.network_data.slot = request_data
 
-    def update_connected_players(self, r: dict):
-        self.UI.fill_connected(r[CommonReqConst.ConnectedPlayers])
+    def update_connected_players(self, r: dict, request_data):
+        self.UI.fill_connected(request_data)
 
-    def chosen_map(self, r: dict):
+    def chosen_map(self, r: dict, request_data):
         self.UI.update_chosen_map(r.get(SSR.Server.ChosenMap, self.UI.current_save), force=True)
 
-    def start_game(self, r: dict):
+    def start_game(self, r: dict, request_data):
         self.stages_controller.connect_to_game(r[SSR.Server.StartMatch])
 
-    def process_player_msg(self, r: dict):
+    def process_player_msg(self, r: dict, request_data):
         self.UI.chat.add_msg(r[CommonReqConst.Chat])
 
     def send_start_request(self):
         Global.connection.send_json({SSR.Player.StartMatch: True})
 
-    def disconnect_me(self, r: dict):
+    def disconnect_me(self, r: dict, request_data):
         Global.stages.close_game()
         self.stages_controller.alive = False
-        self.stages_controller.add_popup_to_mmenu(r[CommonReqConst.Disconnect])
+        self.stages_controller.add_popup_to_mmenu(request_data)
 
-    def process_players_slots(self, r: dict):
-        self.UI.fill_players_slots(r[CommonReqConst.PlayersSlots])
+    def process_players_slots(self, r: dict, request_data):
+        self.UI.fill_players_slots(request_data)
+        any_player = any((d[0] for d in request_data.values()))
+        if Global.network_data.is_admin:
+            self.UI.start_btn.set_active(any_player)

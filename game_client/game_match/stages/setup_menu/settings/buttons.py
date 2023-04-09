@@ -28,7 +28,7 @@ BUTTONS_DATA = {
             ButtonAttrs.OnClickAction: exit_to_main_menu,
         }
     },
-    'start': {
+    'start_btn': {
         'kwargs': {
             ButtonAttrs.XK: 0.9,
             ButtonAttrs.YK: 0.945,

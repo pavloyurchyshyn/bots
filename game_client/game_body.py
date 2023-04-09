@@ -82,7 +82,7 @@ class GameBody:
                 break
         else:
             self.main_menu.add_ok_popup('Failed to connect.')
-            Global.stages.main_menu()
+            Global.stages.close_game()
 
     def update_game(self):
         self.game.update()

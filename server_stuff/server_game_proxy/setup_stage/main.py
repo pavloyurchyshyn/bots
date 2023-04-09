@@ -81,6 +81,11 @@ class GameSetup:
 
     def start_match(self, request: dict, client: Client, **kwargs):
         if client.is_admin:
+            if not any((s for s in self.game_logic.players_slots.values())):
+                self.server_game_proxy.send_broadcast_chat('Fill any slot')
+                self.server.send_player_slots()
+                return
+
             if request[SSR.Player.StartMatch] and not self.server_game_proxy.started_match:
                 Global.logger.info(f'Game data: {request}')
                 # self.game_logic.set_real_players(

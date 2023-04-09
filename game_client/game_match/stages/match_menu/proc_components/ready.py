@@ -14,7 +14,7 @@ class ReadyProc:
         self.actions[GSC.Player.ReadyStatus] = self.update_ready_status
         self.actions[GSC.ReadyPlayersNumber] = self.update_players_ready_number
 
-    def update_time(self, r: dict, request_data, **kwargs):
+    def update_time(self, r: dict, request_data=None, **kwargs):
         Global.logger.debug(f'Updated time: {r[GSC.Time]}')
         Global.round_clock.set_time(r[GSC.Time])
 

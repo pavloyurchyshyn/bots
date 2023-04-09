@@ -6,7 +6,7 @@ from core.mech.base.pools.details_pool import DetailsPool
 
 def test():
     builder = MechSerializer(DetailsPool(SkillsPool()))
-    builder.details_pool.load_details_list([
+    builder.details_pool.load_details_classes_list([
         ('simple_metal_body', 0),
         ('simple_metal_arm', 1),
         ('simple_metal_arm', 2),

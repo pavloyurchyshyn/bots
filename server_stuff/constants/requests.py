@@ -43,8 +43,9 @@ class GameStgConst:
 
     Settings = 'game_settings'
 
-    class Server:
+    class ToPlayer:
         UpdateMech = 'update_mech'
+        DeleteDetailFromPool = 'delete_detail_from_pool'
 
     class Player:
         ReadyStatus = 'ready_status'

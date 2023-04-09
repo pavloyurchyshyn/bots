@@ -18,7 +18,7 @@ class PlayerObj(PlayerAbs):
                  ):
         self.ready: bool = ready
         self.nickname: str = nickname
-        self.spawn: tuple[int, int] = spawn
+        self.spawn: tuple[int, int] = tuple(spawn)
         self.mech: BaseMech = mech
         self.under_bot_control: bool = under_bot_control
         self.scenario: Scenario = Scenario(self, scenario=scenario)
