@@ -11,7 +11,7 @@ class MechSerializer:
     def __init__(self, details_pool: DetailsPool):
         self.details_pool: DetailsPool = details_pool
 
-    def mech_to_dict(self, mech: BaseMech):
+    def mech_to_dict(self, mech: BaseMech) -> dict:
         data = {
             # MechAttrs.Position: mech.position,
             # MechAttrs.CurrentHP: mech.health_points,

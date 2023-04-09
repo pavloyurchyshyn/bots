@@ -16,7 +16,8 @@ from core.player.player import PlayerObj
 from server_stuff.server_game_proxy.game_stage.components.ready import ReadyLogic
 
 from game_logic.game_data.id_generator import IdGenerator
-from core.mech.base.pools import DetailsPool
+from core.mech.base.pools.details_pool import DetailsPool
+
 
 class GameMatch(ReadyLogic):
 

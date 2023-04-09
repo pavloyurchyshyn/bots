@@ -8,7 +8,7 @@ from game_logic.game_data.game_data import GameData
 from game_logic.game_data.game_settings import GameSettings
 
 from game_logic.game_data.id_generator import IdGenerator
-from core.mech.base.pools import DetailsPool
+from core.mech.base.pools.details_pool import DetailsPool
 
 
 class Game(GameData):
@@ -22,7 +22,7 @@ class Game(GameData):
                  ):
         self.settings: GameSettings = setting
         super().__init__(id_generator=id_generator, details_pool=details_pool)
-        self.bots = bots
+        self.bots: List[BotPlayer] = bots
         self.players: Dict[int, PlayerObj] = players  # player number -> player
         self.world: LogicWorld = world
 

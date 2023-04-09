@@ -39,7 +39,7 @@ class CardUseC:
                                    }
                     self._targets_validators.get(target, self.__unknown_target)(use_skill_d)
                 except BadTarget as e:
-                    Global.logger.info(e.msg)
+                    Global.logger.warning(e.msg)
                 except UnknownTarget:
                     Global.logger.warning(f'Unknown skill target "{target}"')
                     break

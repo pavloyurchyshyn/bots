@@ -1,10 +1,9 @@
 import time
 import traceback
-from typing import Dict
 from global_obj.main import Global
 from core.player.player import PlayerObj
 from core.mech.base.mech import BaseMech
-from core.mech.base.pools import DetailsPool
+from core.mech.base.pools.details_pool import DetailsPool
 
 
 from server_stuff.player_client import Client
