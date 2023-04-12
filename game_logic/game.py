@@ -8,7 +8,7 @@ from game_logic.game_data.game_data import GameData
 from game_logic.game_data.game_settings import GameSettings
 
 from game_logic.game_data.id_generator import IdGenerator
-from core.mech.base.pools.details_pool import DetailsPool
+from core.mech.pools.details_pool import DetailsPool
 
 
 class Game(GameData):

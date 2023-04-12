@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from core.mech.base.mech import BaseMech
+from core.mech.mech import BaseMech
 
 
 class PlayerAbs:

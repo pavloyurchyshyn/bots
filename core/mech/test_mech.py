@@ -1,5 +1,5 @@
-from core.mech.base.mech import BaseMech
-from core.mech.details.simple_metal_parts import MetalArm, MetalLeg, MetalBody
+from core.mech.mech import BaseMech
+from core.vanile_details import MetalArm, MetalLeg, MetalBody
 
 
 class MetalMech(BaseMech):

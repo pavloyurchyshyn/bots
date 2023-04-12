@@ -1,12 +1,11 @@
 from global_obj.main import Global
 
+
 from visual.UI.base.menu import Menu
 from visual.cards.skill.card import SkillCard
 from visual.UI.popup_controller import PopUpsController
 from visual.UI.base.mixins import DrawElementBorderMixin
-
-from core.player.player import PlayerObj
-from core.mech.base.mech import BaseMech
+from visual.cards.skill.skill_cards_fabric import SkillsCardsFabric
 
 from game_client.game_match.stages.match_menu.UI_components.chat import ChatC
 from game_client.game_match.stages.match_menu.UI_components.mech import MechC
@@ -19,9 +18,6 @@ from game_client.game_match.stages.match_menu.UI_components.cards_deck import Ca
 from game_client.game_match.stages.match_menu.UI_components.used_cards import UsedCardsC
 from game_client.game_match.stages.match_menu.UI_components.hp_and_mana import HpAndManaC
 from game_client.game_match.stages.match_menu.settings.buttons import BUTTONS_DATA
-
-from server_stuff.constants.requests import GameStgConst as GSC
-from visual.cards.skill.skill_cards_fabric import SkillsCardsFabric
 
 
 class GameMatch(Menu, PopUpsController,
@@ -86,7 +82,7 @@ class GameMatch(Menu, PopUpsController,
         if Global.mouse.l_up:
             if self.get_rect().collidepoint(Global.mouse.pos):
                 for card in self.skills_deck:
-                    if card.get_rect().collidepoint(Global.mouse.pos):
+                    if card.skill.not_on_cooldown and card.get_rect().collidepoint(Global.mouse.pos):
                         # Global.connection.send_json({GSC.SkillM.SelectSkill: card.skill.unique_id})
                         self.selected_card_to_use: SkillCard = card
                         break

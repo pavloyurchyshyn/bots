@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from core.mech.base.skills.skill import BaseSkill
+from core.mech.skills.skill import BaseSkill
 from visual.cards.skill.style import SkillCardStyle
 
 

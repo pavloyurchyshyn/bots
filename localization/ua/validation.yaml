@@ -1,0 +1,6 @@
+msgs:
+  skill_on_cooldown: Здібність на перезарядці
+  not_enough_energy: Не достатньо енергії
+  skill_not_in_pool: Здібність не в пулі здібностей
+  player_doesnt_own_skill: Гравець не володіє цією здібністю
+  bad_tile_target: Ця клітина не підходить

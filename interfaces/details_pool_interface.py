@@ -1,8 +1,8 @@
 from logging import Logger
 from typing import Dict, Union, Type, List
 
-from core.mech.base.mech import BaseMech
-from core.mech.base.details.detail import BaseDetail
+from core.mech.mech import BaseMech
+from core.mech.details.detail import BaseDetail
 from interfaces.skills_pool_interface import SkillsPoolInterface
 
 from game_logic.game_data.id_generator import IdGenerator

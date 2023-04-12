@@ -1,5 +1,5 @@
 from typing import List, Dict, Union
-from core.mech.base.skills.skill import BaseSkill
+from core.mech.skills.skill import BaseSkill
 
 
 class SkillsPoolInterface:

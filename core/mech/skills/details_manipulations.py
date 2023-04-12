@@ -1,9 +1,9 @@
-from core.mech.base.skills.skill import BaseSkill
-from core.mech.base.skills.constants import ReservedSkillsIds
+from core.mech.skills.skill import BaseSkill
+from core.mech.skills.constants import ReservedSkillsIds
 
 
 class DisconnectDetailSkill(BaseSkill):
-    targets = BaseSkill.Targets.Detail,
+    targets = BaseSkill.TargetsConst.Detail,
     name = 'disconnect_detail'
 
     def __init__(self):

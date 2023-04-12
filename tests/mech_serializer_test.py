@@ -1,7 +1,7 @@
-from core.mech.base.test_mech import MetalMech
-from core.mech.base.pools.skills_pool import SkillsPool
-from core.mech.base.mech_serializer import MechSerializer
-from core.mech.base.pools.details_pool import DetailsPool
+from core.mech.test_mech import MetalMech
+from core.mech.pools.skills_pool import SkillsPool
+from core.mech.mech_serializer import MechSerializer
+from core.mech.pools.details_pool import DetailsPool
 
 
 def test():

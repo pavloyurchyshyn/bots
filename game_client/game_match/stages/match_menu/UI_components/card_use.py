@@ -1,10 +1,11 @@
 from global_obj.main import Global
 from visual.cards.skill.card import SkillCard
-from pygame.draw import rect as draw_rect, line as draw_line, circle as draw_circle
+from core.mech.skills.skill import BaseSkill
+from pygame.draw import line as draw_line, circle as draw_circle
 from core.world.base.visual.world import VisualWorld
-from core.mech.base.skills.constants import Targets
+from core.mech.skills.constants import Targets
 from server_stuff.constants.requests import GameStgConst as GSC
-from core.world.base.logic.tile import LogicTile
+from core.validators.skill import ValidationError
 
 
 class BadTarget(Exception):
@@ -37,48 +38,64 @@ class CardUseC:
                     use_skill_d = {GSC.SkillM.SkillUID: self.selected_card_to_use.skill.unique_id,
                                    GSC.SkillM.UseAttrs: {}
                                    }
-                    self._targets_validators.get(target, self.__unknown_target)(use_skill_d)
+                    self._targets_validators.get(target, self.__unknown_target)(skill=self.selected_card_to_use.skill,
+                                                                                d=use_skill_d)
                 except BadTarget as e:
-                    Global.logger.warning(e.msg)
+                    if Global.mouse.l_up:
+                        Global.logger.info(e.msg)
                 except UnknownTarget:
                     Global.logger.warning(f'Unknown skill target "{target}"')
                     break
                 else:
                     self.good_target = True
                     if Global.mouse.l_up:
-                        Global.connection.send_json(
-                            {GSC.SkillM.UseSkill: use_skill_d}
-                        )
-                        # TODO send request
-                        pass
+                        Global.connection.send_json({GSC.SkillM.UseSkill: use_skill_d})
 
     @staticmethod
-    def __unknown_target(d: dict):
+    def __unknown_target(d: dict, skill: BaseSkill):
         raise UnknownTarget
 
-    def __no_target(self, d: dict):
+    def __no_target(self, d: dict, skill: BaseSkill):
         pass
 
-    def __tile_target(self, d: dict):
+    def __tile_target(self, d: dict, skill: BaseSkill):
         if self.w.window_rect.collidepoint(*Global.mouse.pos):
-            tile = self.w.get_tile_under_mouse()
-            if not tile:
-                raise BadTarget(f'No tile under mouse.')
-            elif not tile.passable:
-                raise BadTarget(f'Tile {tile.id_xy} not passable.')
+            tile = self.w.get_mouse_to_xy()
+            # if not tile:
+            #     raise BadTarget(f'No tile under mouse.')
+            # elif not tile.passable:
+            #     raise BadTarget(f'Tile {tile.id_xy} not passable.')
+            # else:
+            try:
+                self.validate(skill=skill, xy=tile)
+            except ValidationError as e:
+                if Global.mouse.l_up:
+                    self.add_ok_popup(e.msg)
+                Global.logger.info(f'Bad target for skill "{skill.name}" - ({tile})')
+                raise BadTarget('validation error')
+
             else:
-                d[GSC.SkillM.UseAttrs][Targets.Tile] = tile.id_xy
+                d[GSC.SkillM.UseAttrs][Targets.Tile] = tile
 
         else:
             raise BadTarget('Mouse outside of world window.')
 
-    def __mech_target(self, d: dict):
+    def validate(self, skill: BaseSkill, **additional_kwargs):
+        return skill.validate_use(player=self.player,
+                                  world=Global.game.world,
+                                  details_pool=Global.game.details_pool,
+                                  skill_pool=Global.game.skills_pool,
+                                  players=Global.game.players,
+                                  **additional_kwargs,
+                                  )
+
+    def __mech_target(self, d: dict, skill: BaseSkill):
         pass
 
     def draw_use_trace(self):
         if self.selected_card_to_use:
             draw_line(Global.display, (100, 255, 255),
-                      self.selected_card_to_use.get_center(dy=self.cards_dy),
+                      self.w.get_real_center_of_tile(self.mech.position),
                       Global.mouse.pos,
                       4
                       )

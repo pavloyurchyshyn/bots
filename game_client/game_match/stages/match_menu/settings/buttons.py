@@ -2,8 +2,8 @@ from global_obj.main import Global
 from visual.UI.base.button import Button
 from visual.UI.yes_no_popup import YesNoPopUp
 from visual.UI.constants.attrs import ButtonAttrs
-from game_client.game_match.stages.match_menu.settings.uids import UIDs
 from settings.localization.menus.UI import UILocal
+from game_client.game_match.stages.match_menu.settings.uids import UIDs
 
 
 def add_exit_popup(b: Button):

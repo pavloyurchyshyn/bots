@@ -1,0 +1,6 @@
+msgs:
+  skill_on_cooldown: Skill on cooldown
+  not_enough_energy: No enough energy
+  skill_not_in_pool: Skill not in pull
+  player_doesnt_own_skill: Player doesnt own skill
+  bad_tile_target: Bad tile target

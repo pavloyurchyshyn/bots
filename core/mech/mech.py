@@ -1,9 +1,10 @@
-from typing import List
-from core.mech.base.details.body import BaseBody
-from core.mech.base.details.detail import BaseDetail
-from core.mech.base.skills.exceptions import NotEnoughEnergyError
-from core.mech.base.exceptions import SlotDoesntExistsError, WrongDetailType
-from core.mech.base.details.constants import DetailsAttrs, MechAttrs, DetailsTypes
+from typing import List, Dict, Tuple
+from core.mech.details.body import BaseBody
+from core.mech.details.detail import BaseDetail
+from core.mech.details.slot import BaseSlot
+from core.mech.skills.exceptions import NotEnoughEnergyError
+from core.mech.exceptions import SlotDoesntExistsError, WrongDetailType
+from core.mech.details.constants import DetailsAttrs, MechAttrs, DetailsTypes
 
 
 class MechPropertiesMixin:
@@ -104,33 +105,37 @@ class MechParameterCalculationMixin:
 class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin):
     """
     This is an object which contains body and calculating attrs.
-    Body contains other details.
+    Body contains other vanile_details.
     """
 
     def __init__(self, position, body_detail: BaseBody = None):
         self.body = body_detail
 
-        self._position = tuple(position) if position else None
+        self._position: Tuple[int, int] = tuple(position) if position else None
 
         # - slots -
-        self._left_slots = {}
-        self._right_slots = {}
+        self._left_slots: Dict[int, BaseSlot] = {}
+        self._right_slots: Dict[int, BaseSlot] = {}
         self.build_slots()
         # ----------
 
-        self._damage = 0
-        self._armor = 0
-        self._hp = 0
-        self._hp_regen = 0
-        self._energy = 0
-        self._energy_regen = 0
+        self._damage: float = 0
+        self._armor: float = 0
+        self._hp: float = 0
+        self._hp_regen: float = 0
+        self._energy: float = 0
+        self._energy_regen: float = 0
 
         self.calculate_attrs()
+        self._current_hp: float = self._hp
+        self._current_energy: float = self._energy
+
+        self._skills: List['BaseSkill'] = []
+        self.collect_abilities()
+
+    def refill_energy_and_hp(self):
         self._current_hp = self._hp
         self._current_energy = self._energy
-
-        self._skills = []
-        self.collect_abilities()
 
     def update_details_and_attrs(self):
         self.build_slots()
@@ -168,16 +173,16 @@ class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin):
 
             side[i] = slot
 
-    def change_position(self, pos):
+    def change_position(self, pos: Tuple[int, int]):
         self._position = tuple(pos)
 
-    def set_left_detail(self, slot_id, detail: BaseDetail):
+    def set_left_detail(self, slot_id: int, detail: BaseDetail):
         self.set_detail(self._left_slots, slot_id, detail)
 
-    def set_right_detail(self, slot_id, detail: BaseDetail):
+    def set_right_detail(self, slot_id: int, detail: BaseDetail):
         self.set_detail(self._right_slots, slot_id, detail)
 
-    def set_detail(self, slots: dict, slot_id, detail: BaseDetail, update_attr=True):
+    def set_detail(self, slots: dict, slot_id: int, detail: BaseDetail, update_attr=True):
         if slots.get(slot_id) is not None:
             slots[slot_id].set_detail(detail)
             if update_attr:
@@ -185,7 +190,7 @@ class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin):
         else:
             raise SlotDoesntExistsError(f'{slot_id} in {slots}')
 
-    def switch_part(self, slots, slot_id, detail: BaseDetail, update_attr=True):
+    def switch_part(self, slots: dict, slot_id: int, detail: BaseDetail, update_attr=True):
         slot = slots.get(slot_id)
         if slot:
             d = slot.switch_detail(detail)
@@ -202,13 +207,13 @@ class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin):
             for detail in self.details:
                 self._skills.extend(detail.skills)
 
-    def deal_damage(self, dmg):
+    def deal_damage(self, dmg: float):
         self._current_hp -= dmg
 
-    def have_enough_energy(self, energy) -> bool:
+    def have_enough_energy(self, energy: float) -> bool:
         return self._current_energy - energy >= 0.
 
-    def spend_energy(self, energy):
+    def spend_energy(self, energy: float):
         if energy > self._current_energy:
             raise NotEnoughEnergyError
 
@@ -217,39 +222,41 @@ class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin):
     def set_max_hp(self):
         self._current_hp = self._hp
 
-    def set_health_points(self, hp):
+    def set_health_points(self, hp: float):
         self._current_hp = hp
 
     def set_max_energy(self):
         self._current_energy = self._energy
 
-    def set_energy(self, energy):
+    def set_energy(self, energy: float):
         self._current_energy = energy
 
     def attr_dict(self):
         return {
             DetailsAttrs.Damage: self._damage,
             DetailsAttrs.Armor: self._armor,
-            DetailsAttrs.AddHP: self._hp,
             DetailsAttrs.HPRegen: self._hp_regen,
-            DetailsAttrs.AddEnergy: self._energy,
             DetailsAttrs.EnergyRegen: self._energy_regen,
-            MechAttrs.Position: self._position,
+
+            MechAttrs.MaxHP: self._hp,
+            MechAttrs.MaxEnergy: self._energy,
             MechAttrs.CurrentHP: self._current_hp,
             MechAttrs.CurrentEnergy: self._current_energy,
+            MechAttrs.Position: self._position,
         }
 
     def set_attrs(self, data: dict):
         for key, attr in (
                 (DetailsAttrs.Damage, '_damage'),
                 (DetailsAttrs.Armor, '_armor'),
-                (DetailsAttrs.AddHP, '_hp'),
-                (MechAttrs.Position, '_position'),
                 (DetailsAttrs.HPRegen, '_hp_regen'),
-                (DetailsAttrs.AddEnergy, '_energy'),
                 (DetailsAttrs.EnergyRegen, '_energy_regen'),
+
+                (MechAttrs.MaxHP, '_hp'),
+                (MechAttrs.MaxEnergy, '_energy'),
                 (MechAttrs.CurrentHP, '_current_hp'),
                 (MechAttrs.CurrentEnergy, '_current_energy'),
+                (MechAttrs.Position, '_position'),
         ):
             setattr(self, attr, data[key] if data.get(key) is not None else getattr(self, attr))
 

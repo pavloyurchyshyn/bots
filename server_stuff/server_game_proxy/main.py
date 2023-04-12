@@ -2,15 +2,15 @@ import time
 import traceback
 from global_obj.main import Global
 from core.player.player import PlayerObj
-from core.mech.base.mech import BaseMech
-from core.mech.base.pools.details_pool import DetailsPool
+from core.mech.mech import BaseMech
+from core.mech.pools.details_pool import DetailsPool
 
 
 from server_stuff.player_client import Client
 from server_stuff.abs.server import ServerAbc
 from server_stuff.server_game_proxy.game_stage.main import GameMatch
 from server_stuff.server_game_proxy.setup_stage.main import GameSetup
-from server_stuff.constants.requests import CommonReqConst, GameStgConst, SetupStageReq
+from server_stuff.constants.requests import CommonReqConst, SetupStageReq
 
 from game_logic.bots.bot_player import BotPlayer
 from game_logic.settings_stage import SettingsStage

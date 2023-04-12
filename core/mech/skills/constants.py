@@ -4,6 +4,7 @@ class SkillAttrs:
     ECost = 'ec'
     UseJson = 'use_j'
     OnCD = 'on_cd'
+    Range = 'cast_range'
 
 
 class Targets:

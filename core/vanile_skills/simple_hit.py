@@ -1,6 +1,6 @@
-from core.mech.base.skills.skill import BaseSkill
-from core.mech.base.skills.exceptions import OnCooldownError
-from core.mech.base.mech import BaseMech
+from core.mech.skills.skill import BaseSkill
+from core.mech.skills.exceptions import OnCooldownError
+from core.mech.mech import BaseMech
 
 
 class SimpleStepAttrs:

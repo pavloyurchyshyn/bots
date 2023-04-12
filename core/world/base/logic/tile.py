@@ -51,10 +51,14 @@ class LogicTile:
                     self.eternal = True
 
     @property
-    def passable(self):
+    def passable(self) -> bool:
         return self.move_energy_k != IMPASSABLE_VALUE
 
-    def get_data_dict(self):
+    @property
+    def not_passable(self) -> bool:
+        return not self.passable
+
+    def get_data_dict(self) -> dict:
         return self.tile_data.parameters_to_dict(self)
 
     @property

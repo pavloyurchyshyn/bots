@@ -1,5 +1,5 @@
 from logging import Logger
-from core.mech.base.mech import BaseMech
+from core.mech.mech import BaseMech
 from interfaces.details_pool_interface import DetailsPoolInterface
 
 

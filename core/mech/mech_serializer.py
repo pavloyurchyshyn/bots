@@ -1,8 +1,8 @@
 from global_obj.logger import get_logger
-from core.mech.base.mech import BaseMech
-from core.mech.base.details.body import BaseBody
-from core.mech.base.pools.details_pool import DetailsPool
-from core.mech.base.details.constants import MechSerializeConst, DetailsTypes, MechAttrs
+from core.mech.mech import BaseMech
+from core.mech.details.body import BaseBody
+from core.mech.pools.details_pool import DetailsPool
+from core.mech.details.constants import MechSerializeConst, DetailsTypes, MechAttrs
 
 
 class MechSerializer:
@@ -41,7 +41,7 @@ class MechSerializer:
 
     def dict_to_mech(self, data: dict) -> BaseMech:
         """
-        Dict with data in string format about details
+        Dict with data in string format about vanile_details
         :param data:
         :return:
         """
@@ -76,7 +76,7 @@ class MechSerializer:
 
 
 if __name__ == '__main__':
-    from core.mech.base.test_mech import MetalMech
+    from core.mech.test_mech import MetalMech
     from game_logic import IdGenerator
 
     builder = MechSerializer(DetailsPool(IdGenerator()))

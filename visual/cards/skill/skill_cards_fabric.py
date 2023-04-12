@@ -1,13 +1,14 @@
+from typing import Type
 from visual.cards.skill.card import SkillCard
-from core.mech.base.skills.skill import BaseSkill
-from core.mech.base.pools.skills_pool import SkillsPool
+from core.mech.skills.skill import BaseSkill
+from core.mech.pools.skills_pool import SkillsPool
 
 
 class SkillsCardsFabric:
     def __init__(self, skill_pool: SkillsPool):
         self.skill_pool: SkillsPool = skill_pool
         self.cards = {}
-        self.card_class: SkillCard = SkillCard
+        self.card_class: Type[SkillCard] = SkillCard
 
     def create_card(self, skill_uid: str, x: int = 0, y: int = 0) -> SkillCard:
         skill: BaseSkill = self.skill_pool.get_skill_by_id(skill_uid)

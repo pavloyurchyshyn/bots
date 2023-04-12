@@ -1,6 +1,6 @@
 from global_obj.main import Global
-from core.mech.base.skills.skill import BaseSkill
-from core.mech.base.skills.constants import SkillAttrs
+from core.mech.skills.skill import BaseSkill
+from core.mech.skills.constants import SkillAttrs
 
 
 class SkillSerializer:

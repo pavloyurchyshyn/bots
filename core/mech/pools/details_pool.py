@@ -1,13 +1,13 @@
 import inspect
-from typing import Dict, Union, Optional
+from typing import Dict, Union
 from global_obj.logger import get_logger
 
-from core.mech.base.mech import BaseMech
-from core.mech.details.names import DetailNames
-from core.mech import details as details_module
-from core.mech.base.details.detail import BaseDetail
-from core.mech.base.pools.skills_pool import SkillsPool
-from core.mech.base.exceptions import ThisDetailClassDoesntExist
+from core.mech.mech import BaseMech
+from core.vanile_details.names import DetailNames
+from core import vanile_details as details_module
+from core.mech.details.detail import BaseDetail
+from core.mech.pools.skills_pool import SkillsPool
+from core.mech.exceptions import ThisDetailClassDoesntExist
 
 from game_logic.game_data.id_generator import IdGenerator
 
@@ -68,7 +68,7 @@ class DetailsPool:
         return [(detail.name, unique_id) for unique_id, detail in self.id_to_detail.items()]
 
     def get_simple_mech(self, position=(0, 0)) -> BaseMech:
-        mech = BaseMech(position)
+        mech: BaseMech = BaseMech(position)
         body = self.create_add_and_get_detail_to_pool(DetailNames.SimpleMetal.Body)
         mech.set_body(body)
 
@@ -81,6 +81,9 @@ class DetailsPool:
         mech.set_left_detail(1, left_leg)
         right_leg = self.create_add_and_get_detail_to_pool(DetailNames.SimpleMetal.Leg)
         mech.set_right_detail(1, right_leg)
+
+        mech.refill_energy_and_hp()
+
         return mech
 
 

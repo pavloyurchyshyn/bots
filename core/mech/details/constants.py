@@ -28,6 +28,8 @@ class MechAttrs:
     Position: str = 'position'
     CurrentHP: str = 'current_hp'
     CurrentEnergy: str = 'current_energy'
+    MaxHP = 'max_hp'
+    MaxEnergy = 'max_energy'
     Attrs = 'attrs'
 
 

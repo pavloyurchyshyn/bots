@@ -1,6 +1,6 @@
 from typing import Dict
 from global_obj.main import Global
-from core.mech.base.mech import BaseMech
+from core.mech.mech import BaseMech
 from core.player.abs import PlayerAbs
 from core.player.scenario import Scenario
 from core.player.constants import PlayerAttrs
@@ -44,7 +44,7 @@ class PlayerObj(PlayerAbs):
 
     def update_attrs(self, attrs_dict: dict):
         # self.mech.set_attrs(attrs_dict.pop(PlayerAttrs.Mech, {}))
-        # TODO set details
+        # TODO set vanile_details
         for attr, val in attrs_dict.items():
             setattr(self, attr, val)
 

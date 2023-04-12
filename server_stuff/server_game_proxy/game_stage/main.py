@@ -16,7 +16,7 @@ from core.player.player import PlayerObj
 from server_stuff.server_game_proxy.game_stage.components.ready import ReadyLogic
 
 from game_logic.game_data.id_generator import IdGenerator
-from core.mech.base.pools.details_pool import DetailsPool
+from core.mech.pools.details_pool import DetailsPool
 
 
 class GameMatch(ReadyLogic):
@@ -74,8 +74,8 @@ class GameMatch(ReadyLogic):
                                                       client=client,
                                                       player_obj=self.get_player_obj(client))
 
-    def bad_action(self, action: str, client: Client, **kwargs):
-        Global.logger.warning(f'Bad request from {client.token} with action "{action}"')
+    def bad_action(self, action: str, request: dict, client: Client, **kwargs):
+        Global.logger.warning(f'Bad request from {client.token} with action "{action}: {request[action]}"')
 
     def chat(self, request: dict, client: Client, **kwargs):
         msg = request.get(CommonReqConst.Chat, '')

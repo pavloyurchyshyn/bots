@@ -1,6 +1,6 @@
 from typing import Union
-from core.mech.base.details.constants import *
-from core.mech.base.exceptions import *
+from core.mech.details.constants import *
+from core.mech.exceptions import *
 from global_obj.logger import get_logger
 
 __all__ = ['BaseDetail', ]

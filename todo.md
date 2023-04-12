@@ -45,13 +45,21 @@ First priority:
       - timer
       - details pool
     
-      - #### JOIN MENU
-        - add nickname edit
+  - #### JOIN MENU
+    - add nickname edit
   
   - #### GAME stage
     - draw meches
     - start details selection
     - sync time
+
+### GAME:
+- mech effects
+- mech AI
+
+### Features:
+  - custom details
+  - custom skills
 
 - Multiplayer
   - ~~connecting~~
@@ -66,13 +74,11 @@ First priority:
 
 - Visual 
   - Tile
-    - ~~direction~~ _declined_
     - images
       - different hp stages for tile
       - animations
   - tiles textures system
       - different hp stages for tile
-  - ~~tiles texture direction~~ _declined_
 
 ----------------------
 
@@ -83,5 +89,3 @@ First priority:
 ## BUGS:
  - map scale
 
-### Fixed bugs 
-- ~~map editor crash with empty texture~~

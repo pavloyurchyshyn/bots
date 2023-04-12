@@ -1,5 +1,5 @@
-from core.mech.base.details.detail import BaseDetail
-from core.mech.base.details.constants import *
+from core.mech.details.detail import BaseDetail
+from core.mech.details.constants import *
 
 
 class BaseLeg(BaseDetail):

@@ -1,6 +1,6 @@
-from core.mech.base.details.detail import BaseDetail
-from core.mech.base.details.slot import WeaponSlot
-from core.mech.base.details.constants import *
+from core.mech.details.detail import BaseDetail
+from core.mech.details.slot import WeaponSlot
+from core.mech.details.constants import *
 
 __all__ = ['BaseArm', ]
 

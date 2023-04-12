@@ -1,5 +1,5 @@
 from pygame import Surface, Rect
-from pygame.draw import rect as draw_rect
+from pygame.draw import rect as draw_rect, line as draw_line
 
 from visual.UI.base.text import Text
 from visual.UI.utils import get_surface
@@ -9,7 +9,7 @@ from visual.cards.skill.card_abs import SkillCardAbs
 
 from settings.visual.cards import SkillCardSize
 
-from core.mech.base.skills.skill import BaseSkill
+from core.mech.skills.skill import BaseSkill
 
 from global_obj.main import Global
 
@@ -42,6 +42,8 @@ class SkillCard(SkillCardAbs):
                                h_size_k=0.98,
                                parent_surface=self.surface, auto_draw=False)
 
+        self.mute_surface: Surface = self.get_mute_surface()
+
         self.render()
 
     def render(self):
@@ -60,7 +62,21 @@ class SkillCard(SkillCardAbs):
         return Rect(self.x + dx, self.y + dy, self.h_size, self.v_size)
 
     def get_center(self, dx: int = 0, dy: int = 0) -> tuple:
-        return self.x + dx + self.h_size//2, self.y + dy + self.v_size // 2
+        return self.x + dx + self.h_size // 2, self.y + dy + self.v_size // 2
 
     def draw(self, dx=0, dy=0):
         Global.display.blit(self.surface, (self.x + dx, self.y + dy))
+        if self.skill.on_cooldown:
+            Global.display.blit(self.mute_surface, (self.x + dx, self.y + dy))
+
+    def get_mute_surface(self) -> Surface:
+        card_surf = get_surface(h_size=self.h_size,
+                                v_size=self.v_size,
+                                transparent=1,
+                                )
+        draw_rect(card_surf,
+                  self.style.on_cd_background_color,
+                  (0, 0, self.h_size, self.v_size),
+                  0,
+                  self.style.border_radius)
+        return card_surf

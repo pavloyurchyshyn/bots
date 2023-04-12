@@ -53,7 +53,7 @@ class Global:
         cls.game = game
         cls.details_pool: DetailsPoolInterface = game.details_pool
         cls.skill_pool: SkillsPoolInterface = game.skills_pool
-        from core.mech.base.mech_serializer import MechSerializer
+        from core.mech.mech_serializer import MechSerializer
         cls.mech_serializer: MechSerializer = MechSerializer(game.details_pool)
 
     @classmethod

@@ -1,12 +1,11 @@
-from core.mech.base.details.body import BaseBody
-from core.mech.base.details.arm import BaseArm
-from core.mech.base.details.leg import BaseLeg
+from core.mech.details.body import BaseBody
+from core.mech.details.arm import BaseArm
+from core.mech.details.leg import BaseLeg
+from core.mech.details.constants import DetailsAttrs
 
-from core.mech.skills.simple_step import SimpleStep
-from core.mech.skills.simple_hit import SimpleHit
-
-from core.mech.base.details.constants import *
-from core.mech.details.names import DetailNames
+from core.vanile_details.names import DetailNames
+from core.vanile_skills.simple_step import SimpleStep
+from core.vanile_skills.simple_hit import SimpleHit
 
 __all__ = ['MetalArm', 'MetalLeg', 'MetalBody']
 
@@ -15,6 +14,7 @@ class MetalArm(BaseArm):
     name = DetailNames.SimpleMetal.Arm
     original_name = 'Metal Arm'
     verbal_name = 'Metal Arm'
+
     def __init__(self, unique_id):
         skills = [SimpleHit, ]
 
@@ -47,6 +47,3 @@ class MetalBody(BaseBody):
                 DetailsAttrs.AddHP: 10,
                 DetailsAttrs.HPRegen: 1}
         super(MetalBody, self).__init__(unique_id=unique_id, damage=1, armor=1, **data)
-
-
-

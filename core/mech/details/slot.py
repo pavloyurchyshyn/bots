@@ -1,8 +1,8 @@
 from global_obj.logger import get_logger
-from core.mech.base.exceptions import *
-from core.mech.base.details.detail import BaseDetail
-from core.mech.base.details.constants import DetailsTypes
-from core.mech.base.exceptions import SlotIsFullError, WrongDetailType
+from core.mech.exceptions import *
+from core.mech.details.detail import BaseDetail
+from core.mech.details.constants import DetailsTypes
+from core.mech.exceptions import SlotIsFullError, WrongDetailType
 
 __all__ = ['BaseSlot', 'ArmSlot', 'LegSlot', 'WeaponSlot']
 
