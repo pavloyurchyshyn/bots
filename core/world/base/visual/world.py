@@ -59,25 +59,27 @@ class VisualWorld(LogicWorld):
         w, h = self.big_surface.get_size()
         self.surface = transform.smoothscale(self.big_surface, (int(w * self.scale), int(h * self.scale)))
 
-    def build_map(self, flat, odd, data: List[List[TileDataAbs]]):
-        self.hex_math = get_hex_math(flat, odd)
+    def build_map(self, data: List[List[TileDataAbs]]):
+        self.hex_math = get_hex_math()
         self.tile_xy_size = self.hex_math.get_hex_size(self.tile_r)
         self.clear()
-        super().build_map(flat, odd, data)
+        super().build_map(data)
         self.reference_hex = VisualTile((None, None),
                                         center=(-100, -100),
                                         dots=self.hex_math.get_dots_by_xy(0, 0, self.tile_r),
                                         texture_size=self.hex_math.get_hex_size(self.tile_r))
+
+        print(self.qr_to_tile)
         self.render()
 
     def create_big_surface(self):
         return get_surface(*self.hex_math.get_map_size(self.x_size, self.y_size, self.tile_r))
 
     def build_map_from_save(self, save):
-        self.build_map(save.flat, save.odd, save.get_tiles_data())
+        self.build_map(save.get_tiles_data())
 
-    def init_hex_math(self, flat=True, odd=True):
-        self.hex_math = get_hex_math(flat, odd)
+    def init_hex_math(self):
+        self.hex_math = get_hex_math()
 
     def get_normalized_mouse_pos(self) -> tuple[int, int]:
         m_pos = self.hex_math.normalize_coordinates(Global.mouse.x - self.x - self.dx,
@@ -121,15 +123,20 @@ class VisualWorld(LogicWorld):
         # draw.polygon(surface, tile.tile_data.color, tile.dots)
         # draw.lines(surface, (50, 50, 50), True, points=tile.dots)
         surface.blit(Global.textures.get_scaled_tile_texture(tile.name, tile.img, tile.texture_size), tile.texture_pos)
-        draw_circle(surface, (255, 0, 0), tile.center, 3)
+        # draw_circle(surface, (255, 0, 0), tile.center, 3)
         # draw.rect(surface, (255, 255, 255), (tile.texture_pos, tile.texture.get_size()), 1)
         if tile.at_edge:
             draw.lines(surface, (200, 200, 255), True, points=tile.dots, width=3)
 
-        # font = get_custom_font(int(9 * self.scale))
-        # text = font.render(f'{tile.id_x, tile.id_y}', True, (255, 255, 255))
-        # pos = self.hex_math.get_center_by_xy_id(tile.id_x, tile.id_y, self.tile_size)
-        # surface.blit(text, (pos[0] - text.get_width() // 2, pos[1] - text.get_height() // 2))
+        from visual.UI.base.font import get_custom_font
+        font = get_custom_font(int(10 * self.scale))
+        text = font.render(f'{tile.id_xy}', True, (255, 255, 255))
+        pos = self.hex_math.get_center_by_xy_id(tile.id_x, tile.id_y, self.tile_r)
+        surface.blit(text, (pos[0] - text.get_width() // 2, pos[1] - text.get_height() // 2 - 5))
+
+        text = font.render(f'{tile.qrs}', True, (255, 255, 255))
+        pos = self.hex_math.get_center_by_xy_id(tile.id_x, tile.id_y, self.tile_r)
+        surface.blit(text, (pos[0] - text.get_width() // 2, pos[1] - text.get_height() // 2 + 5))
         # self.textures.get_texture()
 
     def get_tile_from_data(self, x, y, tile_data: Type[TileDataAbs], **extra_data) -> VisualTile | LogicTile:

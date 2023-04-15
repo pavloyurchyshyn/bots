@@ -8,7 +8,5 @@ class Empty(MapSave):
         super(Empty, self).__init__(name='Empty',
                                     path='classic',
                                     dict_tiles_data=dict_tiles_data,
-                                    odd=True,
-                                    flat=True,
                                     default=True,
                                     )

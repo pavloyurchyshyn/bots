@@ -4,7 +4,7 @@ from settings.json_configs_manager import get_from_common_config, save_to_common
 GLOBAL_SETTINGS = {
     'slow_motion': 0,
     'slow_motion_value': 0.05,
-    'fps': get_from_common_config('fps_config', 60),
+    'fps_config': get_from_common_config('fps_config', 60),
     'language': get_from_common_config('language', 'eng'),
     'scroll_speed': 5,
     'texture_pack': 'default',
@@ -46,12 +46,12 @@ def set_language(lang):
 
 
 def set_fps(fps):
-    GLOBAL_SETTINGS['fps'] = fps
+    GLOBAL_SETTINGS['fps_config'] = fps
     save_to_common_config('fps_config', fps)
 
 
 def get_fps() -> int:
-    return GLOBAL_SETTINGS['fps']
+    return GLOBAL_SETTINGS['fps_config']
 
 
 DEFAULT_SLOW_TIME_DURATION = 10
@@ -81,4 +81,4 @@ def change_test_draw_status():
     GLOBAL_SETTINGS['test_draw'] = not GLOBAL_SETTINGS['test_draw']
 
 
-set_fps(GLOBAL_SETTINGS['fps'])
+set_fps(GLOBAL_SETTINGS['fps_config'])

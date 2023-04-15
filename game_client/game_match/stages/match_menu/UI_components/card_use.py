@@ -70,9 +70,9 @@ class CardUseC:
                 self.validate(skill=skill, xy=tile)
             except ValidationError as e:
                 if Global.mouse.l_up:
-                    self.add_ok_popup(e.msg)
-                Global.logger.info(f'Bad target for skill "{skill.name}" - ({tile})')
-                raise BadTarget('validation error')
+                    self.chat.add_msg(e, text_kwargs=dict(color=(200, 200, 200)), raw_text=False)
+                    Global.logger.info(f'Bad target for skill "{skill.name}" - ({tile}), reason: {e}')
+                raise BadTarget(e.msg)
 
             else:
                 d[GSC.SkillM.UseAttrs][Targets.Tile] = tile

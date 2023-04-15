@@ -4,3 +4,6 @@ msgs:
   skill_not_in_pool: Здібність не в пулі здібностей
   player_doesnt_own_skill: Гравець не володіє цією здібністю
   bad_tile_target: Ця клітина не підходить
+  bad_target_type: Не той тип цілі
+  no_such_tile: Така клітинка не існує
+  tile_not_passable: Клітинка не прохідна

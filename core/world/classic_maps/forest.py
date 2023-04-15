@@ -982,8 +982,6 @@ class ForestMap(MapSave):
                                         path='classic',
                                         dict_tiles_data=dict_tiles_data,
                                         created="2023-04-06 23:36:09.752149",
-                                        odd=True,
-                                        flat=True,
                                         default=True,
                                         spawns=[(5, 6), (43, 6), (47, 14), (18, 16), (14, 7)],
                                         )

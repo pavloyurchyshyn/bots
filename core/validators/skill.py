@@ -38,6 +38,11 @@ class SkillsValidations:
     @classmethod
     def validate_tile_target(cls, xy, skill, world, **kwargs):
         tile = world.get_tile_by_xy(xy)
-        # TODO split for different validations
-        if (skill.TargetsConst.Tile not in skill.targets) or (tile is None) or tile.not_passable:
-            raise ValidationError(ValidationMsg.BadTileTarget)
+        if skill.TargetsConst.Tile not in skill.targets:
+            raise ValidationError(ValidationMsg.BadTargetType)
+
+        if tile is None:
+            raise ValidationError(ValidationMsg.NoSuchTile)
+
+        if tile.not_passable:
+            raise ValidationError(ValidationMsg.TileNotPassable)

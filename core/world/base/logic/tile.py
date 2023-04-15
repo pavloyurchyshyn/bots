@@ -8,6 +8,12 @@ class LogicTile:
                  tile_data: Union[str, TileDataAbs],
                  at_edge: bool = False):
         self.id_x, self.id_y = xy_id
+        if self.id_x and self.id_y:
+            self.q = self.id_x - (self.id_y // 2)
+            self.r = self.id_y
+            self.s = -self.q - self.r
+        else:
+            self.q = self.r = self.s = -999
 
         if type(tile_data) is str:
             tile_data = TileTypes.types_dict[tile_data]
@@ -65,6 +71,9 @@ class LogicTile:
     def id_xy(self) -> tuple:
         return self.id_x, self.id_y
 
+    @property
+    def qrs(self):
+        return self.q, self.r, self.s
 
 if __name__ == '__main__':
     tile = LogicTile((0, 0), TileTypes.Forest)

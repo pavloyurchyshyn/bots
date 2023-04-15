@@ -1,9 +1,10 @@
 from math import cos
 from pygame import transform
-from pygame.draw import rect as draw_rect, circle as draw_circle, lines as draw_lines
+from pygame.draw import rect as draw_rect, circle as draw_circle, lines as draw_lines, line as draw_line
 
 from global_obj.main import Global
 
+from core.player.player import PlayerObj
 from core.world.base.visual.tile import VisualTile
 from core.world.base.visual.world import VisualWorld
 
@@ -16,6 +17,8 @@ MECH = transform.smoothscale(load_image('default/mech.png'), (150, 150))
 
 
 class WorldC:
+    player: PlayerObj
+
     def __init__(self):
         self.w: VisualWorld = VisualWorld(MapRect.rect, tile_r=scaled_w(0.03))
 

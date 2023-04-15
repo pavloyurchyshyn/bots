@@ -7,18 +7,19 @@ class LogicWorld:
 
     def __init__(self, tile_class: LogicTile = LogicTile):
         self.tile_class: LogicTile = tile_class
-        self.flat = self.odd = True
         self.y_size = None
         self.x_size = None
         self.tiles: List[LogicTile] = []
         self.xy_to_tile: Dict[Tuple[int, int], LogicTile] = {}
+        self.qr_to_tile: Dict[Tuple[int, int], LogicTile] = {}
 
     def get_tile_by_xy(self, xy):
         return self.xy_to_tile.get(xy)
 
     def add_tile(self, tile: LogicTile):
         self.tiles.append(tile)
-        self.xy_to_tile[(tile.id_x, tile.id_y)] = tile
+        self.xy_to_tile[tile.id_xy] = tile
+        self.qr_to_tile[(tile.q, tile.r)] = tile
 
     def remove_tile_by_xy(self, xy: tuple):
         if xy in self.xy_to_tile:
@@ -30,14 +31,12 @@ class LogicWorld:
             self.tiles.remove(tile)
 
     def change_tile(self, tile: LogicTile):
-        if (tile.id_x, tile.id_y) in self.xy_to_tile:
-            self.tiles.remove(self.xy_to_tile[(tile.id_x, tile.id_y)])
+        if tile.id_xy in self.xy_to_tile:
+            self.tiles.remove(self.xy_to_tile[tile.id_xy])
 
         self.add_tile(tile)
 
-    def build_map(self, flat: bool, odd: bool, data: List[List[TileDataAbs]]):
-        self.flat = flat
-        self.odd = odd
+    def build_map(self, data: List[List[TileDataAbs]]):
         self.y_size = len(data)
         self.x_size = len(max(data, key=len))
 

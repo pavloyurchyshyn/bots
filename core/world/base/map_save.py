@@ -13,8 +13,6 @@ class SaveDictConst:
     Name = 'name'
     Metadata = 'metadata'
     Created = 'created'
-    Odd = 'odd'
-    Flat = 'flat'
     Spawns = 'spawns'
     DictTilesData = 'dict_tiles_data'
 
@@ -22,14 +20,11 @@ class SaveDictConst:
 class MapSave:
     def __init__(self, name: str = '', path: str = '',
                  tiles_data: List[List[TileDataAbs]] = None,
-                 odd: bool = True, flat: bool = True,
                  dict_tiles_data: List[List[dict | int | None]] = None,
                  created: str = None,
                  spawns: List[Tuple[int, int]] = None,
                  default=False):
         self.default = default
-        self.__odd = odd
-        self.__flat = flat
         self.__name: str = name
         self.__created = created
         self.__spawns: List[Tuple[int, int]] = [] if spawns is None else spawns
@@ -118,8 +113,6 @@ class MapSave:
             raise Exception
         return {
             SaveDictConst.Name: self.__name,
-            SaveDictConst.Odd: self.__odd,
-            SaveDictConst.Flat: self.__flat,
             SaveDictConst.Metadata: {
                 SaveDictConst.Created: self.__created if self.__created else str(datetime.datetime.now()),
                 SaveDictConst.Spawns: self.__spawns,
@@ -132,8 +125,6 @@ class MapSave:
         Global.logger.debug(f'Map save dict: {d}')
         return MapSave(
             name=d[SaveDictConst.Name],
-            flat=d[SaveDictConst.Flat],
-            odd=d[SaveDictConst.Odd],
             created=d[SaveDictConst.Metadata][SaveDictConst.Created],
             spawns=d[SaveDictConst.Metadata][SaveDictConst.Spawns],
             dict_tiles_data=d[SaveDictConst.DictTilesData],
@@ -185,21 +176,11 @@ class MapSave:
         return TileTypes.types_dict.get(data[TileAttrs.Name])(**data)
 
     @property
-    def odd(self) -> bool:
-        return self.__odd
-
-    @property
-    def flat(self) -> bool:
-        return self.__flat
-
-    @property
     def path(self) -> str:
         return self.__path
 
     def copy(self):
         return MapSave(name=f'{self.__name} copy',
-                       odd=self.odd,
-                       flat=self.flat,
                        dict_tiles_data=copy.deepcopy(self.__dict_tiles_data),
                        default=False,
                        spawns=self.__spawns,

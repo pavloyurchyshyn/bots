@@ -117,15 +117,11 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         y_size = int(MapRect.V_size // self.w.hex_math.vertical_spacing(self.w.tile_r)) - 2
 
         if map_save is None:
-            odd = True
-            flat = True
             map_tiles_data = [[EmptyTile() for _ in range(x_size)] for _ in range(y_size)]
         else:
-            odd = map_save.odd
-            flat = map_save.flat
             map_tiles_data = map_save.get_tiles_data()
 
-        self.w.build_map(flat, odd, map_tiles_data)
+        self.w.build_map(map_tiles_data)
         self.w.adapt_scale_to_win_size()
 
     def update_sizes_texts(self):

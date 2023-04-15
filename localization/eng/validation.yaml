@@ -4,3 +4,6 @@ msgs:
   skill_not_in_pool: Skill not in pull
   player_doesnt_own_skill: Player doesnt own skill
   bad_tile_target: Bad tile target
+  bad_target_type: Bad target type
+  no_such_tile: no such tile
+  tile_not_passable: tile not passable

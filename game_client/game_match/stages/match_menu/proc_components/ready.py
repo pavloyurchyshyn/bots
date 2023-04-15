@@ -19,11 +19,11 @@ class ReadyProc:
         Global.round_clock.set_time(r[GSC.Time])
 
     def update_ready_status(self, r: dict, request_data, **kwargs):
-        Global.logger.info(f'Ready status: {request_data}')
+        Global.logger.debug(f'Ready status: {request_data}')
         self.player.ready = request_data
         self.UI.ready_win.change_button_color_to_ready()
 
     def update_players_ready_number(self, r: dict, request_data, **kwargs):
-        Global.logger.info(f"Ready players {request_data}")
+        Global.logger.debug(f"Ready players {request_data}")
         self.UI.ready_win.set_ready_players_text(request_data)
 
