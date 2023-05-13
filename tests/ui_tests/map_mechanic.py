@@ -103,7 +103,7 @@ class Body:
 
         self.x_size = x_size = 30
         self.y_size = y_size = 15
-        self.surface = get_surface(*Global.display.get_size())
+        self.surface = get_surface(*Global.display.get_hex_size())
         # self.surface = get_surface(get_hex_distance(self.r) * (x_size + 0.25) + 5,
         #                            get_hex_height(self.r) * (y_size + 0.5) + 1)
 

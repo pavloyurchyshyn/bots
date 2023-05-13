@@ -73,7 +73,6 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
 
         self.current_save: MapSave = None
 
-        self.w.init_hex_math()
         map_save = None
         if self.maps_mngr.maps:
             map_save = self.maps_mngr.maps[0].copy()
@@ -113,8 +112,8 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         self.maps_container.build()
 
     def init_map(self, map_save: MapSave):
-        x_size = int(MapRect.H_size // self.w.hex_math.horizontal_spacing(self.w.tile_r)) - 2
-        y_size = int(MapRect.V_size // self.w.hex_math.vertical_spacing(self.w.tile_r)) - 2
+        x_size = int(MapRect.H_size // self.w.hex_math.horizontal_spacing(self.w.tile_radius)) - 2
+        y_size = int(MapRect.V_size // self.w.hex_math.vertical_spacing(self.w.tile_radius)) - 2
 
         if map_save is None:
             map_tiles_data = [[EmptyTile() for _ in range(x_size)] for _ in range(y_size)]
@@ -218,16 +217,16 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
                 if not tile.at_edge:
                     if tile.name == SpawnTile.name:
                         if self.current_pencil_type.name != SpawnTile.name:
-                            if tile.id_xy in self.spawns:
-                                self.spawns.remove(tile.id_xy)
+                            if tile.xy_id in self.spawns:
+                                self.spawns.remove(tile.xy_id)
                             self.update_spawns_text()
                     else:
                         if self.current_pencil_type.name == SpawnTile.name:
-                            self.spawns.append(tile.id_xy)
+                            self.spawns.append(tile.xy_id)
                             self.update_spawns_text()
 
                     tile.apply_type(self.current_pencil_type)
-                    self.w.rerender_tile((tile.id_x, tile.id_y))
+                    self.w.rerender_tile(tile.xy_id)
                     self.unsaved_edit = True
 
         self.w.draw()
@@ -296,12 +295,12 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         self.w.x_size += 1
         for tile in self.w.tiles.copy():
             self.w.remove_tile(tile)
-            tile.id_x += 1
+            tile.x_id += 1
             self.w.add_tile(tile)
-            if tile.id_x == 1:
-                tile.at_edge = (tile.id_y == 0) or (tile.id_y == self.w.y_size - 1)
+            if tile.x_id == 1:
+                tile.at_edge = (tile.y_id == 0) or (tile.y_id == self.w.y_size - 1)
 
-        x = min(self.w.tiles, key=lambda t: t.id_x).id_x - 1
+        x = min(self.w.tiles, key=lambda t: t.id_x).x_id - 1
         for y in range(self.w.y_size):
             self.w.add_tile(self.w.get_tile_from_data(x, y, EmptyTile(), at_edge=True))
             # self.w.xy_to_tile[(1, y)].at_edge = (y == 0) or (y == self.w.y_size - 1)

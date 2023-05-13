@@ -1,23 +1,19 @@
 from typing import Union
 from core.world.base.logic.tiles_data import TileDataAbs, IMPASSABLE_VALUE, TileTypes
+from core.world.base.hex_utils import Cube, XYIdHex, HexMath
 
 
-class LogicTile:
+class LogicTile(XYIdHex, Cube):
 
     def __init__(self, xy_id: tuple[int, int],
                  tile_data: Union[str, TileDataAbs],
                  at_edge: bool = False):
-        self.id_x, self.id_y = xy_id
-        if self.id_x and self.id_y:
-            self.q = self.id_x - (self.id_y // 2)
-            self.r = self.id_y
-            self.s = -self.q - self.r
-        else:
-            self.q = self.r = self.s = -999
+        XYIdHex.__init__(self, *xy_id)
+        Cube.__init__(self, *HexMath.xy_id_to_qr(*xy_id))
 
         if type(tile_data) is str:
             tile_data = TileTypes.types_dict[tile_data]
-        self.tile_data = tile_data
+        # self.tile_data = tile_data
         self.name = tile_data.name
         self.verbose_name = tile_data.verbose_name
         self.hp: float = tile_data.hp
@@ -33,7 +29,7 @@ class LogicTile:
 
     def apply_type(self, tile_type: Union[str, TileDataAbs]) -> None:
         tile_type = TileTypes.types_dict[tile_type] if type(tile_type) is str else tile_type
-        self.tile_data = tile_type
+        # self.tile_data = tile_type
         self.name = tile_type.name
         self.hp: float = tile_type.hp
         self.eternal: bool = tile_type.eternal
@@ -65,15 +61,8 @@ class LogicTile:
         return not self.passable
 
     def get_data_dict(self) -> dict:
-        return self.tile_data.parameters_to_dict(self)
+        return TileDataAbs.parameters_to_dict(self)
 
-    @property
-    def id_xy(self) -> tuple:
-        return self.id_x, self.id_y
-
-    @property
-    def qrs(self):
-        return self.q, self.r, self.s
 
 if __name__ == '__main__':
     tile = LogicTile((0, 0), TileTypes.Forest)

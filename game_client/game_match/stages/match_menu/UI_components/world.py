@@ -20,7 +20,7 @@ class WorldC:
     player: PlayerObj
 
     def __init__(self):
-        self.w: VisualWorld = VisualWorld(MapRect.rect, tile_r=scaled_w(0.03))
+        self.w: VisualWorld = VisualWorld(MapRect.rect, tile_radius=scaled_w(0.03))
 
     def update_and_draw_map(self):
         self.check_for_drag()
