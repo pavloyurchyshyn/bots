@@ -96,15 +96,15 @@ class HexMath:
 
     @classmethod
     def get_hex_size(cls, radius: int) -> Tuple[int, int]:
-        return cls.get_width(radius), cls.get_height(radius)
+        return int(cls.get_width(radius)), int(cls.get_height(radius))
 
     @staticmethod
     def get_width(r: int) -> int:
-        return int(r + r)
+        return r + r
 
     @staticmethod
-    def get_height(r: int) -> int:
-        return int(math.sqrt(3) * r)
+    def get_height(r: int) -> float:
+        return math.sqrt(3) * r
 
     @classmethod
     def qr_to_xy_coords(cls, q: int, r: int, radius: int) -> Tuple[int, int]:
@@ -132,6 +132,9 @@ class HexMath:
 
     @classmethod
     def normalize_coordinates(cls, x: int, y: int, radius: int) -> Tuple[int, int]:
+        """
+        Position to xy_id
+        """
         x = x // cls.horizontal_spacing(radius)
         if x % 2:
             y -= cls.vertical_spacing(radius) // 2

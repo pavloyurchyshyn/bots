@@ -121,7 +121,7 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
             map_tiles_data = map_save.get_tiles_data()
 
         self.w.build_map(map_tiles_data)
-        self.w.adapt_scale_to_win_size()
+        # self.w.adapt_scale_to_win_size()
 
     def update_sizes_texts(self):
         self.size_txt.change_text(f'{Global.localization.get_text_wloc(UILocal.Match.Size)}:'
@@ -214,6 +214,7 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         self.check_for_scale()
         if (Global.mouse.l_up or Global.mouse.l_hold) and self.w.window_rect.collidepoint(*Global.mouse.pos):
             if tile := self.w.get_tile_under_mouse():
+
                 if not tile.at_edge:
                     if tile.name == SpawnTile.name:
                         if self.current_pencil_type.name != SpawnTile.name:
@@ -231,8 +232,7 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
 
         self.w.draw()
         draw_rect(Global.display, (255, 255, 255), self.w.window_rect, 3)
-        if self.w.window_rect.collidepoint(*Global.mouse.pos):
-            self.w.draw_border_under_mouse()
+        self.w.draw_border_under_mouse()
 
     def check_for_drag(self):
         if Global.mouse.m_hold:

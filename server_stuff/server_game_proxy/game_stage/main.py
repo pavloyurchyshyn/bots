@@ -53,7 +53,7 @@ class GameMatch(ReadyLogic):
               details_pool: DetailsPool
               ):
         world = LogicWorld()
-        world.build_map(flat=map_save.flat, odd=map_save.odd, data=map_save.get_tiles_data())
+        world.build_map(data=map_save.get_tiles_data())
 
         self.current_map_save.set_name(map_save.name)
         self.current_map_save.set_world_to_json_data(world)

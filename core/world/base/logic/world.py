@@ -1,6 +1,7 @@
 from typing import List, Tuple, Dict, Type, Optional, Union
 from core.world.base.logic.tile import LogicTile, TileDataAbs
 from core.world.base.logic.tiles_data import EmptyTile
+from core.world.base.hex_utils import HexMath
 
 TileClass = Union[LogicTile, Type[LogicTile]]
 
@@ -14,6 +15,7 @@ class LogicWorld:
         self.tiles: List[LogicTile] = []
         self.xy_to_tile: Dict[Tuple[int, int], TileClass] = {}
         self.qr_to_tile: Dict[Tuple[int, int], TileClass] = {}
+        self.hex_math: Type[HexMath] = HexMath
 
     def get_tile_by_xy(self, xy: Tuple[int, int]) -> Optional[TileClass]:
         return self.xy_to_tile.get(xy)

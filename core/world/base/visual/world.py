@@ -1,7 +1,7 @@
 if __name__ == '__main__':
     pass
 from pygame.rect import Rect
-from typing import List, Type, TypeVar
+from typing import List, Type, Tuple, Optional
 from _thread import start_new_thread
 from pygame import draw, Surface, transform
 from global_obj.main import Global
@@ -12,8 +12,6 @@ from core.world.base.visual.tile import VisualTile
 from core.world.base.logic.world import LogicWorld
 from core.world.base.logic.tiles_data import EmptyTile
 from core.world.base.logic.tiles_data import TileDataAbs
-from core.world.base.hex_utils import HexMath, Hexagon
-
 from pygame.draw import circle as draw_circle
 
 
@@ -32,7 +30,6 @@ class VisualWorld(LogicWorld):
         self.big_surface: Surface = None
         self.surface: Surface = None
 
-        self.hex_math: Type[HexMath] = HexMath
         self.tile_radius: int = tile_radius
         self.tile_size = self.hex_math.get_hex_size(self.tile_radius)
 
@@ -40,8 +37,8 @@ class VisualWorld(LogicWorld):
 
     def adapt_scale_to_win_size(self):
         h_size, v_size = self.hex_math.get_grid_size(self.x_size, self.y_size, self.tile_radius)
-        h_k = self.window_rect[2] / h_size
-        v_k = self.window_rect[3] / v_size
+        h_k = self.window_rect.width / h_size
+        v_k = self.window_rect.height / v_size
         self.scale = h_k if h_k < v_k else v_k
         self.reload_surface()
 
@@ -72,12 +69,15 @@ class VisualWorld(LogicWorld):
 
     def get_mouse_to_xy(self):
         return self.hex_math.normalize_coordinates(
-            (Global.mouse.x - self.x - self.dx) // self.scale,
-            (Global.mouse.y - self.y - self.dy) // self.scale,
+            (Global.mouse.x - self.x - self.dx) / self.scale,
+            (Global.mouse.y - self.y - self.dy) / self.scale,
             self.tile_radius)
 
     def get_tile_under_mouse(self) -> VisualTile:
         return self.get_tile_by_xy(self.get_mouse_to_xy())
+
+    def get_tile_by_xy(self, xy: Tuple[int, int]) -> Optional[VisualTile]:
+        return super().get_tile_by_xy(xy)
 
     def render(self):
         self.big_surface = self.create_big_surface()
@@ -134,8 +134,6 @@ class VisualWorld(LogicWorld):
     def draw_border_under_mouse(self, color=(255, 255, 255)):
         if self.window_rect.collidepoint(Global.mouse.pos):
             pos = self.get_mouse_to_xy()
-            # print(pos)
-
             if pos in self.xy_to_tile:
                 self.draw_border_for_xy(pos, color)
 
@@ -147,7 +145,7 @@ class VisualWorld(LogicWorld):
         return self.hex_math.get_dots_by_xy_id(x, y,
                                                self.scaled_tile_radius,
                                                self.x + self.dx,
-                                               self.y + self.dy
+                                               self.y + self.dy,
                                                )
 
     def draw(self):

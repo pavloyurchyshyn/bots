@@ -1,5 +1,3 @@
-# Generated code -- CC0 -- No Rights Reserved -- http://www.redblobgames.com/grids/hexagons/
-
 import math
 import collections
 from launch import GameRunner
