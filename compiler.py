@@ -31,12 +31,7 @@ try:
             if compiled_out.exists():
                 shutil.rmtree(compiled_out)
             compiled_out.mkdir()
-            # args = ['auto-py-to-exe',
-            #         launch.as_posix(),
-            #         '-c', config.as_posix(),
-            #         '--output-dir', compiled_out.as_posix(),
-            #         ]
-            # subprocess.call(args)
+
             subprocess.call('pyinstaller '
                             '--noconfirm --onefile --windowed '
                             f'--icon "{GAME_ICO}" '

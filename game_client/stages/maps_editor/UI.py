@@ -121,7 +121,7 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
             map_tiles_data = map_save.get_tiles_data()
 
         self.w.build_map(map_tiles_data)
-        # self.w.adapt_scale_to_win_size()
+        self.w.adapt_scale_to_win_size()
 
     def update_sizes_texts(self):
         self.size_txt.change_text(f'{Global.localization.get_text_wloc(UILocal.Match.Size)}:'

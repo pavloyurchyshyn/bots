@@ -89,6 +89,7 @@ class SetupMenu(Menu,
     def load_save(self, save: MapSave):
         self.w.build_map_from_save(save)
         self.w.adapt_scale_to_win_size()
+        self.define_map_position()
 
     def update_and_draw_map(self):
         self.w.draw()
@@ -155,3 +156,17 @@ class SetupMenu(Menu,
         if name:
             Global.network_data.nickname = name
             Global.connection.send_json({SetupStageReq.Player.NewNickname: name})
+    def define_map_position(self):
+        if MapRect.H_size > self.w.surface.get_width():
+            self.w.dx = (MapRect.H_size - self.w.surface.get_width()) // 2
+        elif self.w.dx > 0:
+            self.w.dx = 0
+        elif self.w.surface.get_width() + self.w.dx < MapRect.H_size:
+            self.w.dx = MapRect.H_size - self.w.surface.get_width()
+
+        if MapRect.V_size > self.w.surface.get_height():
+            self.w.dy = (MapRect.V_size - self.w.surface.get_height()) // 2
+        elif self.w.dy > 0:
+            self.w.dy = 0
+        elif self.w.surface.get_height() + self.w.dy < MapRect.V_size:
+            self.w.dy = MapRect.V_size - self.w.surface.get_height()

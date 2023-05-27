@@ -79,8 +79,8 @@ class MatchStage(Processor, ReadyProc):  # , CardsProc):
         # self.update_players_ready_number(response)
 
         # self.UI.w.build_map_from_save(MapSave.get_save_from_dict(match_data[GSC.Map]))
-        # self.UI.w.adapt_scale_to_win_size()
-        # self.UI.define_map_position()
+        self.UI.w.adapt_scale_to_win_size()
+        self.UI.define_map_position()
         self.UI.collect_skills_deck()
 
     def process_player_msg(self, r: dict, request_data, **kwargs):
