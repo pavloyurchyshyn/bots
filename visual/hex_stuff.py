@@ -3,7 +3,7 @@ from core.shape.hex import Hex
 from settings.tile_settings import TileSettings
 from visual.UI.utils import get_surface
 
-__prepared_hex = Hex(0, 0, TileSettings.visual_tile_r)
+__prepared_hex = Hex(0, 0, TileSettings.visual_tile_radius)
 
 
 def get_colored_hex(color, surface=None, dots=__prepared_hex.dots[1:]) -> Surface:

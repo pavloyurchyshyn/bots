@@ -56,7 +56,7 @@ class MatchStage(Processor, ReadyProc):  # , CardsProc):
                                                    **response[GameStgConst.Settings])
         save = MapSave.get_save_from_dict(response[GameStgConst.Map])
         self.UI: GameMatch = GameMatch(self)
-        self.UI.w.build_map(save.flat, save.odd, save.get_tiles_data())
+        self.UI.w.build_map(data=save.get_tiles_data())
         self.UI.w.adapt_scale_to_win_size()
         self.UI.define_map_position()
 

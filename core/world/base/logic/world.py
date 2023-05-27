@@ -1,38 +1,49 @@
-from typing import List, Tuple, Dict, Type
+from typing import List, Tuple, Dict, Type, Optional, Union
 from core.world.base.logic.tile import LogicTile, TileDataAbs
 from core.world.base.logic.tiles_data import EmptyTile
+from core.world.base.hex_utils import HexMath
+
+TileClass = Union[LogicTile, Type[LogicTile]]
 
 
 class LogicWorld:
 
-    def __init__(self, tile_class: LogicTile = LogicTile):
-        self.tile_class: LogicTile = tile_class
-        self.y_size = None
-        self.x_size = None
+    def __init__(self, tile_class: Type[LogicTile] = LogicTile):
+        self.tile_class: Type[LogicTile] = tile_class
+        self.x_size: int = None
+        self.y_size: int = None
         self.tiles: List[LogicTile] = []
-        self.xy_to_tile: Dict[Tuple[int, int], LogicTile] = {}
-        self.qr_to_tile: Dict[Tuple[int, int], LogicTile] = {}
+        self.xy_to_tile: Dict[Tuple[int, int], TileClass] = {}
+        self.qr_to_tile: Dict[Tuple[int, int], TileClass] = {}
+        self.hex_math: Type[HexMath] = HexMath
 
-    def get_tile_by_xy(self, xy):
+    def get_tile_by_xy(self, xy: Tuple[int, int]) -> Optional[TileClass]:
         return self.xy_to_tile.get(xy)
 
-    def add_tile(self, tile: LogicTile):
+    def get_tile_by_qr(self, qr: Tuple[int, int]) -> Optional[TileClass]:
+        return self.qr_to_tile.get(qr)
+
+    def add_tile(self, tile: TileClass):
         self.tiles.append(tile)
-        self.xy_to_tile[tile.id_xy] = tile
-        self.qr_to_tile[(tile.q, tile.r)] = tile
+        self.xy_to_tile[tile.xy_id] = tile
+        self.qr_to_tile[tile.qr] = tile
 
-    def remove_tile_by_xy(self, xy: tuple):
+    def remove_tile_by_xy(self, xy: Tuple[int, int]):
         if xy in self.xy_to_tile:
-            self.remove_tile(self.xy_to_tile.get(xy))
+            self.remove_tile(self.xy_to_tile[xy])
 
-    def remove_tile(self, tile: LogicTile):
-        self.xy_to_tile.pop((tile.id_x, tile.id_y), None)
+    def remove_tile_by_qr(self, qr: Tuple[int, int]):
+        if qr in self.qr_to_tile:
+            self.remove_tile(self.qr_to_tile[qr])
+
+    def remove_tile(self, tile: TileClass):
+        self.xy_to_tile.pop(tile.xy_id, None)
         if tile in self.tiles:
             self.tiles.remove(tile)
 
-    def change_tile(self, tile: LogicTile):
-        if tile.id_xy in self.xy_to_tile:
-            self.tiles.remove(self.xy_to_tile[tile.id_xy])
+    def change_tile(self, tile: TileClass):
+        if tile.xy_id in self.xy_to_tile:
+            self.tiles.remove(self.xy_to_tile[tile.xy_id])
 
         self.add_tile(tile)
 
@@ -55,6 +66,7 @@ class LogicWorld:
     def clear(self):
         self.tiles.clear()
         self.xy_to_tile.clear()
+        self.qr_to_tile.clear()
 
-    def get_tile_from_data(self, x, y, tile_data: TileDataAbs, **extra_data) -> LogicTile:
+    def get_tile_from_data(self, x: int, y: int, tile_data: TileDataAbs, **extra_data) -> TileClass:
         return self.tile_class(xy_id=(x, y), tile_data=tile_data, **extra_data)
