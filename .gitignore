@@ -6,8 +6,11 @@ python_env
 .idea
 settings/keyboard_config.json
 settings/common_config.json
-tests/ui_tests/keyboard_config.json
-tests/ui_tests/common_config.json
+
+tests/ui_tests/logs
+tests/ui_tests/maps
+tests/ui_tests/settings
+
 some_code
 maps
 compiled_versions
