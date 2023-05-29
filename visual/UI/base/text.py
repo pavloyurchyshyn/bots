@@ -1,5 +1,5 @@
 from pygame import Surface
-from pygame.transform import smoothscale
+from pygame.transform import smoothscale, scale
 from global_obj.main import Global
 from visual.UI.utils import get_surface
 from visual.UI.base.element import BaseUI
@@ -23,9 +23,11 @@ class Text(BaseUI):
         self.font_size = kwargs.get(TextAttrs.FontSize, DEFAULT_FONT_SIZE)
         self.font_name = kwargs.get(TextAttrs.FontName, DEFAULT_FONT_NAME)
         self.font = get_custom_font(self.font_size, self.font_name)
+
         self.scale_font = kwargs.get(TextAttrs.ScaleFont, False)
 
         self.split_lines = kwargs.get(TextAttrs.SplitLines, True)
+        self.split_words = kwargs.get(TextAttrs.SplitWords, True)
 
         self.auto_draw = kwargs.get(Attrs.AutoDraw, True)
 
@@ -91,7 +93,7 @@ class Text(BaseUI):
             return self.simple_render()
 
     def split_lines_render(self) -> Surface:
-        lines = [line for line in self.str_text.splitlines() if line]
+        lines = [line for line in self.str_text.replace('.', " ").splitlines() if line]
         if self.unlimited_h_size:
             return self.simple_render(lines=lines)
         else:
@@ -101,6 +103,9 @@ class Text(BaseUI):
             new_line = []
             for line in lines:
                 for word in line.split(' '):
+                    if not word:
+                        continue
+
                     h_s = self.font.size(word)[0]
 
                     if x + h_s + space_size >= self.h_size:
@@ -123,22 +128,78 @@ class Text(BaseUI):
         lines = [line for line in self.str_text.splitlines() if line]
         h_size, v_size = self.font.size(max(lines, key=len))
         font = None
-        if not self.unlimited_h_size and h_size > self.h_size:
+        if not self.unlimited_h_size and self.h_size_is_bigger(h_size):
             f_size = int(self.font_size / h_size * self.h_size)
             font = get_custom_font(f_size, self.font_name)
 
         v_size = self.font.size(max(lines, key=len))[1] * len(lines)
-        if not self.unlimited_v_size and v_size > self.v_size:
+        if not self.unlimited_v_size and self.v_size_is_bigger(v_size):
             f_size = int(self.font_size / v_size * self.v_size)
             font = get_custom_font(f_size, self.font_name)
 
         return self.simple_render(font)
+
+    def split_lines_words(self, lines, font):
+        if not self.h_size_is_bigger(font.size(max(lines, key=len))[0]):
+            return lines
+
+        lines_ = []
+        space_size = self.font.size(' ')[0]
+        new_line = []
+        for line_i in range(len(lines)):
+            line = lines[line_i].split()
+            if new_line:
+                line = [*new_line, * line]
+                new_line.clear()
+
+            line_h = font.size(" ".join(line))[0]
+            if self.h_size_is_bigger(line_h):
+                line_h_ = 0
+                for word in line:
+                    word_size = font.size(word)[0]
+                    line_h__ = line_h_ + word_size
+                    if self.h_size_is_bigger(line_h__):
+                        d_size = line_h__ - self.h_size
+                        px_per_letter = word_size / len(word)
+                        if d_size >= word_size or (px_per_letter >= d_size and d_size <= word_size):
+                            lines_.append(" ".join(new_line))
+                            new_line.clear()
+                            new_line.append(word)
+                        else:
+                            letters_count = int(d_size // px_per_letter) - 2
+                            new_line.append(word[:letters_count])
+                            lines_.append(" ".join(new_line))
+                            new_line.clear()
+                            new_line.append(word[letters_count:])
+
+
+                    else:
+                        new_line.append(word)
+                        line_h_ += space_size + word_size
+            else:
+                lines_.append( lines[line_i])
+                continue
+
+
+        lines_.append(" ".join(new_line))
+        new_line.clear()
+
+        return lines_
+
+    def v_size_is_bigger(self, v_size):
+        return v_size > self.v_size - 1
+    def h_size_is_bigger(self, h_size):
+        return h_size > self.h_size - 1
 
     def simple_render(self, font=None, lines=None):
         lines = lines if lines else [line for line in self.str_text.splitlines() if line]
         if not lines:
             return get_surface(1, 1, 1)
         font = font if font else self.font
+
+        if self.split_words and not self.unlimited_h_size:
+            lines = self.split_lines_words(lines=lines, font=font)
+
         h_size, v_size = font.size(max(lines, key=len))
         if not self.unlimited_h_size and h_size < self.h_size:
             h_size = self.h_size
@@ -163,18 +224,23 @@ class Text(BaseUI):
             y += text.get_height()
 
         bigger = False
+        v_k = 1
+        h_k = 1
         if not self.unlimited_h_size and h_size > self.h_size:
-            h_size = self.h_size
+            # h_size = self.h_size
+            h_k = h_size / self.h_size
             bigger = True
         if not self.unlimited_v_size and v_size > self.v_size:
+            # v_size = self.v_size
+            v_k = v_size / self.v_size
             bigger = True
-            v_size = self.v_size
 
         if self.unlimited_v_size:
             self.v_size = v_size
 
         if bigger:
-            text_surf = smoothscale(text_surf, (h_size, v_size))
+            k = v_k if v_k > h_k else h_k
+            text_surf = smoothscale(text_surf, (h_size // k, v_size // k))
 
         return text_surf
 
