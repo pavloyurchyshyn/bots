@@ -213,13 +213,16 @@ class HexMath:
         return results
 
     @classmethod
-    def get_cube_distance(cls, a, b) -> float:
+    def get_cube_distance(cls, a: Cube, b: Cube) -> float:
         vec = a - b
         return (abs(vec.q) + abs(vec.r) + abs(vec.s)) / 2
 
     @classmethod
+    def get_xy_distance(cls, a: Tuple[int, int], b: Tuple[int, int]) -> float:
+        return cls.get_cube_distance(Cube(*cls.xy_id_to_qr(*a)), Cube(*cls.xy_id_to_qr(*b)))
+    @classmethod
     def lerp(cls, a: Union[int, float], b: Union[int, float], t: Union[int, float]) -> int:
-        return int(a + (b - a) * t)
+        return a + (b - a) * t
 
     @classmethod
     def cube_lerp(cls, a: Cube, b: Cube, t: Union[int, float]) -> Cube:

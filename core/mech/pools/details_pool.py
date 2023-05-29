@@ -3,8 +3,8 @@ from typing import Dict, Union
 from global_obj.logger import get_logger
 
 from core.mech.mech import BaseMech
-from core.vanile_details.names import DetailNames
-from core import vanile_details as details_module
+from core.vanilla_details.names import DetailNames
+from core import vanilla_details as details_module
 from core.mech.details.detail import BaseDetail
 from core.mech.pools.skills_pool import SkillsPool
 from core.mech.exceptions import ThisDetailClassDoesntExist

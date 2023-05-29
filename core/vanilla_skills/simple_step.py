@@ -1,6 +1,5 @@
 from core.mech.skills.skill import BaseSkill
 from core.mech.skills.exceptions import OnCooldownError
-from core.validators.skill import SkillsValidations
 
 
 class SimpleStep(BaseSkill):
@@ -9,12 +8,7 @@ class SimpleStep(BaseSkill):
     targets = BaseSkill.TargetsConst.Tile,
 
     def __init__(self, num, unique_id):
-        validators = (
-            SkillsValidations.player_owns_skill_by_uid,
-            SkillsValidations.skill_not_on_cooldown,
-            SkillsValidations.player_has_enough_of_energy,
-            SkillsValidations.validate_tile_target,
-        )
+        validators = ()
         super(SimpleStep, self).__init__(unique_id=unique_id, num=num,
                                          energy_cost=1,
                                          cooldown=0, validators=validators,

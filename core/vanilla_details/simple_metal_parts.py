@@ -3,9 +3,9 @@ from core.mech.details.arm import BaseArm
 from core.mech.details.leg import BaseLeg
 from core.mech.details.constants import DetailsAttrs
 
-from core.vanile_details.names import DetailNames
-from core.vanile_skills.simple_step import SimpleStep
-from core.vanile_skills.simple_hit import SimpleHit
+from core.vanilla_details.names import DetailNames
+from core.vanilla_skills.simple_step import SimpleStep
+from core.vanilla_skills.simple_hit import SimpleHit
 
 __all__ = ['MetalArm', 'MetalLeg', 'MetalBody']
 

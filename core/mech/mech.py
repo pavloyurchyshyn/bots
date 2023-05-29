@@ -105,7 +105,7 @@ class MechParameterCalculationMixin:
 class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin):
     """
     This is an object which contains body and calculating attrs.
-    Body contains other vanile_details.
+    Body contains other vanilla_details.
     """
 
     def __init__(self, position, body_detail: BaseBody = None):

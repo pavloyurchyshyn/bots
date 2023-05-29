@@ -1,11 +1,11 @@
 from global_obj.main import Global
 from visual.cards.skill.card import SkillCard
 from core.mech.skills.skill import BaseSkill
-from pygame.draw import line as draw_line, circle as draw_circle
 from core.world.base.visual.world import VisualWorld
 from core.mech.skills.constants import Targets
-from server_stuff.constants.requests import GameStgConst as GSC
 from core.validators.skill import ValidationError
+from core.validators.constants import ValidationKeys
+from server_stuff.constants.requests import GameStgConst as GSC
 
 
 class BadTarget(Exception):
@@ -67,11 +67,11 @@ class CardUseC:
             #     raise BadTarget(f'Tile {tile.id_xy} not passable.')
             # else:
             try:
-                self.validate(skill=skill, xy=tile)
+                self.validate(skill=skill, **{ValidationKeys.TargetXYCoordinate: tile})
             except ValidationError as e:
                 if Global.mouse.l_up:
                     self.chat.add_msg(e, text_kwargs=dict(color=(200, 200, 200)), raw_text=False)
-                    Global.logger.info(f'Bad target for skill "{skill.name}" - ({tile}), reason: {e}')
+                    Global.logger.info(f'Bad target for skill "{skill.name}" - {tile}, reason: {e}')
                 raise BadTarget(e.msg)
 
             else:
@@ -82,10 +82,7 @@ class CardUseC:
 
     def validate(self, skill: BaseSkill, **additional_kwargs):
         return skill.validate_use(player=self.player,
-                                  world=Global.game.world,
-                                  details_pool=Global.game.details_pool,
-                                  skill_pool=Global.game.skills_pool,
-                                  players=Global.game.players,
+                                  **Global.get_dict_for_validations(),
                                   **additional_kwargs,
                                   )
 
@@ -94,9 +91,7 @@ class CardUseC:
 
     def draw_use_trace(self):
         if self.selected_card_to_use:
-            draw_line(Global.display, (100, 255, 255),
-                      self.w.get_real_center_of_tile(self.mech.position),
-                      Global.mouse.pos,
-                      4
-                      )
-            draw_circle(Global.display, (50, 255, 50) if self.good_target else (255, 50, 50), Global.mouse.pos, 5)
+            target_hex = self.w.get_tile_by_xy(self.w.get_mouse_to_xy())
+            if target_hex:
+                self.w.draw_ray_from_a_to_b(target_hex, self.w.get_tile_by_xy(self.mech.position),
+                                            color=(0, 155, 0) if self.good_target else (255, 100,100), width=2)

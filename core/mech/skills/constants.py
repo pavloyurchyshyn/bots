@@ -1,3 +1,5 @@
+INFINITE_VALUE = float('inf')
+
 class SkillAttrs:
     UID = 'uid'
     CD = 'cd'

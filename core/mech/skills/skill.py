@@ -1,6 +1,7 @@
 from typing import Iterable
 from abc import abstractmethod
 from global_obj.logger import get_logger
+from core.validators.skill import SkillsValidations
 from core.mech.skills.constants import Targets, SkillAttrs
 from core.mech.skills.exceptions import SpellWithoutNameError, TargetsTypeNotDefined
 
@@ -16,8 +17,9 @@ class BaseSkill:
     targets: Iterable = None
 
     def __init__(self, num, unique_id: str,
-                 energy_cost: int, validators: tuple,
-                 cooldown: int = 1, cast_range: int = 0):
+                 energy_cost: int, validators: tuple = (),
+                 cooldown: int = 1, current_cooldown: int = 0,
+                 cast_range: int = 1):
         if self.name is None or self.verbal_name is None:
             raise SpellWithoutNameError
 
@@ -28,9 +30,15 @@ class BaseSkill:
 
         self.energy_cost = energy_cost
         self.cooldown_value = cooldown
-        self.cooldown = 0
+        self.cooldown = current_cooldown
         self.cast_range: int = cast_range
-        self.validators = validators
+        self.validators = (
+            SkillsValidations.player_owns_skill_by_uid,
+            SkillsValidations.skill_not_on_cooldown,
+            SkillsValidations.player_has_enough_of_energy,
+            SkillsValidations.validate_tile_target,
+            SkillsValidations.target_in_range,
+            *validators)
 
     def get_base_dict(self) -> dict:
         return {
@@ -72,11 +80,12 @@ class BaseSkill:
     def update_attrs(self, attr: dict) -> None:
         raise NotImplementedError
 
-    def validate_use(self, player, world, details_pool, players, **kwargs) -> None:
+    def validate_use(self, player, **kwargs) -> None:
         for validation in self.validators:
             validation(player=player,
-                       world=world,
-                       details_pool=details_pool,
-                       players=players, skill=self,
+                       skill=self,
                        skill_uid=self.unique_id,
                        **kwargs)
+
+    def __str__(self):
+        return str(self.name)

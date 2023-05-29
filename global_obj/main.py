@@ -4,6 +4,8 @@ from global_obj.clock import Clock
 from global_obj.stages import Stages
 from global_obj.logger import get_logger
 
+from core.validators.constants import ValidationKeys
+
 from interfaces.skills_pool_interface import SkillsPoolInterface
 from interfaces.details_pool_interface import DetailsPoolInterface
 from interfaces.mech_serializer_interface import MechSerializerInterface
@@ -63,6 +65,17 @@ class Global:
         cls.skill_pool: SkillsPoolInterface = None
         cls.mech_serializer = None
 
+    @classmethod
+    def get_dict_for_validations(cls):
+        return {
+            ValidationKeys.Global: cls,
+            ValidationKeys.GameObj: cls.game,
+            ValidationKeys.SkillPool: cls.skill_pool,
+            ValidationKeys.DetailsPool: cls.details_pool,
+            ValidationKeys.AllMeches: cls.game.bots if cls.game else None,
+            ValidationKeys.Players: cls.game.players if cls.game else None,
+            ValidationKeys.World: cls.game.world if cls.game else None,
+        }
 
 if __name__ == '__main__':
     pass

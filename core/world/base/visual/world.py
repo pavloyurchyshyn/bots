@@ -4,6 +4,7 @@ from pygame.rect import Rect
 from typing import List, Type, Tuple, Optional
 from _thread import start_new_thread
 from pygame import draw, Surface, transform
+from pygame.draw import circle as draw_circle
 from global_obj.main import Global
 from visual.UI.utils import get_surface
 from settings.tile_settings import TileSettings
@@ -12,7 +13,7 @@ from core.world.base.visual.tile import VisualTile
 from core.world.base.logic.world import LogicWorld
 from core.world.base.logic.tiles_data import EmptyTile
 from core.world.base.logic.tiles_data import TileDataAbs
-from pygame.draw import circle as draw_circle
+from core.world.base.hex_utils import HexMath, Cube
 
 
 class VisualWorld(LogicWorld):
@@ -158,3 +159,15 @@ class VisualWorld(LogicWorld):
         x, y = self.hex_math.xy_id_to_xy_coordinates(*xy, self.tile_radius)
         return int(x * self.scale) + self.dx + self.x, int(y * self.scale) + self.y + self.dy
 
+    def get_real_center_of_tile_qr(self, qr: tuple) -> tuple:
+        x, y = self.hex_math.qr_to_xy_coords(*qr, self.tile_radius)
+        return int(x * self.scale) + self.dx + self.x, int(y * self.scale) + self.y + self.dy
+
+    def draw_ray_from_a_to_b(self, a_qr: Cube, b_qr: Cube, color = (155, 155, 155), width = 1):
+        ray = HexMath.ray_from_a_to_b(a_qr, b_qr)
+        if ray:
+            ray = [self.get_real_center_of_tile_qr(qr) for qr in ray]
+            if len(ray) >= 2:
+                draw.lines(Global.display, color, False, ray, width)
+            else:
+                draw.line(Global.display, color, *ray, width)
