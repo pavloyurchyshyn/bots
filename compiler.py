@@ -1,5 +1,6 @@
 import os
 import time
+import datetime
 import shutil
 import subprocess
 from pathlib import Path
@@ -73,5 +74,12 @@ try:
 except Exception as e:
     print(e)
     print(traceback.format_exc())
-
-print(f'Time spent: {time.time() - start} seconds.')
+else:
+    time_d = round(time.time() - start, 2)
+    with open(compiled_out / 'META.txt', 'w') as f:
+        data = f'time {time_d}\n'\
+        f'version {VERSION}\n' \
+        f'date {datetime.datetime.now().strftime("%d:%m:%Y %H:%M:%S")}\n'
+        f.write(data)
+time_d = round(time.time() - start, 2)
+print(f'Time spent: {time_d} seconds.')

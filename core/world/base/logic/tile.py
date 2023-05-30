@@ -63,6 +63,9 @@ class LogicTile(XYIdHex, Cube):
     def get_data_dict(self) -> dict:
         return TileDataAbs.parameters_to_dict(self)
 
+    @property
+    def can_be_destroyed(self) -> bool:
+        return not self.eternal and self.hp > 0
 
 if __name__ == '__main__':
     tile = LogicTile((0, 0), TileTypes.Forest)

@@ -6,5 +6,5 @@ msgs:
   bad_tile_target: Bad tile target
   bad_target_type: Bad target type
   no_such_tile: no such tile
-  tile_not_passable: tile not passable
+  tile_not_passable: tile is not passable
   out_of_range: out of range

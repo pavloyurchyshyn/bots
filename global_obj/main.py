@@ -72,7 +72,7 @@ class Global:
             ValidationKeys.GameObj: cls.game,
             ValidationKeys.SkillPool: cls.skill_pool,
             ValidationKeys.DetailsPool: cls.details_pool,
-            ValidationKeys.AllMeches: cls.game.bots if cls.game else None,
+            ValidationKeys.AllMeches: tuple([player.mech for player in cls.game.players.values()]) if cls.game else None,
             ValidationKeys.Players: cls.game.players if cls.game else None,
             ValidationKeys.World: cls.game.world if cls.game else None,
         }

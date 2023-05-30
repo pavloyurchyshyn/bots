@@ -15,7 +15,10 @@ class Text(BaseUI):
         super().__init__(uid=uid, **kwargs, build_surface=True)
         self.color = color if color else self.style.color
         self.raw_text = raw_text
+        self.capitalize = kwargs.get(TextAttrs.Capitalize, False)
         self.str_text = self.get_localization_text(str(text), self.raw_text)
+        if self.capitalize:
+            self.str_text = self.str_text.capitalize()
 
         self.unlimited_h_size = kwargs.get(TextAttrs.UnlimitedHSize, False)
         self.unlimited_v_size = kwargs.get(TextAttrs.UnlimitedVSize, False)

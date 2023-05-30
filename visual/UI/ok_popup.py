@@ -12,7 +12,7 @@ class OkPopUp(PopUpBase):
     def init_shape(self) -> None:
         self.init_rect_shape()
 
-    def __init__(self, uid, ok_uid=None, on_click_action=None, **kwargs):
+    def __init__(self, uid, ok_uid=None, on_click_action=None, ok_text: str = None, **kwargs):
         super(OkPopUp, self).__init__(uid=uid, **kwargs)
         self.on_click_action = on_click_action
         ok_uid = ok_uid if ok_uid else f'{self.uid}_ok_btn'
@@ -24,7 +24,7 @@ class OkPopUp(PopUpBase):
         self.ok = Button(uid=ok_uid,
                          parent=self,
                          on_click_action=self.close,
-                         text=CommonText.Ok,
+                         text=ok_text if ok_text else CommonText.Ok,
                          postpone_build=True,
                          **button_data,
                          )

@@ -12,7 +12,7 @@ class Chat(Container):
                                    **kwargs)
         self.text_kwargs: dict = text_kwargs if text_kwargs else {}
 
-    def add_msg(self, msg: str, text_kwargs: dict = None, raw_text: bool = True):
+    def add_msg(self, msg: str, text_kwargs: dict = None, raw_text: bool = True, capitalize: bool = True):
         if text_kwargs:
             uid = text_kwargs.pop('uid', f'{len(self.elements)}_msg')
         else:
@@ -22,8 +22,10 @@ class Chat(Container):
                               raw_text=raw_text,
                               unlimited_v_size=True,
                               split_lines=True,
-                              h_size_k=0.99,
+                              h_size_k=0.98,
                               parent=self,
                               from_left=True,
+                              capitalize=capitalize,
                               **text_kwargs
                               ))
+

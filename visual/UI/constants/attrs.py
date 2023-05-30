@@ -64,7 +64,7 @@ class TextAttrs(Attrs):
     SplitLines = 'split_lines'
     SplitWords = 'split_words'
     FromLeft = 'from_left'
-
+    Capitalize = 'capitalize'
 
 class InputAttr(Attrs):
     OnEnterAction = 'on_enter_action'

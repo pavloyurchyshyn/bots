@@ -121,6 +121,7 @@ def main():
 
 if __name__ == '__main__':
     try:
+        Global.logger.error("Start")
         main()
     except Exception as e:
         Global.logger.error(e)

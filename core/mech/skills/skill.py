@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import Iterable, Callable
 from abc import abstractmethod
 from global_obj.logger import get_logger
 from core.validators.skill import SkillsValidations
@@ -17,6 +17,7 @@ class BaseSkill:
     targets: Iterable = None
 
     def __init__(self, num, unique_id: str,
+                 target_validation_func: Callable,
                  energy_cost: int, validators: tuple = (),
                  cooldown: int = 1, current_cooldown: int = 0,
                  cast_range: int = 1):
@@ -36,8 +37,8 @@ class BaseSkill:
             SkillsValidations.player_owns_skill_by_uid,
             SkillsValidations.skill_not_on_cooldown,
             SkillsValidations.player_has_enough_of_energy,
-            SkillsValidations.validate_tile_target,
             SkillsValidations.target_in_range,
+            target_validation_func,
             *validators)
 
     def get_base_dict(self) -> dict:
@@ -58,7 +59,7 @@ class BaseSkill:
             self.cooldown -= 1
 
     @abstractmethod
-    def use(self, **kwargs) -> dict:
+    def use(self, player, game_obj, target_xy) -> dict:
         """
         Do action.
         """
@@ -77,7 +78,7 @@ class BaseSkill:
         raise NotImplementedError
 
     @abstractmethod
-    def update_attrs(self, attr: dict) -> None:
+    def update_attrs(self, attrs: dict) -> None:
         raise NotImplementedError
 
     def validate_use(self, player, **kwargs) -> None:

@@ -16,7 +16,7 @@ from game_logic.bots.bot_player import BotPlayer
 from game_logic.settings_stage import SettingsStage
 from game_logic.game_data.id_generator import IdGenerator
 
-SERVER_LIVE_TIME = 60
+SERVER_LIVE_TIME = 120
 
 
 # TODO make abstract

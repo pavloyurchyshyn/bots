@@ -1,4 +1,3 @@
-import os
 import psutil
 import subprocess
 from abc import abstractmethod
@@ -22,27 +21,41 @@ class ServerRunnerAbs:
         self.stop()
 
 
-SERVER_FILE_NAME = 'server.exe'
-SERVER_PYTHON_FILE_NAME = 'server.py'
+SERVER_FILE_EXE = ROOT_OF_GAME / 'server.exe'
+SERVER_PYTHON_FILE_NAME = ROOT_OF_GAME / 'server.py'
 
 
 class ServerRunner(ServerRunnerAbs):
-    def __init__(self, solo=True, port=StartArgs.DefaultPort, password=None, token=None):
+    def __init__(self, solo=True, port=StartArgs.DefaultPort,
+                 password=None, token=None,
+                 visible_terminal: bool = False):
         self.solo = solo
         self.port = port
         self.password = password
         self.server_process: subprocess.Popen = None
         self.token = token
+        self.visible_terminal = visible_terminal
 
     def run(self):
         arguments = self.get_arguments()
-        if os.path.exists(os.path.join(ROOT_OF_GAME, SERVER_FILE_NAME)):
-            arguments = [os.path.join(ROOT_OF_GAME, SERVER_FILE_NAME), *arguments]
-        else:
-            arguments = ['python', os.path.join(ROOT_OF_GAME, SERVER_PYTHON_FILE_NAME), *arguments]
 
-        LOGGER.debug(f'Arguments.{arguments}')
-        self.server_process = subprocess.Popen(arguments, shell=True, creationflags=subprocess.DETACHED_PROCESS)
+        if SERVER_FILE_EXE.exists():
+            arguments = [str(SERVER_FILE_EXE), *arguments]
+        else:
+            arguments = ['python', str(SERVER_PYTHON_FILE_NAME), *arguments]
+
+        if not self.visible_terminal:
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        else:
+            startupinfo = None
+
+        LOGGER.info(f'Starting server with arguments: {arguments}')
+        self.server_process = subprocess.Popen(arguments,
+                                               startupinfo=startupinfo,
+                                               shell=True,
+                                               creationflags=subprocess.DETACHED_PROCESS if self.visible_terminal else 0,
+                                               )
         LOGGER.info('Server started')
 
     def get_arguments(self):

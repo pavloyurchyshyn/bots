@@ -24,8 +24,8 @@ class PopUpsController:
     def add_popup(self, pop_up: PopUpBase):
         self.popups.append(pop_up)
 
-    def add_ok_popup(self, msg: str):
-        self.add_popup(OkPopUp(f'ok_{len(self.popups)}', text=msg))
+    def add_ok_popup(self, msg: str, ok_text: str = None):
+        self.add_popup(OkPopUp(f'ok_{len(self.popups)}', text=msg, ok_text=ok_text))
 
     def clear_popups(self):
         self.popups.clear()

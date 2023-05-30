@@ -1,3 +1,6 @@
+import time
+import traceback
+
 from global_obj.main import Global
 from constants.stages import StagesConstants
 from game_client.stages import *
@@ -69,14 +72,14 @@ class GameBody:
         """
         Global.logger.info('Joining game')
         self.game = StagesController(self)
-        for i in range(1):
+        for i in range(3):
             Global.logger.info(f'Connecting, attempt {i+1}')
             try:
                 self.game.connect()
             except Exception as e:
-                import traceback
                 Global.logger.warning(traceback.format_exc())
                 Global.logger.warning(f'Failed to connect due to: {e}')
+                time.sleep(0.5)
             else:
                 Global.stages.game()
                 break
