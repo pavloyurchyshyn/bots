@@ -56,7 +56,7 @@ try:
                             '"E:/nastilna_gra_refactor/server.py"')
             shutil.copy(server_exe, server_exe_dst)
 
-            for folder in ('localization', 'sounds', 'textures'):
+            for folder in ('localization', 'sounds', 'textures', 'fonts'):
                 shutil.copytree(root / folder, compiled_out / folder)
 
             for file in (GAME_ICO, SERVER_ICO):

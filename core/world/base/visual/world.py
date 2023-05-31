@@ -129,8 +129,8 @@ class VisualWorld(LogicWorld):
                                           radius=self.tile_radius,
                                           **extra_data)
 
-    def draw_border_for_xy(self, xy, color=(255, 255, 255)):
-        self.draw_tile_border(Global.display, self.get_dots_due_to_map_pos(*xy), color=color)
+    def draw_border_for_xy(self, xy, color=(255, 255, 255), width=1):
+        self.draw_tile_border(Global.display, self.get_dots_due_to_map_pos(*xy), color=color, width=width)
 
     def draw_border_under_mouse(self, color=(255, 255, 255)):
         if self.window_rect.collidepoint(Global.mouse.pos):

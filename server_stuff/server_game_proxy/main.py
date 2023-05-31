@@ -31,7 +31,7 @@ class ServerGameProxy:
 
     def run(self):
         a = time.time() + SERVER_LIVE_TIME
-        while time.time() < a:
+        while self.server.server_alive:
             self.current_stage.update()
             time.sleep(0.1)
         Global.logger.info('end of game')

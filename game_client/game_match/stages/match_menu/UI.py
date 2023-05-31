@@ -48,8 +48,10 @@ class GameMatch(Menu, PopUpsController,
         Global.display.fill((0, 0, 0))
         collided_popup_btn = self.update_popups()
 
-        self.simple_buttons_update(self.draw_border_around_element)
         self.update_and_draw_map()
+        self.draw_use_trace()
+
+        self.simple_buttons_update(self.draw_border_around_element)
 
         self.draw_popups()
         self.update_chat()
@@ -76,7 +78,6 @@ class GameMatch(Menu, PopUpsController,
             self.check_for_card_select()
             self.check_for_card_use()
 
-        self.draw_use_trace()
 
     def check_for_card_select(self):
         if Global.mouse.l_up:

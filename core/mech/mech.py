@@ -213,8 +213,8 @@ class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin):
     def have_enough_energy(self, energy: float) -> bool:
         return self._current_energy - energy >= 0.
 
-    def spend_energy(self, energy: float):
-        if energy > self._current_energy:
+    def spend_energy(self, energy: float, allow_minus: bool = False):
+        if energy > self._current_energy and not allow_minus:
             raise NotEnoughEnergyError
 
         self._current_energy -= energy

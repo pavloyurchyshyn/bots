@@ -6,7 +6,7 @@ from core.mech.skills.constants import Targets
 from core.validators.skill import ValidationError
 from core.validators.constants import ValidationKeys
 from server_stuff.constants.requests import GameStgConst as GSC
-
+from core.world.base.hex_utils import HexMath
 
 class CardUseC:
     cards_dy: int
@@ -15,6 +15,7 @@ class CardUseC:
     def __init__(self):
         self.selected_card_to_use: SkillCard = None
         self.good_target = False
+        self.draw_good_square = True
 
     def check_for_card_use(self):
         self.good_target = False
@@ -48,3 +49,19 @@ class CardUseC:
             if target_hex:
                 self.w.draw_ray_from_a_to_b(a_qr=target_hex, b_qr=self.w.get_tile_by_xy(self.mech.position),
                                             color=(0, 155, 0) if self.good_target else (255, 100,100), width=2)
+            if self.draw_good_square:
+                tiles = HexMath.get_neighbors_qr(*self.w.get_tile_by_xy(self.mech.position).qr,
+                                                 self.selected_card_to_use.skill.cast_range)
+
+
+                for tile in tiles:
+                    if target_hex and tile == target_hex.qr:
+                        continue
+                    try:
+                        tile = self.w.get_tile_by_qr(tile)
+                        if tile:
+                            self.validate(self.selected_card_to_use.skill, **{ValidationKeys.TargetXYCoordinate: tile.xy_id})
+                    except:
+                        pass
+                    else:
+                        self.w.draw_border_for_xy(tile.xy_id, width=2, color=(100, 225, 100))

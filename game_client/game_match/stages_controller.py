@@ -36,8 +36,8 @@ class StagesController:
         Global.logger.info(f'Sending creds: {Global.network_data.credentials}')
         Global.connection.send_json(Global.network_data.credentials)
         response = Global.connection.recv_json()
-        Global.logger.warning(f'Response: {response}')
-        Global.logger.warning(f"Player client data: {response.get(LoginArgs.ClientAttrs.ClientData)}")
+        Global.logger.info(f'Response: {response.get("status")}')
+        Global.logger.info(f"Player client data: {response.get(LoginArgs.ClientAttrs.ClientData)}")
 
         client_data = response.get(LoginArgs.ClientAttrs.ClientData, {})
         Global.network_data.token = client_data[LoginArgs.Token]
@@ -49,7 +49,7 @@ class StagesController:
             return
 
     def process_connection(self, response: dict):
-        Global.logger.info(f'Connection data: {response}')
+        Global.logger.debug(f'Connection data: {response}')
         if not response.get(LoginArgs.Result.Status):
             raise NotImplementedError('Add some info why failed')
 

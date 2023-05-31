@@ -20,6 +20,7 @@ from visual.UI.popup_controller import PopUpsController
 from visual.UI.base.mixins import DrawElementBorderMixin
 
 from server_stuff.constants.requests import SetupStageReq
+from settings.tile_settings import TileSettings
 
 
 class SetupMenu(Menu,
@@ -36,7 +37,7 @@ class SetupMenu(Menu,
         ConnectedPlayers.__init__(self)
         PlayersSlots.__init__(self)
         self.setup_stage = setup_stage
-        self.w: VisualWorld = VisualWorld(MapRect.rect)
+        self.w: VisualWorld = VisualWorld(MapRect.rect, tile_radius=TileSettings.visual_tile_radius_setup)
         self.maps_mngr = setup_stage.maps_mngr
 
         self.current_save: int = 0
@@ -100,19 +101,17 @@ class SetupMenu(Menu,
         # self.maps_cont.clear()
         for i, map_save in enumerate(self.maps_mngr.maps):
             self.maps_container.add_element(MapChooseUI(uid=map_save.name, map_save=map_save,
+                                                        chosen=self.current_save == i,
                                                         parent=self.maps_container, menu=self, index=i))
 
         self.maps_container.build()
 
     def update_chosen_map(self, index: int, force=False):
         if self.current_save != index or force:
+            self.maps_container.elements[self.current_save].unchoose()
             self.current_save = index
-            for i, save_c in enumerate(self.maps_container.elements):
-                if i == index:
-                    self.load_save(save_c.save)
-                    save_c.choose()
-                else:
-                    save_c.unchoose()
+            self.maps_container.elements[self.current_save].choose()
+            self.load_save(self.maps_container.elements[self.current_save].save)
             self.maps_container.render()
 
     def upd_draw_map_container(self):
@@ -142,6 +141,9 @@ class SetupMenu(Menu,
             self.draw_border_around_element(self.nickname_input)
             if Global.mouse.l_up:
                 self.nickname_input.focus()
+        elif Global.mouse.l_up:
+            self.nickname_input.unfocus()
+
         self.nickname_input.update()
         self.submit_nickname.set_active(Global.network_data.nickname != self.nickname_input.text.str_text)
 
@@ -153,9 +155,10 @@ class SetupMenu(Menu,
 
     def nickname_function(self, i: InputBase = None):
         name = self.nickname_input.text.str_text
-        if name:
+        if name and name != Global.network_data.nickname:
             Global.network_data.nickname = name
             Global.connection.send_json({SetupStageReq.Player.NewNickname: name})
+
     def define_map_position(self):
         if MapRect.H_size > self.w.surface.get_width():
             self.w.dx = (MapRect.H_size - self.w.surface.get_width()) // 2

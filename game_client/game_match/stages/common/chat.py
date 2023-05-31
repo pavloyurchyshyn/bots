@@ -11,7 +11,7 @@ class ChatPart:
                  inp_x_k=0.425, inp_y_k=0.95, inp_h_size_k=0.23, inp_v_size_k=0.05,
                  send_x_k=0.655, send_y_k=0.95, send_h_size_k=0.02, send_v_size_k=0.05,
                  ):
-        self.chat = Chat('chat', x_k=x_k, y_k=y_k, h_size_k=h_size_k, v_size_k=v_size_k).build()
+        self.chat = Chat('chat', x_k=x_k, y_k=y_k, h_size_k=h_size_k, v_size_k=v_size_k, parent=self).build()
         self.send_btn = Button('send_btn', '->',
                                x_k=send_x_k, y_k=send_y_k,
                                h_size_k=send_h_size_k, v_size_k=send_v_size_k,
@@ -43,8 +43,18 @@ class ChatPart:
 
     def upd_draw_input(self):
         self.input.draw()
-        if self.input.collide_point(Global.mouse.pos):
+        self.input.update()
+
+        if self.input.input_is_active and Global.keyboard.ESC:
+            self.input.unfocus()
+
+        elif Global.keyboard.activate_input:
+            self.input.focus()
+
+        elif self.input.collide_point(Global.mouse.pos):
             self.draw_border_around_element(self.input)
             if Global.mouse.l_up:
                 self.input.focus()
-        self.input.update()
+
+        elif Global.mouse.l_up:
+            self.input.unfocus()

@@ -38,6 +38,11 @@ def save_to_common_config(key, value):
 def get_from_common_config(key, def_value=None):
     return get_parameter_from_json_config(key=key, def_value=def_value, path=COMMON_CONFIG_PATH)
 
+def get_and_save_from_common_config(key, def_value=None):
+    value = get_from_common_config(key=key, def_value=def_value)
+    save_to_common_config(key, value)
+    return value
+
 
 def get_common_config():
     return load_json_config(COMMON_CONFIG_PATH)

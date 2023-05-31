@@ -55,6 +55,7 @@ class MapChooseUI(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBo
                  y_k=MapFuncElCons.Y,
                  h_size_k=MapFuncElCons.H_size,
                  v_size_k=MapFuncElCons.V_size,
+                 chosen: bool = False,
                  **kwargs):
         super(MapChooseUI, self).__init__(uid,
                                           x_k=x_k,
@@ -89,6 +90,7 @@ class MapChooseUI(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBo
                                          on_click_action=self.choose_btn_action,
                                          style=get_green_btn_style())
         self.build()
+        self.choose() if chosen else self.unchoose()
 
     def choose_btn_action(self, b: Button):
         if Global.network_data.is_admin:

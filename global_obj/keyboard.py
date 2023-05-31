@@ -22,7 +22,7 @@ class KeyUsingError(Exception):
 class Keyboard:
     def __init__(self, logger):
         self.logger = logger
-        self.key_str_to_command = self.get_config()
+        self.key_str_to_command: dict = self.get_config()
         self.fulfill_config()
         self.save_config()
         self.commands = []
@@ -107,8 +107,5 @@ class Keyboard:
     def alt_and_f4(self):
         return self._pressed[K_F4] and self._pressed[K_LALT]
 
-    def test(self):
-        print(self.__dict__)
-
     def __getattr__(self, item: str):
-        return item.replace('_', '', 1) in self.text
+        return item in self.commands

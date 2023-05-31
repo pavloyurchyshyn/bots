@@ -23,12 +23,12 @@ class TexturePack:
         if k in self.textures:
             return self.textures[k]
         else:
-            LOGGER.info(f'Missing texture: {k}')
+            LOGGER.debug(f'Missing texture: {k}')
             keys = tuple(filter(lambda key: key.startswith(k), self.textures.keys()))
             if keys:
                 return self.textures[keys[0]]
             else:
-                LOGGER.warning(f'Returns error texture {k}')
+                LOGGER.debug(f'Returns error texture {k}') # TODO warn
                 return self.ERROR_TEXTURE
 
     def load(self, parent_path):
