@@ -1,13 +1,29 @@
 from pygame import font
-from settings.screen.size import scaled_w
+from settings.visual.graphic import GraphicConfig
 
-DEFAULT_FONT_NAME = 'Arial'
-DEFAULT_FONT_SIZE = scaled_w(0.0078125)
+DEFAULT_FONT = font.SysFont(GraphicConfig.DEFAULT_SYS_FONT_NAME, GraphicConfig.FontSize)
 
 
+def fonts_collector(func):
+    memory = {}
+    def wrapper(size, font_name=None):
+        if (size, font_name) not in memory:
+            font_ = func(size, font_name)
+            if font_ == DEFAULT_FONT:
+                return DEFAULT_FONT
+            else:
+                memory[(size, font_name)] = font_
+
+        return memory[(size, font_name)]
+
+
+    return wrapper
+
+@fonts_collector
 def get_custom_font(size: int, font_name=None):
-    font_name = font_name if font_name else DEFAULT_FONT_NAME
-    return font.SysFont(font_name, int(size))
+    font_name = font_name if font_name else GraphicConfig.DEFAULT_FONT_NAME
+    try:
+        return font.Font(font_name, int(size))
+    except Exception:
+        return DEFAULT_FONT
 
-
-DEFAULT_FONT = font.SysFont(DEFAULT_FONT_NAME, DEFAULT_FONT_SIZE)

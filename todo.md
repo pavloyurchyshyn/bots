@@ -90,3 +90,6 @@ First priority:
  - map scale
 
 ### OTHER
+ - switch target tiles demonstration types
+ - custom font
+ - render dots in text

@@ -1,10 +1,11 @@
 from pygame import Surface
-from pygame.transform import smoothscale, scale
+from pygame.transform import smoothscale
 from global_obj.main import Global
 from visual.UI.utils import get_surface
 from visual.UI.base.element import BaseUI
-from visual.UI.base.font import DEFAULT_FONT_NAME, get_custom_font, DEFAULT_FONT_SIZE
+from visual.UI.base.font import get_custom_font
 from visual.UI.constants.attrs import Attrs, TextAttrs
+from settings.visual.graphic import GraphicConfig
 
 
 class Text(BaseUI):
@@ -23,8 +24,8 @@ class Text(BaseUI):
         self.unlimited_h_size = kwargs.get(TextAttrs.UnlimitedHSize, False)
         self.unlimited_v_size = kwargs.get(TextAttrs.UnlimitedVSize, False)
 
-        self.font_size = kwargs.get(TextAttrs.FontSize, DEFAULT_FONT_SIZE)
-        self.font_name = kwargs.get(TextAttrs.FontName, DEFAULT_FONT_NAME)
+        self.font_size = kwargs.get(TextAttrs.FontSize, GraphicConfig.FontSize)
+        self.font_name = kwargs.get(TextAttrs.FontName, GraphicConfig.FontName)
         self.font = get_custom_font(self.font_size, self.font_name)
 
         self.scale_font = kwargs.get(TextAttrs.ScaleFont, False)

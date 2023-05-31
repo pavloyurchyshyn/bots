@@ -52,6 +52,9 @@ class ServerRunner(ServerRunnerAbs):
 
         LOGGER.info(f'Starting server with arguments: {arguments}')
         self.server_process = subprocess.Popen(arguments,
+                                               stdout=subprocess.PIPE,
+                                               stdin=subprocess.PIPE,
+                                               stderr=subprocess.PIPE,
                                                startupinfo=startupinfo,
                                                shell=True,
                                                creationflags=subprocess.DETACHED_PROCESS if self.visible_terminal else 0,

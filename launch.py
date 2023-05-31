@@ -1,4 +1,4 @@
-from os import environ
+from os import environ, getcwd
 environ['VisualPygameOn'] = 'on'
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "1"
 
@@ -10,7 +10,7 @@ init()
 from pygame import display, event as EVENT, MOUSEBUTTONDOWN, MOUSEBUTTONUP, KEYDOWN, TEXTINPUT
 from pygame.time import Clock
 
-display.set_icon(pygame.image.load(Path(__file__).parent / 'game.ico'))
+display.set_icon(pygame.image.load(Path(getcwd()) / 'game.ico'))
 from global_obj.main import Global
 from visual.UI.constants.colors import WHITE
 from global_obj.display import MAIN_DISPLAY

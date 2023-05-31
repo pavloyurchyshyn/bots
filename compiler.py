@@ -36,10 +36,11 @@ try:
             subprocess.call('pyinstaller '
                             '--noconfirm --onefile --windowed '
                             f'--icon "{GAME_ICO}" '
-                            '--add-data "E:/nastilna_gra_refactor/localization;localization/" '
-                            '--add-data "E:/nastilna_gra_refactor/sounds;sounds/" '
-                            '--add-data "E:/nastilna_gra_refactor/textures;textures/"  '
-                            '"E:/nastilna_gra_refactor/launch.py"')
+                            f'--add-data "{root/"localization"};localization/" '
+                            f'--add-data "{root/"sounds"};sounds/" '
+                            f'--add-data "{root / "textures"};textures/"  '
+                            f'--add-data "{root / "fonts"};fonts/"  '
+                            f'"{root/"launch.py"}"')
 
             shutil.copy(dist_folder / 'launch.exe', compiled_exe)
 
@@ -53,7 +54,7 @@ try:
             subprocess.call('pyinstaller '
                             '--noconfirm --onefile --console '
                             f'--icon "{SERVER_ICO}"  '
-                            '"E:/nastilna_gra_refactor/server.py"')
+                            f'"{root / "server.py"}"')
             shutil.copy(server_exe, server_exe_dst)
 
             for folder in ('localization', 'sounds', 'textures', 'fonts'):

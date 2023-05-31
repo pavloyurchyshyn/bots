@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 LOG_LEVEL = logging.INFO
 
-ROOT_OF_GAME = Path(__file__).parent.parent
+ROOT_OF_GAME = Path(os.getcwd())
 TEXTURES_FOLDER = ROOT_OF_GAME / 'textures'
 DEFAULT_TEXTURES_FOLDER = TEXTURES_FOLDER / 'default'
 MAPS_SAVES = ROOT_OF_GAME / 'maps'

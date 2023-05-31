@@ -1,11 +1,11 @@
 from time import time as current_time
-from settings.json_configs_manager import get_from_common_config, save_to_common_config
+from settings.json_configs_manager import save_to_common_config, get_and_save_from_common_config
 
 GLOBAL_SETTINGS = {
     'slow_motion': 0,
     'slow_motion_value': 0.05,
-    'fps_config': get_from_common_config('fps_config', 60),
-    'language': get_from_common_config('language', 'eng'),
+    'fps_config': get_and_save_from_common_config('fps_config', 60),
+    'language': get_and_save_from_common_config('language', 'eng'),
     'scroll_speed': 5,
     'texture_pack': 'default',
 }
