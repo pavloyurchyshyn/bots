@@ -20,6 +20,7 @@ from visual.UI.popup_controller import PopUpsController
 from visual.UI.base.mixins import DrawElementBorderMixin
 
 from settings.localization.menus.UI import UILocal
+from settings.tile_settings import TileSettings
 
 
 class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
@@ -67,7 +68,7 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
                                       h_size_k=0.1, v_size_k=0.1,
                                       )
 
-        self.w: VisualWorld = VisualWorld(MapRect.rect)
+        self.w: VisualWorld = VisualWorld(MapRect.rect, tile_radius=TileSettings.visual_tile_radius)
         self.maps_mngr: MapsManager = MapsManager()
         self.maps_mngr.load_maps()
 
@@ -250,7 +251,7 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
                     map_bigger = True
 
                 if scroll > 0 or (scroll < 0 and map_bigger):
-                    self.w.scale = self.w.scale + scroll * Global.clock.d_time
+                    self.w.set_scale(self.w.scale + scroll * Global.clock.d_time)
                     self.w.reload_surface()
                     self.define_map_position()
 

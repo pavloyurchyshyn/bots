@@ -15,9 +15,10 @@ from game_logic.game import Game
 from game_logic.game_data.game_settings import GameSettings
 
 from game_client.game_match.stages.match_menu.proc_components.ready import ReadyProc
+from game_client.game_match.stages.match_menu.proc_components.cards import CardsProc
 
 
-class MatchStage(Processor, ReadyProc):  # , CardsProc):
+class MatchStage(Processor, ReadyProc, CardsProc):
     def __init__(self, stages_controller):
         self.stages_controller = stages_controller
         self.game_object: Game = None
@@ -28,7 +29,7 @@ class MatchStage(Processor, ReadyProc):  # , CardsProc):
         }
 
         ReadyProc.__init__(self)
-        # CardsProc.__init__(self)
+        CardsProc.__init__(self)
 
     @property
     def player(self) -> PlayerObj:
@@ -42,8 +43,8 @@ class MatchStage(Processor, ReadyProc):  # , CardsProc):
         self.UI.update()
 
     def process_request(self, r: dict):
-        for k in r.keys():
-            self.actions.get(k, self.bad_request)(r, request_data=r[k])
+        for request, data  in r.items():
+            self.actions.get(request, self.bad_request)(r=r, request=request, request_data=data)
 
     def bad_request(self, r: dict, request_data, **_):
         Global.logger.warning(f'Bad request: {r}:\n{request_data}')

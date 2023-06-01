@@ -25,6 +25,8 @@ class SkillsCardsFabric:
     def get_cards_for_skill(self, skill: BaseSkill, x: int = 0, y: int = 0) -> SkillCard:
         if skill.unique_id not in self.cards:
             self.add_card(self.card_class(skill, skill.unique_id, x, y))
+        else:
+            self.cards[skill.unique_id].skill = skill
 
         return self.cards[skill.unique_id]
 

@@ -5,7 +5,7 @@ from core.mech.mech import BaseMech
 class SimpleStepAttrs:
     name = 'simple_step'
     spell_cost = 1
-    cooldown = 0
+    cooldown = 1
 
 
 class SimpleHit(BaseSkill):

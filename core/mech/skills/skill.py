@@ -18,8 +18,11 @@ class BaseSkill:
 
     def __init__(self, num, unique_id: str,
                  target_validation_func: Callable,
-                 energy_cost: int, validators: tuple = (),
-                 cooldown: int = 1, current_cooldown: int = 0,
+                 energy_cost: int,
+                 health_points_cost: int = 0,
+                 validators: tuple = (),
+                 cooldown: int = 1,
+                 current_cooldown: int = 0,
                  cast_range: int = 1):
         if self.name is None or self.verbal_name is None:
             raise SpellWithoutNameError
@@ -30,6 +33,7 @@ class BaseSkill:
         self.unique_id = f'{num}_{unique_id}_{self.name}'
 
         self.energy_cost = energy_cost
+        self.health_points_cost = health_points_cost
         self.cooldown_value = cooldown
         self.cooldown = current_cooldown
         self.cast_range: int = cast_range
@@ -58,8 +62,11 @@ class BaseSkill:
         if self.cooldown > 0:
             self.cooldown -= 1
 
+    def set_on_cooldown(self, value=None):
+        self.cooldown = value if value else self.cooldown_value
+
     @abstractmethod
-    def use(self, player, game_obj, target_xy) -> dict:
+    def use(self, player, game_obj, target_xy, mech=None) -> dict:
         """
         Do action.
         """
@@ -67,7 +74,7 @@ class BaseSkill:
 
     @property
     def on_cooldown(self) -> bool:
-        return self.cooldown_value > 0
+        return self.cooldown > 0
 
     @property
     def not_on_cooldown(self) -> bool:

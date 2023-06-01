@@ -4,10 +4,10 @@ from core.player.action import Action
 from core.player.abs import PlayerAbs
 
 class ScenarioActions(OrderedDict):
-    def __init__(self, actions_count: int, *args, **kwds):
+    def __init__(self, actions_count: int, *args, **kwargs):
         self.actions_count = actions_count
         self.actions_keys = tuple(range(actions_count))
-        OrderedDict.__init__(self, *args, **kwds)
+        OrderedDict.__init__(self, *args, **kwargs)
         for k in self.actions_keys:
             self[k] = None
 
@@ -46,6 +46,13 @@ class Scenario:
 
         self.__actions[k] = action
 
+    def create_and_add_action(self, use_attrs: dict, mech_copy, k=None):
+        action = Action(use_attrs=use_attrs, mech_copy=mech_copy)
+        if k is None:
+            self.add(action)
+        else:
+            self.add_action(action=action, k=k)
+
     def switch(self, k1: int, k2: int):
         self.__actions[k1], self.__actions[k2] = self.__actions[k2], self.__actions[k1]
 
@@ -74,7 +81,12 @@ class Scenario:
     def is_full(self) -> bool:
         return len(tuple(filter(bool, self.__actions.values()))) == self.__actions_count
 
+    @property
+    def has_slots(self) -> bool:
+        return not self.is_full
 
 class NoEmptyStep(Exception):
-    pass
+    msg = 'No empty slots in scenario'
 
+    def __str__(self):
+        return self.msg

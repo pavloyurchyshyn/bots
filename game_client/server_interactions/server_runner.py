@@ -28,7 +28,7 @@ SERVER_PYTHON_FILE_NAME = ROOT_OF_GAME / 'server.py'
 class ServerRunner(ServerRunnerAbs):
     def __init__(self, solo=True, port=StartArgs.DefaultPort,
                  password=None, token=None,
-                 visible_terminal: bool = False):
+                 visible_terminal: bool = True):
         self.solo = solo
         self.port = port
         self.password = password

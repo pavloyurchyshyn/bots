@@ -28,7 +28,7 @@ class Global:
     game = None
     details_pool: DetailsPoolInterface = None
     skill_pool: SkillsPoolInterface = None
-    mech_serializer: MechSerializerInterface = None  # MechSerializer(details_pool)
+    mech_serializer: MechSerializerInterface = None
 
     if VisualPygameOn:
         from pygame import Surface as __Surface

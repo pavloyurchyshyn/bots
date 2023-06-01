@@ -48,7 +48,7 @@ class ChatPart:
         if self.input.input_is_active and Global.keyboard.ESC:
             self.input.unfocus()
 
-        elif Global.keyboard.activate_input:
+        elif Global.keyboard.activate_input and not self.nickname_input.input_is_active:
             self.input.focus()
 
         elif self.input.collide_point(Global.mouse.pos):

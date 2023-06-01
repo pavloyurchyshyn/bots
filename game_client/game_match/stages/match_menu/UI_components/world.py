@@ -5,22 +5,21 @@ from pygame.draw import rect as draw_rect, circle as draw_circle, lines as draw_
 from global_obj.main import Global
 
 from core.player.player import PlayerObj
-from core.world.base.visual.tile import VisualTile
 from core.world.base.visual.world import VisualWorld
 
-from settings.screen.size import scaled_w, scaled_h
 from game_client.game_match.stages.match_menu.settings.windows_sizes import MapRect
 
 from visual.UI.utils import load_image
 
 MECH = transform.smoothscale(load_image('default/mech.png'), (150, 150))
+from settings.tile_settings import TileSettings
 
 
 class WorldC:
     player: PlayerObj
 
     def __init__(self):
-        self.w: VisualWorld = VisualWorld(MapRect.rect, tile_radius=scaled_w(0.03))
+        self.w: VisualWorld = VisualWorld(MapRect.rect, tile_radius=TileSettings.visual_tile_radius)
 
     def update_and_draw_map(self):
         self.check_for_drag()
@@ -60,7 +59,7 @@ class WorldC:
                     map_bigger = False
 
                 if scroll > 0 or (scroll < 0 and map_bigger):
-                    self.w.scale = self.w.scale + scroll * Global.clock.d_time
+                    self.w.set_scale(self.w.scale + scroll * Global.clock.d_time)
                     # TODO add minimum scale parameter due to rect size
                     self.w.reload_surface()
                     self.define_map_position()

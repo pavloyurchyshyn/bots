@@ -1,6 +1,7 @@
-from typing import Dict
+from typing import Dict, Optional, List
 from global_obj.main import Global
 from core.mech.mech import BaseMech
+from core.mech.skills.skill import BaseSkill
 from core.player.abs import PlayerAbs
 from core.player.scenario import Scenario
 from core.player.constants import PlayerAttrs
@@ -49,8 +50,35 @@ class PlayerObj(PlayerAbs):
             setattr(self, attr, val)
 
     @property
-    def skills(self) -> list:
+    def skills(self) -> List[BaseSkill]:
         if self.mech:
             return self.mech.skills.copy()
         else:
             return []
+
+    @property
+    def latest_scenario_mech(self) -> Optional[BaseMech]:
+        for action in reversed(self.scenario.actions.values()):
+            if action and action.mech_copy:
+                return action.mech_copy
+
+        return self.mech.get_copy()
+
+    @property
+    def latest_scenario_skills(self) -> List[BaseSkill]:
+        for action in reversed(self.scenario.actions.values()):
+            if action and action.mech_copy:
+                return action.mech_copy.skills
+
+        return self.mech.get_copy().skills
+
+    def get_latest_scenario_skill(self, skill_uid: str):
+        for skill in self.latest_scenario_skills:
+            if skill.unique_id == skill_uid:
+                return skill
+
+    @property
+    def first_empty_action_slot(self) -> int:
+        for k, action in reversed(self.scenario.actions.items()):
+            if action is None:
+                return k

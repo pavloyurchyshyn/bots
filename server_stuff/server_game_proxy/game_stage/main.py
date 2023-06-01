@@ -14,18 +14,20 @@ from game_logic.game_data.game_settings import GameSettings
 from core.player.player import PlayerObj
 
 from server_stuff.server_game_proxy.game_stage.components.ready import ReadyLogic
+from server_stuff.server_game_proxy.game_stage.components.skill_use import SkillUseLogic
 
 from game_logic.game_data.id_generator import IdGenerator
 from core.mech.pools.details_pool import DetailsPool
 
 
-class GameMatch(ReadyLogic):
+class GameMatch(ReadyLogic, SkillUseLogic):
 
     def __init__(self, server_game_proxy, server):
         self.actions = {
             CommonReqConst.Chat: self.chat,
         }
         ReadyLogic.__init__(self)
+        SkillUseLogic.__init__(self)
 
         self.server: ServerAbc = server
         self.server_game_proxy = server_game_proxy
@@ -71,14 +73,15 @@ class GameMatch(ReadyLogic):
         for action, data in request.items():
             self.actions.get(action, self.bad_action)(action=action,
                                                       request=request,
+                                                      action_data=data,
                                                       client=client,
                                                       player_obj=self.get_player_obj(client))
 
     def bad_action(self, action: str, request: dict, client: Client, **kwargs):
         Global.logger.warning(f'Bad request from {client.token} with action "{action}: {request[action]}"')
 
-    def chat(self, request: dict, client: Client, **kwargs):
-        msg = request.get(CommonReqConst.Chat, '')
+    def chat(self, client: Client, action_data, **kwargs):
+        msg = action_data
         Global.logger.info(f'{client.token} send a message {msg}')
         if msg:
             self.server.sync_broadcast({CommonReqConst.Chat: f'{client.nickname}: {msg}'})

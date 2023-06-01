@@ -18,6 +18,7 @@ from core.world.base.hex_utils import HexMath, Cube
 
 class VisualWorld(LogicWorld):
     tiles: List[VisualTile]
+    MAX_SCALE = 1
 
     def __init__(self, window_rect, tile_radius: int = TileSettings.visual_tile_radius, parent_surface=Global.display):
         super(VisualWorld, self).__init__(tile_class=VisualTile)
@@ -171,3 +172,10 @@ class VisualWorld(LogicWorld):
                 draw.lines(Global.display, color, False, ray, width)
             else:
                 draw.line(Global.display, color, *ray, width)
+
+    def set_scale(self, scale: float):
+        if scale > self.MAX_SCALE:
+            self.scale = self.MAX_SCALE
+        else:
+            self.scale = scale
+        self.reload_surface()

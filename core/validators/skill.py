@@ -15,18 +15,18 @@ class SkillsValidations:
             raise SkillNotInPullValError
 
     @classmethod
-    def player_owns_skill(cls, player, skill, **_):
-        if skill and skill not in player.skills:
+    def player_owns_skill(cls, player, skill_uid, **_):
+        if skill_uid not in tuple(map(lambda s: s.unique_id, player.latest_scenario_skills)):
             raise PlayerDoesntOwnSkillValError
 
     @classmethod
     def player_owns_skill_by_uid(cls, player, skill_uid: str, skill_pool, **_):
         cls.skill_exists_in_pool(skill_uid=skill_uid, skill_pool=skill_pool)
-        cls.player_owns_skill(player=player, skill=skill_pool.get_skill_by_id(skill_uid))
+        cls.player_owns_skill(player=player, skill_uid=skill_uid)
 
     @classmethod
-    def player_has_enough_of_energy(cls, player, skill, **kwargs):
-        if player.mech.energy < skill.energy_cost:
+    def player_has_enough_of_energy(cls, skill, mech, **_):
+        if mech.energy < skill.energy_cost:
             raise NotEnoughEnergyValError
 
     @classmethod
@@ -42,7 +42,7 @@ class SkillsValidations:
             raise TileNotPassableValError
 
     @classmethod
-    def target_in_range(cls, skill, target_xy_coord, player, **_):
+    def target_in_range(cls, skill, target_xy_coord, mech, **_):
         if skill.cast_range != INFINITE_VALUE and \
-                HexMath.get_xy_distance(player.mech.position, target_xy_coord) > skill.cast_range:
+                HexMath.get_xy_distance(mech.position, target_xy_coord) > skill.cast_range:
             raise OutOfRangeValError

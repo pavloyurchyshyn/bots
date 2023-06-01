@@ -66,6 +66,7 @@ class SkillCard(SkillCardAbs):
 
     def draw(self, dx=0, dy=0):
         Global.display.blit(self.surface, (self.x + dx, self.y + dy))
+
         if self.skill.on_cooldown:
             Global.display.blit(self.mute_surface, (self.x + dx, self.y + dy))
 

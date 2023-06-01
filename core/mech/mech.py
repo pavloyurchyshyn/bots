@@ -1,7 +1,9 @@
+from copy import deepcopy
 from typing import List, Dict, Tuple
 from core.mech.details.body import BaseBody
 from core.mech.details.detail import BaseDetail
 from core.mech.details.slot import BaseSlot
+from core.mech.skills.skill import BaseSkill
 from core.mech.skills.exceptions import NotEnoughEnergyError
 from core.mech.exceptions import SlotDoesntExistsError, WrongDetailType
 from core.mech.details.constants import DetailsAttrs, MechAttrs, DetailsTypes
@@ -41,7 +43,7 @@ class MechPropertiesMixin:
         return self._hp
 
     @property
-    def skills(self) -> list:
+    def skills(self) -> List[BaseSkill]:
         return self._skills
 
     @property
@@ -271,3 +273,6 @@ class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin):
         self._left_slots.clear()
         self._right_slots.clear()
         self.body = None
+
+    def get_copy(self) -> 'BaseMech':
+        return deepcopy(self)

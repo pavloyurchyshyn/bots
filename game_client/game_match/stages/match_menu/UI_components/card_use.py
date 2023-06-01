@@ -33,12 +33,18 @@ class CardUseC:
                     Global.logger.info(f'Bad target for skill "{skill.name}" - {tile_xy}, reason: {e}')
             else:
                 self.good_target = True
-                use_skill_d[GSC.SkillM.UseAttrs][Targets.Tile] = tile_xy
-                if Global.mouse.l_up:
-                    Global.connection.send_json({GSC.SkillM.UseSkill: use_skill_d})
+                if self.player.scenario.has_slots:
+                    use_skill_d[GSC.SkillM.UseAttrs][Targets.Tile] = tile_xy
+                    if Global.mouse.l_up:
+                        Global.connection.send_json({GSC.SkillM.UseSkill: use_skill_d})
+                elif Global.mouse.l_up:
+                    self.add_ok_popup(f'No free slots')
 
-    def validate(self, skill: BaseSkill, **additional_kwargs):
+
+    def validate(self, skill: BaseSkill, mech=None,**additional_kwargs):
+        mech = mech if mech else self.player.latest_scenario_mech
         return skill.validate_use(player=self.player,
+                                  mech=mech,
                                   **Global.get_dict_for_validations(),
                                   **additional_kwargs,
                                   )
@@ -47,10 +53,11 @@ class CardUseC:
         if self.selected_card_to_use:
             target_hex = self.w.get_tile_by_xy(self.w.get_mouse_to_xy())
             if target_hex:
-                self.w.draw_ray_from_a_to_b(a_qr=target_hex, b_qr=self.w.get_tile_by_xy(self.mech.position),
+                self.w.draw_ray_from_a_to_b(a_qr=target_hex,
+                                            b_qr=self.w.get_tile_by_xy(self.player.latest_scenario_mech.position),
                                             color=(0, 155, 0) if self.good_target else (255, 100,100), width=2)
             if self.draw_good_square:
-                tiles = HexMath.get_neighbors_qr(*self.w.get_tile_by_xy(self.mech.position).qr,
+                tiles = HexMath.get_neighbors_qr(*self.w.get_tile_by_xy(self.player.latest_scenario_mech.position).qr,
                                                  self.selected_card_to_use.skill.cast_range)
 
 

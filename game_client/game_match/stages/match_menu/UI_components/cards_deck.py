@@ -59,8 +59,8 @@ class CardsC:
 
     def collect_skills_deck(self):
         self.skills_deck.clear()
-        if self.player.mech:
-            for skill in self.player.skills:
+        if self.player.mech and self.player.latest_scenario_mech:
+            for skill in self.player.latest_scenario_skills:
                 self.skills_deck.append(self.skill_cards_fabric.get_cards_for_skill(skill))  # TODO move to factory
 
             self.calculate_cards_positions()

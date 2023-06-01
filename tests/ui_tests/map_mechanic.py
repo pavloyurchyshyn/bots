@@ -109,9 +109,9 @@ class Body:
         self.hexes_coords = {}
         self.hexes_cube_coords = {}
 
-        self.mid_x = mid_x = x_size // 2
-        self.mid_y = mid_y = y_size // 2
-        print(mid_x, mid_y)
+        self.mid_x = x_size // 2
+        self.mid_y = y_size // 2
+
         for y in range(y_size + 1):
             for x in range(x_size + 1):
                 # h = HexCoord(x, y, q=x - mid_x, r=y - mid_y)
