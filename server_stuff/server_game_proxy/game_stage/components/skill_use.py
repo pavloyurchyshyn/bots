@@ -26,9 +26,9 @@ class SkillUseLogic(ComponentAbs):
                 mech_copy = player_obj.latest_scenario_mech
                 skill.use(player=player_obj, target_xy=tile_xy, mech=mech_copy, game_obj=Global.game)
                 player_obj.scenario.create_and_add_action(use_attrs=action_data[GSC.SkillM.UseAttrs],
-                                                      mech_copy=mech_copy)
+                                                      mech_copy=mech_copy, skill_uid=skill_uid)
             except NoEmptyStep as e:
-                pass
+                pass # TODO send data update
 
             except Exception as e:
                 Global.logger.warning(f'{str(Client)} failed to use card: {action_data}')

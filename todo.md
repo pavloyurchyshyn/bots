@@ -1,3 +1,5 @@
+python -m cProfile -s tottime launch.py
+
 # **TODO**
 First priority:
   - ~~CREATE COMPILER SCRIPTS~~

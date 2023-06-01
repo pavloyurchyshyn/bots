@@ -26,7 +26,7 @@ class CardsProc:
         skill = tuple(filter(lambda s: s.unique_id == skill_uid, mech_copy.skills))[0]
         skill.use(player=self.player, target_xy=tile_xy, mech=mech_copy, game_obj=Global.game)
         self.player.scenario.create_and_add_action(use_attrs=request_data[GSC.SkillM.UseAttrs],
-                                                   mech_copy=mech_copy)
+                                                   mech_copy=mech_copy, skill_uid=skill_uid)
         self.UI.collect_skills_deck()
 
 

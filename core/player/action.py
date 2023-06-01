@@ -1,14 +1,14 @@
 from typing import List
 from core.mech.mech import BaseMech
 from core.mech.skills.skill import BaseSkill
-from server_stuff.constants.requests import GameStgConst as GSC
 from core.mech.skills.constants import Targets
 
 class Action:
     """
     One skill use
     """
-    def __init__(self, use_attrs: dict, mech_copy: BaseMech):
+    def __init__(self, skill_uid:str, use_attrs: dict, mech_copy: BaseMech):
+        self.skill_uid = skill_uid
         self.use_attrs: dict = use_attrs
         self.mech_copy: BaseMech = mech_copy
 
@@ -22,9 +22,9 @@ class Action:
     def target_xy(self) -> tuple:
         return self.use_attrs.get(Targets.Tile)
     @property
-    def skills(self) -> List[BaseSkill]:
+    def mech_skills(self) -> List[BaseSkill]:
         return self.mech_copy.skills
 
     @property
-    def details(self):
+    def mech_details(self):
         return self.mech_copy.details

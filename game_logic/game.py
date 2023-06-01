@@ -1,6 +1,7 @@
 from typing import Dict, List
 
 from core.player.player import PlayerObj
+from core.mech.mech import BaseMech
 from core.world.base.logic.world import LogicWorld
 
 from game_logic.bots.bot_player import BotPlayer
@@ -33,3 +34,7 @@ class Game(GameData):
     @property
     def ready_players_number(self) -> int:
         return len(tuple(filter(lambda p: p.ready or p.under_bot_control, self.players.values())))
+
+    @property
+    def players_meches(self) -> List[BaseMech]:
+        return [player.mech for player in self.players.values() if player.mech is not None]

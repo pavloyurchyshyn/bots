@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 from pygame import Surface, Rect
 from pygame.draw import rect as draw_rect
 from global_obj.main import Global
@@ -20,6 +20,7 @@ class CardsC:
         self.deck_back_surface.fill((80, 150, 80))
         draw_rect(self.deck_back_surface, (255, 255, 255), (0, 0, CardsDeck.h_size, CardsDeck.v_size), 1)
         self.skills_deck: List[SkillCard] = []
+        self.skills_deck_dict: Dict[str, SkillCard] = {}
         self.cards_dy = 0
 
     def deck_cards_move_check(self):
@@ -59,10 +60,12 @@ class CardsC:
 
     def collect_skills_deck(self):
         self.skills_deck.clear()
+        self.skills_deck_dict.clear()
         if self.player.mech and self.player.latest_scenario_mech:
             for skill in self.player.latest_scenario_skills:
-                self.skills_deck.append(self.skill_cards_fabric.get_cards_for_skill(skill))  # TODO move to factory
-
+                card = self.skill_cards_fabric.get_cards_for_skill(skill)
+                self.skills_deck.append(card)  # TODO move to factory
+                self.skills_deck_dict[card.skill.unique_id] = card
             self.calculate_cards_positions()
 
     def calculate_cards_positions(self):

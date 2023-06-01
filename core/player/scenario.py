@@ -46,8 +46,8 @@ class Scenario:
 
         self.__actions[k] = action
 
-    def create_and_add_action(self, use_attrs: dict, mech_copy, k=None):
-        action = Action(use_attrs=use_attrs, mech_copy=mech_copy)
+    def create_and_add_action(self, skill_uid:str, use_attrs: dict, mech_copy, k=None):
+        action = Action(skill_uid=skill_uid, use_attrs=use_attrs, mech_copy=mech_copy)
         if k is None:
             self.add(action)
         else:

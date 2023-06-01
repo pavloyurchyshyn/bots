@@ -44,7 +44,7 @@ class UsedCardsC:
                       1,
                       SkillCard.default_style.border_radius)
 
-            self.used_cards_positions_dict[i] = (x, y)
+            self.used_cards_positions_dict[i] = (x + UsedCards.x, y + UsedCards.y)
             self.used_cards_dict[i] = None
 
             x += step
@@ -53,8 +53,16 @@ class UsedCardsC:
         return rects
 
     def draw_used_cards(self):
+        # if self.used_cards_collide_point(Global.mouse.pos):
         Global.display.blit(self.used_cards_back_surface, (UsedCards.x, UsedCards.y))
-        # for i, pos in self.ca
+        for i, action in self.player.scenario.actions.items():
+            if action:
+                card = self.skills_deck_dict[action.skill_uid]
+                Global.display.blit(card.surface, self.used_cards_positions_dict[i])
+
+    def update_used_cards(self):
+        if self.used_cards_collide_point(Global.mouse.pos):
+            pass
 
     def used_cards_move_check(self):
         if HpBar.y + self.cards_dy < UsedCards.y + UsedCards.v_size:

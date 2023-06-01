@@ -24,7 +24,6 @@ class WorldC:
     def update_and_draw_map(self):
         self.check_for_drag()
         self.check_for_scale()
-
         self.w.draw()
         draw_rect(Global.display, (255, 255, 255), self.w.window_rect, 1)
         # draw_circle(Global.display, (255, 0, 0), self.w.get_real_center_of_tile(self.mech.position), 5)

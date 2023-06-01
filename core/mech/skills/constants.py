@@ -16,10 +16,8 @@ class Targets:
 
     Tile = 'tile'
     # Tiles = 'tiles'
-
     # Detail = 'detail'
     # Details = 'details'
-
     # Skill = 'skill'
 
     NoTarget = 'no_target'

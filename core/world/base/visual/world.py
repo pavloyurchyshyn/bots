@@ -4,7 +4,7 @@ from pygame.rect import Rect
 from typing import List, Type, Tuple, Optional
 from _thread import start_new_thread
 from pygame import draw, Surface, transform
-from pygame.draw import circle as draw_circle
+from pygame.draw import circle as draw_circle, rect as draw_rect
 from global_obj.main import Global
 from visual.UI.utils import get_surface
 from settings.tile_settings import TileSettings
@@ -31,6 +31,7 @@ class VisualWorld(LogicWorld):
 
         self.big_surface: Surface = None
         self.surface: Surface = None
+        self.surface_back_color = (50, 50, 50)
 
         self.tile_radius: int = tile_radius
         self.tile_size = self.hex_math.get_hex_size(self.tile_radius)
@@ -64,7 +65,8 @@ class VisualWorld(LogicWorld):
         self.render()
 
     def create_big_surface(self) -> Surface:
-        return get_surface(*self.hex_math.get_grid_size(self.x_size, self.y_size, self.tile_radius))
+        return get_surface(*self.hex_math.get_grid_size(self.x_size, self.y_size, self.tile_radius),
+                           color=self.surface_back_color)
 
     def build_map_from_save(self, save):
         self.build_map(save.get_tiles_data())
@@ -152,6 +154,9 @@ class VisualWorld(LogicWorld):
 
     def draw(self):
         if self.surface:
+            # if self.win_x_size > self.surface.get_width() or self.win_y_size > self.surface.get_height():
+            #     draw_rect(Global.display, self.surface_back_color, self.window_rect)
+
             self.parent_surface.blit(self.surface,
                                      (self.x, self.y),
                                      (0 - self.dx, 0 - self.dy, self.win_x_size, self.win_y_size))

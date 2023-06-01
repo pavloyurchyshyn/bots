@@ -38,7 +38,7 @@ class CardUseC:
                     if Global.mouse.l_up:
                         Global.connection.send_json({GSC.SkillM.UseSkill: use_skill_d})
                 elif Global.mouse.l_up:
-                    self.add_ok_popup(f'No free slots')
+                    self.add_ok_popup(f'No free slots') # TODO localization
 
 
     def validate(self, skill: BaseSkill, mech=None,**additional_kwargs):

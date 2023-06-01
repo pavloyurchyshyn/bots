@@ -14,10 +14,10 @@ class SimpleStep(BaseSkill):
                                          target_validation_func=SkillsValidations.validate_tile_target,
                                          )
 
-    def use(self, player, game_obj, target_xy, mech: BaseMech = None, **kwargs):
+    def use(self, player, game_obj, target_xy, mech: BaseMech = None, **_):
         mech: BaseMech = mech if mech else player.mech
-        mech.change_position(target_xy)
         mech.spend_energy(self.energy_cost)
+        mech.change_position(target_xy)
         self.set_on_cooldown()
 
     def get_dict(self) -> dict:

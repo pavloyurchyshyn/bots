@@ -23,7 +23,7 @@ class PlayerObj(PlayerAbs):
         self.mech: BaseMech = mech
         self.under_bot_control: bool = under_bot_control
         self.scenario: Scenario = Scenario(self, scenario=scenario)
-
+        self.mech_copy: BaseMech = self.mech.get_copy() if self.mech else self.mech
     def get_dict(self):
         return {
             PlayerAttrs.Ready: self.ready,
@@ -62,7 +62,7 @@ class PlayerObj(PlayerAbs):
             if action and action.mech_copy:
                 return action.mech_copy
 
-        return self.mech.get_copy()
+        return self.mech_copy
 
     @property
     def latest_scenario_skills(self) -> List[BaseSkill]:
@@ -70,7 +70,7 @@ class PlayerObj(PlayerAbs):
             if action and action.mech_copy:
                 return action.mech_copy.skills
 
-        return self.mech.get_copy().skills
+        return self.mech_copy.skills
 
     def get_latest_scenario_skill(self, skill_uid: str):
         for skill in self.latest_scenario_skills:
@@ -82,3 +82,6 @@ class PlayerObj(PlayerAbs):
         for k, action in reversed(self.scenario.actions.items()):
             if action is None:
                 return k
+
+    def create_mech_copy(self):
+        self.mech_copy = self.mech.get_copy() if self.mech else self.mech
