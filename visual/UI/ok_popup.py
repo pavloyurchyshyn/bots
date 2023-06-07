@@ -31,7 +31,7 @@ class OkPopUp(PopUpBase):
         self.buttons.append(self.ok)
         self.build()
 
-    def close(self, b: Button):
+    def close(self, *_, **__):
         self.make_inactive_and_invisible()
 
     def draw(self):

@@ -75,10 +75,11 @@ class BaseButton(BaseUI, DrawBorderMixin, BuildRectShapeMixin, ShapeAbs, GetSurf
         if not kwargs.get(ButtonAttrs.PostponeBuild, False):
             self.build()
 
-    def do_action(self) -> Any:
+    def do_action(self, *args, **kwargs) -> Any:
         Global.logger.debug(f'Button "{self.uid}" do action on stage "{Global.stages.current_stage}".')
+        Global.music_player.click_sound()
         if self.on_click_action:
-            res = self.on_click_action(self, *self.on_click_action_args, **self.on_click_action_kwargs)
+            res = self.on_click_action(self, *self.on_click_action_args, *args, **self.on_click_action_kwargs, **kwargs)
         else:
             res = None
         if self.inactive_after_click:

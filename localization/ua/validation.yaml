@@ -8,3 +8,4 @@ msgs:
   no_such_tile: Така клітинка не існує
   tile_not_passable: Клітинка не прохідна
   out_of_range: Поза дистанцією
+  no_empty_steps: Немає вільних кроків

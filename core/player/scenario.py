@@ -2,6 +2,7 @@ from typing import Dict
 from collections import OrderedDict
 from core.player.action import Action
 from core.player.abs import PlayerAbs
+from core.validators.errors import NoEmptyStepError
 
 class ScenarioActions(OrderedDict):
     def __init__(self, actions_count: int, *args, **kwargs):
@@ -38,7 +39,7 @@ class Scenario:
                 self.add_action(k, action)
                 return k
 
-        raise NoEmptyStep
+        raise NoEmptyStepError
 
     def add_action(self, k: int, action: Action):
         if k not in self.__actions:
@@ -75,7 +76,7 @@ class Scenario:
 
     def get_dict(self) -> dict:
         # TODO move in constant
-        return self.actions
+        return {s: a if a is None else a.get_dict() for s, a in self.__actions.items()}
 
     @property
     def is_full(self) -> bool:
@@ -85,8 +86,3 @@ class Scenario:
     def has_slots(self) -> bool:
         return not self.is_full
 
-class NoEmptyStep(Exception):
-    msg = 'No empty slots in scenario'
-
-    def __str__(self):
-        return self.msg

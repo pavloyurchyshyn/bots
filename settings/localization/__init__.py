@@ -9,13 +9,13 @@ LOGGER = get_logger()
 
 NO_TEXT_MSG = 'no text'
 
-TEXT_PATH_DELIMITER = '/./'
-PathSymbol = '@//'
+TEXT_PATH_DELIMITER = '/-/'
+PATH_SYMBOL = '@//'
 __all__ = ['LocalizationLoader', 'build_path', 'TEXT_PATH_DELIMITER']
 
 
 def build_path(*args: str):
-    return f'{PathSymbol if not args[0].startswith(PathSymbol) else ""}{TEXT_PATH_DELIMITER.join(args)}'
+    return f'{PATH_SYMBOL if not args[0].startswith(PATH_SYMBOL) else ""}{TEXT_PATH_DELIMITER.join(args)}'
 
 
 class TextValue:
@@ -87,14 +87,14 @@ class LocalizationLoader(metaclass=Singleton):
         self.load_lang(self.current_language)
 
     def get_text(self, path: str):
-        return self.get_text_from_lang(path, self.current_language)
+        return self.get_text_from_lang(path.replace(PATH_SYMBOL, '', 1), self.current_language)
 
-    def get_text_from_lang(self, path: str, lang: str):
+    def get_text_from_lang(self, path: str, lang: str, no_text: str = NO_TEXT_MSG):
         key = (path, lang)
         if key not in LocalizationLoader.memory:
             text = self.loaded_languages[lang].localization
             for attr in path.split(TEXT_PATH_DELIMITER):
-                text = text.get(attr, NO_TEXT_MSG)
+                text = text.get(attr, no_text)
                 if type(text) is str:
                     break
 
@@ -104,10 +104,8 @@ class LocalizationLoader(metaclass=Singleton):
         return LocalizationLoader.memory[key]
 
     def get_text_with_localization(self, text: str) -> str:
-        if text.startswith(PathSymbol):
-            return self.get_text(text.replace(PathSymbol, '', 1))
-        else:
-            return text
+        return ' '.join((self.get_text(txt) if txt.startswith(PATH_SYMBOL) else txt for txt in text.split(' ')))
+
 
     def get_text_wloc(self, text: str) -> str:
         return self.get_text_with_localization(text)

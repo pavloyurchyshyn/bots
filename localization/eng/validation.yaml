@@ -7,4 +7,5 @@ msgs:
   bad_target_type: Bad target type
   no_such_tile: no such tile
   tile_not_passable: tile is not passable
-  out_of_range: out of range
+  out_of_range: Out of range
+  no_empty_steps: No empty steps

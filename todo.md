@@ -12,11 +12,14 @@ First priority:
   - ~~REFACTOR separate game logic to a module~~
   - ~~make bridge for online and offline play~~ not complete but anyway
   - use skill functionality
-    - send request to server
-    - create validators system
-    - validate on server side
-    - add card to used cards deck
-    - skill chain if needed to choose few things
+    - ~~send request to server~~
+    - ~~create validators system~~
+    - ~~validate on server side~~
+    - ~~add card to used cards deck~~
+    - change actions order
+    - cancel_action
+    - check is action valid after move
+  - mech effects: stun, silence, etc.
   - detail wearing
   - game stages
 ----------------------

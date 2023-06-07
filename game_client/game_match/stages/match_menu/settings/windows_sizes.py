@@ -55,15 +55,20 @@ class TileInfo:
     v_size = scaled_h(0.275)
     rect = (x, y, h_size, v_size)
 
-
-CARDS_V_SIZE = scaled_h(0.17)
+CARDS_V_SIZE_K = 0.17
+CARDS_V_SIZE = scaled_h(CARDS_V_SIZE_K)
 
 
 class UsedCards:
-    x = scaled_w(0.2)
-    y = scaled_h(0.725)
-    h_size = scaled_w(0.5)
-    v_size = CARDS_V_SIZE  # scaled_h(0.1355)
+    X_k = 0.2
+    Y_k = 0.725
+    H_K = 0.5
+    V_K = CARDS_V_SIZE_K
+
+    x = scaled_w(X_k)
+    y = scaled_h(Y_k)
+    h_size = scaled_w(H_K)
+    v_size = scaled_h(V_K)
     size = h_size, v_size
     rect = (x, y, h_size, v_size)
 

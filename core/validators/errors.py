@@ -9,6 +9,10 @@ class ValidationError(Exception):
         return self.msg
 
 
+class NoEmptyStepError(ValidationError):
+    def __init__(self):
+        super().__init__(ValidationLoc.NoEmptyStepError)
+
 class OnCooldownValError(ValidationError):
     def __init__(self):
         super().__init__(ValidationLoc.SkillOnCooldown)

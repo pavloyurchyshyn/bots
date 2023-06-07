@@ -169,6 +169,11 @@ class VisualWorld(LogicWorld):
         x, y = self.hex_math.qr_to_xy_coords(*qr, self.tile_radius)
         return int(x * self.scale) + self.dx + self.x, int(y * self.scale) + self.y + self.dy
 
+    def draw_ray_from_a_to_b_xy(self, a_xy: tuple, b_xy: tuple, color = (155, 155, 155), width = 1):
+        a = Cube(*self.hex_math.xy_id_to_qr(*a_xy))
+        b = Cube(*self.hex_math.xy_id_to_qr(*b_xy))
+
+        self.draw_ray_from_a_to_b(a_qr=a, b_qr=b, color=color, width=width)
     def draw_ray_from_a_to_b(self, a_qr: Cube, b_qr: Cube, color = (155, 155, 155), width = 1):
         ray = HexMath.ray_from_a_to_b(a_qr, b_qr)
         if ray:

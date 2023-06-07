@@ -2,6 +2,7 @@ skill_target:
   tile: tile
   any_mech: any mech
 
+use_invalid_skill_question: Use the skill anyway?
 
 skills:
   simple_step:

@@ -15,3 +15,4 @@ class ValidationMsg:
     NoSuchTile = build_path(UI_path, 'no_such_tile')
     TileNotPassable = build_path(UI_path, 'tile_not_passable')
     OutOfRange = build_path(UI_path, 'out_of_range')
+    NoEmptyStepError = build_path(UI_path, 'no_empty_steps')

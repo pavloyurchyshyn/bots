@@ -17,6 +17,7 @@ class Text(BaseUI):
         self.color = color if color else self.style.color
         self.raw_text = raw_text
         self.capitalize = kwargs.get(TextAttrs.Capitalize, False)
+        self.original_text = text
         self.str_text = self.get_localization_text(str(text), self.raw_text)
         if self.capitalize:
             self.str_text = self.str_text.capitalize()

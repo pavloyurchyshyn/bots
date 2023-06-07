@@ -40,6 +40,8 @@ class Global:
         from visual.textures.textures import Textures as __Textures
         from game_client.server_interactions.websocket_connection import WebSocketConnection as __WebSocketConnection
 
+        from game_client.sounds.music_player import MusicPlayer as __MusicPlayer
+
         display: __Surface = __display
         keyboard = __keyboard(logger)
         mouse = __mouse()
@@ -48,6 +50,8 @@ class Global:
         network_data = __NetworkData()
         textures: __Textures = __Textures()
         connection: __WebSocketConnection = __WebSocketConnection()
+        music_player: __MusicPlayer = __MusicPlayer()
+        # music_player.update() # to run music
         # TODO add sound
 
     @classmethod

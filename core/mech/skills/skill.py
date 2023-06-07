@@ -38,11 +38,12 @@ class BaseSkill:
         self.cooldown = current_cooldown
         self.cast_range: int = cast_range
         self.validators = (
+            SkillsValidations.no_empty_slots,
             SkillsValidations.player_owns_skill_by_uid,
             SkillsValidations.skill_not_on_cooldown,
             SkillsValidations.player_has_enough_of_energy,
-            SkillsValidations.target_in_range,
             target_validation_func,
+            SkillsValidations.target_in_range,
             *validators)
 
     def get_base_dict(self) -> dict:

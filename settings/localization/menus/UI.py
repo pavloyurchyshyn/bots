@@ -45,3 +45,5 @@ class UILocal:
 
         Height = build_path('menus', 'common', 'height')
         Width = build_path('menus', 'common', 'width')
+
+        UseNotValidSkill = build_path('skills', 'use_invalid_skill_question')
