@@ -140,7 +140,7 @@ class Body:
 
     def square(self, h):
         r = self.rad
-        print('=' * 10, r)
+
 
         # prev_a = 0
         # for a in range(30, 361, 30):

@@ -37,6 +37,14 @@ class WorldC:
                                (55, int(55 + 200 * abs(cos(Global.clock.time))), 55),
                                True,
                                self.w.get_dots_due_to_map_pos(*player.mech.position), 3)
+                    start_pos = self.mech.position
+                    # TODO fix rays
+                    for i, action in enumerate(self.player.scenario.actions.values()):
+                        if action:
+                            self.w.draw_ray_from_a_to_b_xy(start_pos, action.mech_copy.position,
+                                                           color=(120 + 30 * i, 120 + 30 * i, 120 + 30 * i), # TODO
+                                                           width=3)
+                            start_pos = action.mech_copy.position
 
                 mech_img = transform.smoothscale(MECH,
                                                  (MECH.get_width() * self.w.scale, MECH.get_height() * self.w.scale))
@@ -53,8 +61,8 @@ class WorldC:
         if scroll := Global.mouse.scroll:
             if self.w.window_rect.collidepoint(*Global.mouse.pos):
                 map_bigger = True
-                if self.w.surface.get_width() * 1.02 < MapRect.h_size \
-                        and self.w.surface.get_height() * 1.02 < MapRect.v_size:
+                if self.w.surface.get_width()  < MapRect.h_size \
+                        and self.w.surface.get_height()  < MapRect.v_size:
                     map_bigger = False
 
                 if scroll > 0 or (scroll < 0 and map_bigger):

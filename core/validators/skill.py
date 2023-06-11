@@ -5,9 +5,10 @@ from core.validators.errors import *
 
 class SkillsValidations:
     @classmethod
-    def no_empty_slots(cls, player, *_, **__):
-        if player.scenario.is_full:
+    def no_empty_slots(cls, player, skill_uid: str, *_, **__):
+        if player.scenario.is_full and not player.scenario.contains_skill(skill_uid):
             raise NoEmptyStepError
+
     @classmethod
     def skill_not_on_cooldown(cls, skill, **_):
         if skill.on_cooldown:

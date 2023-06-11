@@ -100,8 +100,10 @@ class StagesController:
                 Global.logger.info(f'Got thread error: {e}')
                 self.process_thread_exception(e)
             else:
-                self.current_processor.process_request(r)
-
+                try:
+                    self.current_processor.process_request(r)
+                except Exception as e:
+                    Global.logger.warning(f'Failed to process request: {e}')
         Global.logger.info(f'Recv server stopped')
 
     def process_thread_exception(self, e: Exception):

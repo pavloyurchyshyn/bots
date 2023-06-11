@@ -1,7 +1,7 @@
 if __name__ == '__main__':
     pass
 from pygame.rect import Rect
-from typing import List, Type, Tuple, Optional
+from typing import List, Type, Tuple, Optional, Dict
 from _thread import start_new_thread
 from pygame import draw, Surface, transform
 from pygame.draw import circle as draw_circle, rect as draw_rect
@@ -35,6 +35,7 @@ class VisualWorld(LogicWorld):
 
         self.tile_radius: int = tile_radius
         self.tile_size = self.hex_math.get_hex_size(self.tile_radius)
+        self.cached_rays: Dict[Tuple, List[Tuple[int, int]]] = {}
 
         self.scale = 1
 
@@ -154,9 +155,6 @@ class VisualWorld(LogicWorld):
 
     def draw(self):
         if self.surface:
-            # if self.win_x_size > self.surface.get_width() or self.win_y_size > self.surface.get_height():
-            #     draw_rect(Global.display, self.surface_back_color, self.window_rect)
-
             self.parent_surface.blit(self.surface,
                                      (self.x, self.y),
                                      (0 - self.dx, 0 - self.dy, self.win_x_size, self.win_y_size))
@@ -175,7 +173,10 @@ class VisualWorld(LogicWorld):
 
         self.draw_ray_from_a_to_b(a_qr=a, b_qr=b, color=color, width=width)
     def draw_ray_from_a_to_b(self, a_qr: Cube, b_qr: Cube, color = (155, 155, 155), width = 1):
-        ray = HexMath.ray_from_a_to_b(a_qr, b_qr)
+        if (a_qr.qrs, b_qr.qrs) not in self.cached_rays:
+            self.cached_rays[(a_qr.qrs, b_qr.qrs)] = HexMath.ray_from_a_to_b(a_qr, b_qr)
+        ray = self.cached_rays[(a_qr.qrs, b_qr.qrs)]
+
         if ray:
             ray = [self.get_real_center_of_tile_qr(qr) for qr in ray]
             if len(ray) >= 2:

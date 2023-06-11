@@ -1,6 +1,6 @@
 from typing import Dict
 from collections import OrderedDict
-from core.player.action import Action
+from core.player.action import Action, SkipAction
 from core.player.abs import PlayerAbs
 from core.validators.errors import NoEmptyStepError
 
@@ -30,29 +30,30 @@ class Scenario:
             self.__actions[int(k)] = v
 
 
-    def cancel_action(self, k: int):
-        self.__actions[k] = None
+    def cancel_action(self, slot: int) -> None:
+        self.__actions[slot] = None
 
     def add(self, action: Action):
         for k, action_slot in self.__actions.items():
             if action_slot is None:
                 self.add_action(k, action)
+                action.slot = k
                 return k
 
         raise NoEmptyStepError
 
-    def add_action(self, k: int, action: Action):
-        if k not in self.__actions:
-            raise IndexError(f'Wrong scenario key "{k}" not in {self.__actions}')
+    def add_action(self, slot: int, action: Action):
+        if slot not in self.__actions:
+            raise IndexError(f'Wrong scenario key "{slot}" not in {self.__actions}')
 
-        self.__actions[k] = action
+        self.__actions[slot] = action
 
-    def create_and_add_action(self, skill_uid:str, use_attrs: dict, mech_copy, k=None):
-        action = Action(skill_uid=skill_uid, use_attrs=use_attrs, mech_copy=mech_copy)
-        if k is None:
+    def create_and_add_action(self, skill_uid:str, use_attrs: dict, mech_copy, slot: int = None, valid: bool = True):
+        action = Action(slot=slot, skill_uid=skill_uid, use_attrs=use_attrs, mech_copy=mech_copy, valid=valid)
+        if slot is None:
             self.add(action)
         else:
-            self.add_action(action=action, k=k)
+            self.add_action(action=action, slot=slot)
 
     def switch(self, k1: int, k2: int):
         self.__actions[k1], self.__actions[k2] = self.__actions[k2], self.__actions[k1]
@@ -67,8 +68,12 @@ class Scenario:
         self.__actions_count = count
 
     @property
-    def actions(self):
-        return dict(tuple(self.__actions.items()))
+    def actions(self) -> Dict[int, Action]:
+        return self.__actions
+
+    @property
+    def actions_copy(self) -> Dict[int, Action]:
+        return self.__actions.copy()
 
     @property
     def len(self):
@@ -82,7 +87,12 @@ class Scenario:
     def is_full(self) -> bool:
         return len(tuple(filter(bool, self.__actions.values()))) == self.__actions_count
 
+    def contains_skill(self, skill_uid: str) -> bool:
+        return any(map(lambda a: a.skill_uid == skill_uid, self.__actions.values()))
+
     @property
     def has_slots(self) -> bool:
         return not self.is_full
 
+    def skip_action(self, slot: int, mech_copy) -> None:
+        self.add_action(action=SkipAction(slot=slot, mech_copy=mech_copy), slot=slot)

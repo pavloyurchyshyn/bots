@@ -10,6 +10,8 @@ class CommonReqConst:
 
     SendSlotToPlayer = 'your_slot'
 
+    InfoPopUp = 'info_pop_up'
+
 
 class SetupStageReq:
     CurrentSave = 'current_save'
@@ -52,6 +54,8 @@ class GameStgConst:
         Ready = 'ready'
 
     class SkillM:  # SkillManipulations
+        ActionID = 'action_id'
+
         SkillStats = 'skill_stats'
         SelectSkill = 'select_skill'
         UnknownSkill = 'unk_skill'
@@ -60,6 +64,14 @@ class GameStgConst:
         LockSkill = 'lock_skill'
 
         UseSkill = 'use_skill'
+        InvalidUse = 'inv_use'
         UseAttrs = 'use_attrs'
         SkillUID = 'skill_uid'
+        SkillValid = 'skill_valid'
+        CancelSkillUse = 'cancel_skill_use'
+
+        SkipCommand = 'skip_action'
+        SetAction = 'set_action'
+        SetActions = 'set_actions'
+
     # SyncPlayerData = 'sync_player_data'

@@ -15,7 +15,7 @@ from game_logic.game import Game
 from game_logic.game_data.game_settings import GameSettings
 
 from game_client.game_match.stages.match_menu.proc_components.ready import ReadyProc
-from game_client.game_match.stages.match_menu.proc_components.cards import CardsProc
+from game_client.game_match.stages.match_menu.proc_components.cards_proc import CardsProc
 
 
 class MatchStage(Processor, ReadyProc, CardsProc):
@@ -75,11 +75,8 @@ class MatchStage(Processor, ReadyProc, CardsProc):
                    in players_data.items()}
         self.game_object.players = players
 
-        # Global.details_pool.load_details_list(match_data[GSC.MatchArgs.DetailsPool])
         self.update_time(response, response[GameStgConst.Time])
-        # self.update_players_ready_number(response)
 
-        # self.UI.w.build_map_from_save(MapSave.get_save_from_dict(match_data[GSC.Map]))
         self.UI.w.adapt_scale_to_win_size()
         self.UI.define_map_position()
         self.UI.collect_skills_deck()

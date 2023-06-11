@@ -5,3 +5,4 @@ class SkillCardStyle:
         self.border_radius = 5
         self.title_color = (255, 255, 255)
         self.on_cd_background_color = (0, 0, 20, 150)
+        self.invalid_background_color = (110, 50, 50, 150)

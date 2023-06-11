@@ -18,6 +18,7 @@ class SkillCard(SkillCardAbs):
     Colors = CommonColors
     default_style = SkillCardStyle()
 
+    # TODO separate skill and visual
     def __init__(self,
                  skill: BaseSkill,
                  uid: str = None,
@@ -42,7 +43,8 @@ class SkillCard(SkillCardAbs):
                                h_size_k=0.98,
                                parent_surface=self.surface, auto_draw=False)
 
-        self.mute_surface: Surface = self.get_mute_surface()
+        self.mute_surface: Surface = self.get_mute_surface(self.style.on_cd_background_color)# TODO move to textures cache
+        self.invalid_surface: Surface = self.get_mute_surface(self.style.invalid_background_color) # TODO move to textures cache
 
         self.render()
 
@@ -70,13 +72,13 @@ class SkillCard(SkillCardAbs):
         if self.skill.on_cooldown:
             Global.display.blit(self.mute_surface, (self.x + dx, self.y + dy))
 
-    def get_mute_surface(self) -> Surface:
+    def get_mute_surface(self, color) -> Surface:
         card_surf = get_surface(h_size=self.h_size,
                                 v_size=self.v_size,
                                 transparent=1,
                                 )
         draw_rect(card_surf,
-                  self.style.on_cd_background_color,
+                  color,
                   (0, 0, self.h_size, self.v_size),
                   0,
                   self.style.border_radius)

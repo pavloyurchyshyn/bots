@@ -10,17 +10,30 @@ First priority:
   - ~~MAKE USED CARDS POSITIONS~~
   - ~~make cards factory~~
   - ~~REFACTOR separate game logic to a module~~
-  - ~~make bridge for online and offline play~~ not complete but anyway
   - use skill functionality
     - ~~send request to server~~
     - ~~create validators system~~
     - ~~validate on server side~~
     - ~~add card to used cards deck~~
     - change actions order
-    - cancel_action
-    - check is action valid after move
-  - mech effects: stun, silence, etc.
+    - highlight slot for current card use 
+    - ~~skip~~
+    - cancel skip
+    - ~~cancel_action~~
+    - ~~check is action valid after move~~
+    - card use trace predict
+
   - detail wearing
+  - ready logic, ready warning if bad steps
+  - mech effects: stun, silence, etc.
+
+  - other entities:
+    - missiles
+    - smoke
+    - clouds
+    
+  - mech luck
+  - pathfinder
   - game stages
 ----------------------
 - Basic
@@ -32,8 +45,15 @@ First priority:
     - map editor
     - game
     
-  - nickname edit
-  - player obj
+  - world:
+    - areas
+    - weather
+    - fire
+    - fog of war
+    - карта висот
+
+  - ~~nickname edit~~
+  - ~~player obj~~
   
   - #### SETUP STAGE
     - block game start if no slots selected 
@@ -54,12 +74,11 @@ First priority:
     - add nickname edit
   
   - #### GAME stage
-    - draw meches
+[//]: # (    - draw meches)
     - start details selection
     - sync time
 
 ### GAME:
-- mech effects
 - mech AI
 
 ### Features:
@@ -80,6 +99,7 @@ First priority:
 - Visual 
   - Tile
     - images
+      - rotation
       - different hp stages for tile
       - animations
   - tiles textures system
@@ -92,7 +112,7 @@ First priority:
 ----------------------
 
 ## BUGS:
- - map scale
+
 
 ### OTHER
  - switch target tiles demonstration types
