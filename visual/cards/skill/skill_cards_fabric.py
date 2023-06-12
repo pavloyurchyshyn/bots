@@ -1,7 +1,7 @@
 from typing import Type
 from visual.cards.skill.card import SkillCard
 from core.mech.skills.skill import BaseSkill
-from core.mech.pools.skills_pool import SkillsPool
+from core.pools.skills_pool import SkillsPool
 
 
 class SkillsCardsFabric:

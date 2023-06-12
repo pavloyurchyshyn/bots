@@ -1,7 +1,7 @@
 from global_obj.logger import get_logger
 from core.mech.mech import BaseMech
 from core.mech.details.body import BaseBody
-from core.mech.pools.details_pool import DetailsPool
+from core.pools.details_pool import DetailsPool
 from core.mech.details.constants import MechSerializeConst, DetailsTypes, MechAttrs
 
 

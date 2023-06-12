@@ -17,7 +17,7 @@ from server_stuff.server_game_proxy.game_stage.components.ready import ReadyLogi
 from server_stuff.server_game_proxy.game_stage.components.skill_use import SkillUseLogic
 
 from game_logic.game_data.id_generator import IdGenerator
-from core.mech.pools.details_pool import DetailsPool
+from core.pools.details_pool import DetailsPool
 
 
 class GameMatch(ReadyLogic, SkillUseLogic):

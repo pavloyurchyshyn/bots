@@ -4,114 +4,21 @@ from core.mech.details.body import BaseBody
 from core.mech.details.detail import BaseDetail
 from core.mech.details.slot import BaseSlot
 from core.mech.skills.skill import BaseSkill
+from core.mech.effects.base import BaseEffect
 from core.mech.skills.exceptions import NotEnoughEnergyError
 from core.mech.exceptions import SlotDoesntExistsError, WrongDetailType
 from core.mech.details.constants import DetailsAttrs, MechAttrs, DetailsTypes
+from core.mech.mixins import MechPropertiesMixin, MechParameterCalculationMixin, EffectsMixin
 
 
-class MechPropertiesMixin:
-    @property
-    def health_regen(self):
-        return self._hp_regen
-
-    @property
-    def full_energy(self):
-        return self._energy
-
-    @property
-    def energy(self):
-        return self._current_energy
-
-    @property
-    def health_points(self):
-        return self._current_hp
-
-    @property
-    def energy_regen(self):
-        return self._energy_regen
-
-    @property
-    def damage(self):
-        return self._damage
-
-    @property
-    def armor(self):
-        return self._armor
-
-    @property
-    def full_health_points(self):
-        return self._hp
-
-    @property
-    def skills(self) -> List[BaseSkill]:
-        return self._skills
-
-    @property
-    def position(self):
-        return tuple(self._position)
-
-    @property
-    def details(self):
-        p = []
-        for side in (self._left_slots, self._right_slots):
-            for slot in side.values():
-                if slot.is_full:
-                    p.append(slot.detail)
-
-        return p
-
-    @property
-    def left_slots(self):
-        return self._left_slots
-
-    @property
-    def right_slots(self):
-        return self._right_slots
-
-
-class MechParameterCalculationMixin:
-    def calculate_attrs(self):
-        self.calculate_damage()
-        self.calculate_armor()
-        self.calculate_hp()
-        self.calculate_hp_regen()
-        self.calculate_energy()
-        self.calculate_energy_regen()
-
-    def calculate_damage(self):
-        self._damage = self._calculate_parameter(DetailsAttrs.Damage)
-
-    def calculate_armor(self):
-        self._armor = self._calculate_parameter(DetailsAttrs.Armor)
-
-    def calculate_hp(self):
-        self._hp = self._calculate_parameter(DetailsAttrs.AddHP)
-
-    def calculate_hp_regen(self):
-        self._hp_regen = self._calculate_parameter(DetailsAttrs.HPRegen)
-
-    def calculate_energy(self):
-        self._energy = self._calculate_parameter(DetailsAttrs.AddEnergy)
-
-    def calculate_energy_regen(self):
-        self._energy_regen = self._calculate_parameter(DetailsAttrs.EnergyRegen)
-
-    def _calculate_parameter(self, part_attr):
-        v = 0
-        for detail in self.details:
-            v += getattr(detail, part_attr, 0)
-        v += getattr(self.body, part_attr, 0)
-        return v
-
-
-class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin):
+class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin, EffectsMixin):
     """
     This is an object which contains body and calculating attrs.
     Body contains other vanilla_details.
     """
 
     def __init__(self, position, body_detail: BaseBody = None):
-        self.body = body_detail
+        self.body: BaseBody = body_detail
 
         self._position: Tuple[int, int] = tuple(position) if position else None
 
@@ -132,7 +39,8 @@ class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin):
         self._current_hp: float = self._hp
         self._current_energy: float = self._energy
 
-        self._skills: List['BaseSkill'] = []
+        self._skills: List[BaseSkill] = []
+        self._effects: List[BaseEffect] = []
         self.collect_abilities()
 
     def refill_energy_and_hp(self):

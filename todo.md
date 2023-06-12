@@ -23,18 +23,27 @@ First priority:
     - ~~check is action valid after move~~
     - card use trace predict
 
-  - detail wearing
-  - ready logic, ready warning if bad steps
-  - mech effects: stun, silence, etc.
+    - damage class
+    - skill use class
 
-  - other entities:
-    - missiles
-    - smoke
-    - clouds
+    - detail wearing
+    - ready logic
+    - ~~ready warning if bad steps~~
+    - mech effects: 
+      - stun, 
+      - silence, 
+      - damage de/increase
+      - range de/increase
+      - effects triggers
+    - mech respawn
+    - other entities:
+      - missiles
+      - smoke
+      - clouds
     
-  - mech luck
-  - pathfinder
-  - game stages
+    - mech luck
+    - pathfinder
+    - game stages
 ----------------------
 - Basic
   - ~~run/stop server~~

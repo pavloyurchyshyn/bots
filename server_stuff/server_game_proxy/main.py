@@ -3,7 +3,7 @@ import traceback
 from global_obj.main import Global
 from core.player.player import PlayerObj
 from core.mech.mech import BaseMech
-from core.mech.pools.details_pool import DetailsPool
+from core.pools.details_pool import DetailsPool
 
 
 from server_stuff.player_client import Client

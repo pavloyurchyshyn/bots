@@ -6,8 +6,8 @@ from core.mech.mech import BaseMech
 from core.vanilla_details.names import DetailNames
 from core import vanilla_details as details_module
 from core.mech.details.detail import BaseDetail
-from core.mech.pools.skills_pool import SkillsPool
 from core.mech.exceptions import ThisDetailClassDoesntExist
+from core.pools.skills_pool import SkillsPool
 
 from game_logic.game_data.id_generator import IdGenerator
 

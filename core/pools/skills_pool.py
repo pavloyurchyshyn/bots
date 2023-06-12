@@ -2,7 +2,6 @@ from typing import List
 from global_obj.logger import get_logger
 from core.mech.skills.skill import BaseSkill
 
-# from core.mech.base.vanile_skills.details_manipulations import DisconnectDetailSkill
 LOGGER = get_logger()
 
 
@@ -10,7 +9,6 @@ class SkillsPool:
     def __init__(self):
         self.skills: List[BaseSkill] = []
         self.id_to_skill: dict = {}
-        # self.add_skill(DisconnectDetailSkill())
 
     def get_skill_by_id(self, unique_id) -> BaseSkill:
         return self.id_to_skill.get(unique_id)
