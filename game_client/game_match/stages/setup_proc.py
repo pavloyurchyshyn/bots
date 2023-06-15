@@ -21,7 +21,11 @@ class SetupStage(Processor):
             CommonReqConst.PlayersSlots: self.process_players_slots,
             CommonReqConst.ConnectedPlayers: self.update_connected_players,
             CommonReqConst.SendSlotToPlayer: self.get_my_slot,
+            'test_request': self.test_request, # TODO do not forgot to delete
         }
+
+    def test_request(self, r, request_data):
+        print(request_data)
 
     def process_request(self, r: dict, **kwargs):
         for k in r.keys():
@@ -48,11 +52,11 @@ class SetupStage(Processor):
     def update_connected_players(self, r: dict, request_data):
         self.UI.fill_connected(request_data)
 
-    def chosen_map(self, r: dict, request_data):
+    def chosen_map(self, r: dict, *_, **__):
         self.UI.update_chosen_map(r.get(SSR.Server.ChosenMap, self.UI.current_save), force=True)
 
-    def start_game(self, r: dict, request_data):
-        self.stages_controller.connect_to_game(r[SSR.Server.StartMatch])
+    def start_game(self, *_, request_data):
+        self.stages_controller.connect_to_game(request_data)
 
     def process_player_msg(self, r: dict, request_data):
         self.UI.chat.add_msg(r[CommonReqConst.Chat])

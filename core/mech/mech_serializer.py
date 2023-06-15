@@ -45,14 +45,13 @@ class MechSerializer:
         :param data:
         :return:
         """
+        attrs = data.pop(MechAttrs.Attrs, {})
         body: BaseBody = self.details_pool.get_detail_by_id(data.get(MechSerializeConst.Body))
-        mech = BaseMech(tuple(data.get(MechAttrs.Position, (-100, -100))), body_detail=body)
+        mech = BaseMech(position=tuple(attrs.get(MechAttrs.Position, (-100, -100))), body_detail=body)
 
         self.update_mech_details(mech, data)
 
-        # mech.set_energy(data.get(MechAttrs.CurrentEnergy, 0))
-        # mech.set_health_points(data.get(MechAttrs.CurrentHP, 0))
-        mech.set_attrs(data.get(MechAttrs.Attrs, {}))
+        mech.set_attrs(attrs)
 
         return mech
 
@@ -73,31 +72,3 @@ class MechSerializer:
                             )
                         else:
                             detail.remove_weapon()
-
-
-if __name__ == '__main__':
-    from core.mech.test_mech import MetalMech
-    from game_logic import IdGenerator
-
-    builder = MechSerializer(DetailsPool(IdGenerator()))
-    builder.details_pool.load_details_classes_list([
-        ('simple_metal_body', 0),
-        ('simple_metal_arm', 1),
-        ('simple_metal_arm', 2),
-        ('simple_metal_leg', 3),
-        ('simple_metal_leg', 4),
-    ])
-
-    m = MetalMech((1, 0))
-    print('mech', m.__dict__)
-    d = builder.mech_to_dict(m)
-    print('mech dict', d)
-    m1 = builder.dict_to_mech(d)
-
-    print()
-    print(d)
-    print('# ===================')
-    print(m.__dict__)
-    print(m1.__dict__)
-
-    print(m.attr_dict(), m.attr_dict() == m1.attr_dict(), m1.attr_dict())

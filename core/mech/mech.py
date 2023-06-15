@@ -1,26 +1,44 @@
 from copy import deepcopy
-from typing import List, Dict, Tuple
+from typing import List, Dict, Optional
 from core.mech.details.body import BaseBody
 from core.mech.details.detail import BaseDetail
 from core.mech.details.slot import BaseSlot
 from core.mech.skills.skill import BaseSkill
-from core.mech.effects.base import BaseEffect
-from core.mech.skills.exceptions import NotEnoughEnergyError
+
+from core.entities.base.entity import BaseEntity
+from core.entities.base.effects.base import BaseEffect
+
+
 from core.mech.exceptions import SlotDoesntExistsError, WrongDetailType
 from core.mech.details.constants import DetailsAttrs, MechAttrs, DetailsTypes
-from core.mech.mixins import MechPropertiesMixin, MechParameterCalculationMixin, EffectsMixin
 
 
-class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin, EffectsMixin):
+class BaseMech(BaseEntity):
     """
     This is an object which contains body and calculating attrs.
     Body contains other vanilla_details.
     """
+    AttrsDict = {
+        DetailsAttrs.Damage: 'damage_attr',
+        DetailsAttrs.Armor: 'armor_attr',
+        DetailsAttrs.HPRegen: 'hp_regen_attr',
+        DetailsAttrs.EnergyRegen: 'energy_regen_attr',
 
-    def __init__(self, position, body_detail: BaseBody = None):
+        MechAttrs.MaxHP: 'max_hp_attr',
+        MechAttrs.MaxEnergy: 'max_energy_attr',
+
+        MechAttrs.CurrentHP: '_hp',
+        MechAttrs.CurrentEnergy: '_energy',
+        MechAttrs.Position: 'position',
+    }
+
+    def __init__(self, position,
+                 body_detail: BaseBody = None,
+                 attrs_kwargs: dict = None,
+                 effects: Optional[List[BaseEffect]] = None):
+        attrs_kwargs = {} if attrs_kwargs is None else attrs_kwargs
+        super().__init__(position=position, **attrs_kwargs, effects=effects)
         self.body: BaseBody = body_detail
-
-        self._position: Tuple[int, int] = tuple(position) if position else None
 
         # - slots -
         self._left_slots: Dict[int, BaseSlot] = {}
@@ -28,28 +46,18 @@ class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin, EffectsMixin)
         self.build_slots()
         # ----------
 
-        self._damage: float = 0
-        self._armor: float = 0
-        self._hp: float = 0
-        self._hp_regen: float = 0
-        self._energy: float = 0
-        self._energy_regen: float = 0
-
-        self.calculate_attrs()
-        self._current_hp: float = self._hp
-        self._current_energy: float = self._energy
+        self.collect_base_attrs()
 
         self._skills: List[BaseSkill] = []
-        self._effects: List[BaseEffect] = []
         self.collect_abilities()
 
     def refill_energy_and_hp(self):
-        self._current_hp = self._hp
-        self._current_energy = self._energy
+        self.refresh_hp()
+        self.refresh_energy()
 
     def update_details_and_attrs(self):
         self.build_slots()
-        self.calculate_attrs()
+        self.collect_base_attrs()
         self.collect_abilities()
 
     def set_body(self, body: BaseBody):
@@ -83,9 +91,6 @@ class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin, EffectsMixin)
 
             side[i] = slot
 
-    def change_position(self, pos: Tuple[int, int]):
-        self._position = tuple(pos)
-
     def set_left_detail(self, slot_id: int, detail: BaseDetail):
         self.set_detail(self._left_slots, slot_id, detail)
 
@@ -117,58 +122,59 @@ class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin, EffectsMixin)
             for detail in self.details:
                 self._skills.extend(detail.skills)
 
-    def deal_damage(self, dmg: float):
-        self._current_hp -= dmg
-
     def have_enough_energy(self, energy: float) -> bool:
-        return self._current_energy - energy >= 0.
+        return self._energy - energy >= 0.
 
     def spend_energy(self, energy: float, allow_minus: bool = False):
-        if energy > self._current_energy and not allow_minus:
-            raise NotEnoughEnergyError
+        # TODO think
+        # if energy > self._energy and not allow_minus:
+        #     raise NotEnoughEnergyError
 
-        self._current_energy -= energy
-
-    def set_max_hp(self):
-        self._current_hp = self._hp
+        self._energy -= energy
 
     def set_health_points(self, hp: float):
-        self._current_hp = hp
-
-    def set_max_energy(self):
-        self._current_energy = self._energy
+        self._hp = hp
 
     def set_energy(self, energy: float):
-        self._current_energy = energy
+        self._energy = energy
 
     def attr_dict(self):
+        # TODO add base and current
         return {
-            DetailsAttrs.Damage: self._damage,
-            DetailsAttrs.Armor: self._armor,
-            DetailsAttrs.HPRegen: self._hp_regen,
-            DetailsAttrs.EnergyRegen: self._energy_regen,
+            MechAttrs.Position: self._position.xy_id,
+            MechAttrs.CurrentHP: self._hp,
+            MechAttrs.CurrentEnergy: self._energy,
 
-            MechAttrs.MaxHP: self._hp,
-            MechAttrs.MaxEnergy: self._energy,
-            MechAttrs.CurrentHP: self._current_hp,
-            MechAttrs.CurrentEnergy: self._current_energy,
-            MechAttrs.Position: self._position,
+            MechAttrs.MaxHP: {DetailsAttrs.BaseV: self.max_hp_attr.base,
+                              DetailsAttrs.CurrentV: self.max_hp_attr.dynamic_current},
+            DetailsAttrs.HPRegen: {DetailsAttrs.BaseV: self.hp_regen_attr.base,
+                                   DetailsAttrs.CurrentV: self.hp_regen_attr.dynamic_current},
+
+            MechAttrs.MaxEnergy: {DetailsAttrs.BaseV: self.max_energy_attr.base,
+                                  DetailsAttrs.CurrentV: self.max_energy_attr.dynamic_current},
+            DetailsAttrs.EnergyRegen: {DetailsAttrs.BaseV: self.energy_regen_attr.base,
+                                       DetailsAttrs.CurrentV: self.energy_regen_attr.dynamic_current},
+
+            DetailsAttrs.Damage: {DetailsAttrs.BaseV: self.damage_attr.base,
+                                  DetailsAttrs.CurrentV: self.damage_attr.dynamic_current},
+            DetailsAttrs.Armor: {DetailsAttrs.BaseV: self.armor_attr.base,
+                                 DetailsAttrs.CurrentV: self.armor_attr.dynamic_current},
+
         }
 
     def set_attrs(self, data: dict):
-        for key, attr in (
-                (DetailsAttrs.Damage, '_damage'),
-                (DetailsAttrs.Armor, '_armor'),
-                (DetailsAttrs.HPRegen, '_hp_regen'),
-                (DetailsAttrs.EnergyRegen, '_energy_regen'),
-
-                (MechAttrs.MaxHP, '_hp'),
-                (MechAttrs.MaxEnergy, '_energy'),
-                (MechAttrs.CurrentHP, '_current_hp'),
-                (MechAttrs.CurrentEnergy, '_current_energy'),
-                (MechAttrs.Position, '_position'),
-        ):
-            setattr(self, attr, data[key] if data.get(key) is not None else getattr(self, attr))
+        for key, attr_value in data.items():
+            attr = self.AttrsDict.get(key)
+            if attr is None or attr_value is None:
+                # TODO add logger
+                continue
+            if key == MechAttrs.Position:
+                self._position = self.get_position_obj(data.get(key, self.position))
+            elif key in (MechAttrs.CurrentHP, MechAttrs.CurrentEnergy):
+                setattr(self, attr, attr_value)
+            else:
+                getattr(self, attr).base = attr_value.get(DetailsAttrs.BaseV, getattr(self, attr).base)
+                getattr(self, attr).current = attr_value.get(DetailsAttrs.CurrentV, getattr(self, attr).dynamic_current)
 
     def get_details(self) -> List[BaseDetail]:
         return [slot.detail for slot in [*self._left_slots.values(), *self._right_slots.values()] if slot.is_full]
@@ -184,3 +190,77 @@ class BaseMech(MechPropertiesMixin, MechParameterCalculationMixin, EffectsMixin)
 
     def get_copy(self) -> 'BaseMech':
         return deepcopy(self)
+
+    @property
+    def skills(self) -> List[BaseSkill]:
+        return self._skills
+
+    @property
+    def details(self):
+        p = []
+        for side in (self._left_slots, self._right_slots):
+            for slot in side.values():
+                if slot.is_full:
+                    p.append(slot.detail)
+
+        return p
+
+    @property
+    def left_slots(self):
+        return self._left_slots
+
+    @property
+    def right_slots(self):
+        return self._right_slots
+
+
+    def collect_base_attrs(self):
+        self.calculate_damage()
+        self.calculate_armor()
+        self.calculate_max_hp()
+        self.calculate_hp_regen()
+        self.calculate_max_energy()
+        self.calculate_energy_regen()
+
+    def calculate_damage(self):
+        self.damage_attr.base = self.get_collected_damage()
+
+    def get_collected_damage(self) -> float:
+        return self._collect_parameter_value_from_details(DetailsAttrs.Damage)
+
+    def calculate_armor(self):
+        self.armor_attr.base = self.get_collected_armor()
+
+    def get_collected_armor(self) -> float:
+        return self._collect_parameter_value_from_details(DetailsAttrs.Armor)
+
+    def calculate_max_hp(self):
+        self.max_hp_attr.base = self.get_collected_max_hp()
+
+    def get_collected_max_hp(self) -> float:
+        return self._collect_parameter_value_from_details(DetailsAttrs.AddHP)
+
+    def calculate_hp_regen(self):
+        self.hp_regen_attr.base = self.get_collected_hp_regen()
+
+    def get_collected_hp_regen(self) -> float:
+        return self._collect_parameter_value_from_details(DetailsAttrs.HPRegen)
+
+    def calculate_max_energy(self):
+        self.max_energy_attr.base = self.get_collected_max_energy()
+
+    def get_collected_max_energy(self) -> float:
+        return self._collect_parameter_value_from_details(DetailsAttrs.AddEnergy)
+
+    def calculate_energy_regen(self):
+        self.energy_regen_attr.base = self.get_collected_energy_regen()
+
+    def get_collected_energy_regen(self) -> float:
+        return self._collect_parameter_value_from_details(DetailsAttrs.EnergyRegen)
+
+    def _collect_parameter_value_from_details(self, part_attr):
+        v = 0
+        for detail in self.details:
+            v += getattr(detail, part_attr, 0)
+        v += getattr(self.body, part_attr, 0)
+        return v

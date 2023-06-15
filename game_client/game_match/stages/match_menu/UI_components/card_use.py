@@ -1,4 +1,3 @@
-from typing import Tuple, Dict
 from global_obj.main import Global
 from visual.cards.skill.card import SkillCard
 from core.mech.skills.skill import BaseSkill
@@ -89,7 +88,7 @@ class CardUseC:
                                             b_qr=self.w.get_tile_by_xy(self.player.latest_scenario_mech.position),
                                             color=(0, 155, 0) if self.good_target else (255, 100,100), width=2)
             if self.draw_good_square:
-                tiles = HexMath.get_neighbors_qr(*self.w.get_tile_by_xy(self.player.latest_scenario_mech.position).qr,
+                tiles = HexMath.get_neighbors_qr(*self.player.latest_scenario_mech.position_qr,
                                                  self.selected_card_to_use.skill.cast_range)
 
 

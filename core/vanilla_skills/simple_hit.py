@@ -1,12 +1,13 @@
-from core.mech.skills.skill import BaseSkill
-from core.mech.skills.exceptions import OnCooldownError
 from core.mech.mech import BaseMech
+from core.mech.skills.skill import BaseSkill
 
 class SimpleStepAttrs:
     name = 'simple_step'
     spell_cost = 1
     cooldown = 1
 
+def do_none(*_, **__):
+    pass
 
 class SimpleHit(BaseSkill):
     name = 'simple_hit'
@@ -17,7 +18,7 @@ class SimpleHit(BaseSkill):
         super(SimpleHit, self).__init__(unique_id=unique_id, num=num,
                                         energy_cost=SimpleStepAttrs.spell_cost,
                                         cooldown=SimpleStepAttrs.cooldown,
-                                        target_validation_func=lambda **_: _)
+                                        target_validation_func=do_none)
 
     @staticmethod
     def __target_fileter_func(mech: BaseMech, target_xy_coord: tuple) -> bool:

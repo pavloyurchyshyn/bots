@@ -9,6 +9,9 @@ class MaterialTypes:
 
 
 class DetailsAttrs:
+    CurrentV = 'c'
+    BaseV = 'b'
+
     Id: str = 'unique_id'
     Damage: str = 'damage'
     Armor: str = 'armor'

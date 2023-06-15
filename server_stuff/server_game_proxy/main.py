@@ -67,6 +67,7 @@ class ServerGameProxy:
                                        scenario=dict.fromkeys(tuple(range(self.setup_logic.settings.actions_count))),
                                        under_bot_control=token == self.setup_stage.game_logic.BOT_TOKEN,
                                        )
+
                 if token == self.setup_stage.game_logic.BOT_TOKEN:
                     bots.append(BotPlayer(slot=slot, player_obj=player_obj))
 

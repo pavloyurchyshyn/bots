@@ -1,12 +1,16 @@
 from typing import Tuple
-from abc import abstractmethod
-from core.mech.abs import MechAbs
-# from core.player.player import PlayerObj
+from core.entities.base.entity_abc import BaseEntityAbc
+
 
 class PositiveNotDefinedError(Exception):
     pass
 
+
 class TypesNotDefinedError(Exception):
+    pass
+
+
+class NoNameDefinedError(Exception):
     pass
 
 
@@ -16,14 +20,21 @@ class BaseEffect:
     keep_after_death: bool = False
     permanent: bool = False
 
-    def __init__(self, dealer: 'PlayerObj', duration: int):
+    name: str = None
+    verbal_name: str = None
+
+    def __init__(self, dealer: 'BaseEntityAbc', target: 'BaseEntityAbc', duration: int):
+        if self.name is None or self.verbal_name is None:
+            raise NoNameDefinedError
+
         if self.types is None:
             raise TypesNotDefinedError
 
         if self.is_positive is None:
             raise PositiveNotDefinedError
 
-        self.dealer: 'PlayerObj' = dealer
+        self.dealer: 'BaseEntityAbc' = dealer
+        self.target: 'BaseEntityAbc' = target
         self.duration: int = duration
 
     def tick(self):
@@ -39,38 +50,12 @@ class BaseEffect:
     def not_active(self) -> bool:
         return not self.active
 
-    @abstractmethod
-    def affect(self, mech: MechAbs):
-        raise NotImplementedError
+    def affect(self):
+        self.target.effects_manager.add_effect(self)
+
+    def on_end(self):
+        self.target.effects_manager.remove_effect(self)
 
     @property
     def is_negative(self) -> bool:
         return self.is_positive
-
-    @abstractmethod
-    def on_damage_event(self):
-        pass
-
-    @abstractmethod
-    def on_move_events(self):
-        pass
-
-    @abstractmethod
-    def on_shoot_events(self):
-        pass
-
-    @abstractmethod
-    def on_death_events(self):
-        pass
-
-    @abstractmethod
-    def on_mech_kill_events(self):
-        pass
-
-    @abstractmethod
-    def on_npc_kill_events(self):
-        pass
-
-    @abstractmethod
-    def on_undefined_actions_events(self):
-        pass
