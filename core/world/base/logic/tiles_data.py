@@ -170,13 +170,3 @@ class TileTypes:
 def get_tile_from_dict_data(data: dict) -> TileDataAbs:
     return TileTypes.types_dict.get(data[TileAttrs.Name], TileData)(**data)
 
-
-if __name__ == '__main__':
-    w = TileTypes.Wall()
-    print(w.get_data_dict())
-    w.hp -= 100
-    new_tile = TileData(**w.get_data_dict())
-    print(new_tile.get_data_dict())
-    assert w.get_data_dict() == new_tile.get_data_dict()
-    assert w.get_data_dict() == get_tile_from_dict_data(w.get_data_dict()).get_data_dict()
-    print(EmptyTile.name)

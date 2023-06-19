@@ -4,7 +4,7 @@ from typing import Callable, List, Type, Optional
 class Attr:
     def __init__(self, base: float, current: float,
                  name: Optional[str] = None,
-                 base_multiplier: float = 1, multiplier: float = 0,
+                 base_multiplier: float = 0, multiplier: float = 0,
                  base_additional: float = 0, additional: float = 0,
                  multipliers_functions: List[Callable] = None,
                  additionals_functions: List[Callable] = None,
@@ -47,7 +47,7 @@ class Attr:
     def dynamic_current(self) -> float:
         add = self.base_additional + self.additional + self.get_dynamic_additional()
         mul = self.base_multiplier + self.multiplier + self.get_dynamic_multiplayer()
-        return self.base * mul + add
+        return self.base + self.base * mul + add
 
     def get_added_value(self) -> float:
         return self.base_additional + self.additional + self.get_dynamic_additional()
@@ -76,8 +76,40 @@ class Attr:
         if func in self.dynamic_additionals_functions:
             self.dynamic_additionals_functions.remove(func)
 
+class EntityAttrs:
+    CurrentV = 'c'
+    BaseV = 'b'
+
+    Id: str = 'unique_id'
+    Damage: str = 'damage'
+    Armor: str = 'armor'
+    AddHP: str = 'add_hp'
+    HPRegen: str = 'hp_regen'  # regeneration
+    AddEnergy: str = 'add_energy'
+    EnergyRegen: str = 'energy_regen'
+
+    Position: str = 'position'
+    CurrentHP: str = 'current_hp'
+    CurrentEnergy: str = 'current_energy'
+    MaxHP = 'max_hp'
+    MaxEnergy = 'max_energy'
+
+    Attrs = 'attrs'
 
 class EntityBaseAttrsPart:
+    AttrsDict = {
+        EntityAttrs.Damage: 'damage_attr',
+        EntityAttrs.Armor: 'armor_attr',
+        EntityAttrs.HPRegen: 'hp_regen_attr',
+        EntityAttrs.EnergyRegen: 'energy_regen_attr',
+
+        EntityAttrs.MaxHP: 'max_hp_attr',
+        EntityAttrs.MaxEnergy: 'max_energy_attr',
+
+        EntityAttrs.CurrentHP: '_hp',
+        EntityAttrs.CurrentEnergy: '_energy',
+        EntityAttrs.Position: 'position',
+    }
     def __init__(self,
                  current_hp: float = 0,
                  max_hp: float = 0, current_max_hp: float = 0,

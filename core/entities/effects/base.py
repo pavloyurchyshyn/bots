@@ -1,5 +1,5 @@
-from typing import Tuple
-from core.entities.base.entity_abc import BaseEntityAbc
+from typing import Tuple, Union
+from core.entities.entity_abc import BaseEntityAbc
 
 
 class PositiveNotDefinedError(Exception):
@@ -23,7 +23,7 @@ class BaseEffect:
     name: str = None
     verbal_name: str = None
 
-    def __init__(self, dealer: 'BaseEntityAbc', target: 'BaseEntityAbc', duration: int):
+    def __init__(self, dealer: Union['BaseEntityAbc', 'BaseEntity'], target: Union['BaseEntityAbc', 'BaseEntity'], duration: int):
         if self.name is None or self.verbal_name is None:
             raise NoNameDefinedError
 
@@ -35,7 +35,7 @@ class BaseEffect:
 
         self.dealer: 'BaseEntityAbc' = dealer
         self.target: 'BaseEntityAbc' = target
-        self.duration: int = duration
+        self.duration: int = round(duration)
 
     def tick(self):
         if self.permanent:

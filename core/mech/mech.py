@@ -5,12 +5,12 @@ from core.mech.details.detail import BaseDetail
 from core.mech.details.slot import BaseSlot
 from core.mech.skills.skill import BaseSkill
 
-from core.entities.base.entity import BaseEntity
-from core.entities.base.effects.base import BaseEffect
-
+from core.entities.entity import BaseEntity
+from core.entities.effects.base import BaseEffect
 
 from core.mech.exceptions import SlotDoesntExistsError, WrongDetailType
-from core.mech.details.constants import DetailsAttrs, MechAttrs, DetailsTypes
+from core.mech.details.constants import MechAttrs, DetailsTypes
+from core.entities.stats_attrs import EntityAttrs
 
 
 class BaseMech(BaseEntity):
@@ -18,26 +18,16 @@ class BaseMech(BaseEntity):
     This is an object which contains body and calculating attrs.
     Body contains other vanilla_details.
     """
-    AttrsDict = {
-        DetailsAttrs.Damage: 'damage_attr',
-        DetailsAttrs.Armor: 'armor_attr',
-        DetailsAttrs.HPRegen: 'hp_regen_attr',
-        DetailsAttrs.EnergyRegen: 'energy_regen_attr',
 
-        MechAttrs.MaxHP: 'max_hp_attr',
-        MechAttrs.MaxEnergy: 'max_energy_attr',
 
-        MechAttrs.CurrentHP: '_hp',
-        MechAttrs.CurrentEnergy: '_energy',
-        MechAttrs.Position: 'position',
-    }
-
-    def __init__(self, position,
+    def __init__(self, uid: str, position,
                  body_detail: BaseBody = None,
                  attrs_kwargs: dict = None,
                  effects: Optional[List[BaseEffect]] = None):
         attrs_kwargs = {} if attrs_kwargs is None else attrs_kwargs
         super().__init__(position=position, **attrs_kwargs, effects=effects)
+        self.uid: str = uid
+
         self.body: BaseBody = body_detail
 
         # - slots -
@@ -141,24 +131,24 @@ class BaseMech(BaseEntity):
     def attr_dict(self):
         # TODO add base and current
         return {
-            MechAttrs.Position: self._position.xy_id,
-            MechAttrs.CurrentHP: self._hp,
-            MechAttrs.CurrentEnergy: self._energy,
+            EntityAttrs.Position: self._position.xy_id,
+            EntityAttrs.CurrentHP: self._hp,
+            EntityAttrs.CurrentEnergy: self._energy,
 
-            MechAttrs.MaxHP: {DetailsAttrs.BaseV: self.max_hp_attr.base,
-                              DetailsAttrs.CurrentV: self.max_hp_attr.dynamic_current},
-            DetailsAttrs.HPRegen: {DetailsAttrs.BaseV: self.hp_regen_attr.base,
-                                   DetailsAttrs.CurrentV: self.hp_regen_attr.dynamic_current},
+            EntityAttrs.MaxHP: {EntityAttrs.BaseV: self.max_hp_attr.base,
+                              EntityAttrs.CurrentV: self.max_hp_attr.dynamic_current},
+            EntityAttrs.HPRegen: {EntityAttrs.BaseV: self.hp_regen_attr.base,
+                                  EntityAttrs.CurrentV: self.hp_regen_attr.dynamic_current},
 
-            MechAttrs.MaxEnergy: {DetailsAttrs.BaseV: self.max_energy_attr.base,
-                                  DetailsAttrs.CurrentV: self.max_energy_attr.dynamic_current},
-            DetailsAttrs.EnergyRegen: {DetailsAttrs.BaseV: self.energy_regen_attr.base,
-                                       DetailsAttrs.CurrentV: self.energy_regen_attr.dynamic_current},
+            EntityAttrs.MaxEnergy: {EntityAttrs.BaseV: self.max_energy_attr.base,
+                                  EntityAttrs.CurrentV: self.max_energy_attr.dynamic_current},
+            EntityAttrs.EnergyRegen: {EntityAttrs.BaseV: self.energy_regen_attr.base,
+                                      EntityAttrs.CurrentV: self.energy_regen_attr.dynamic_current},
 
-            DetailsAttrs.Damage: {DetailsAttrs.BaseV: self.damage_attr.base,
-                                  DetailsAttrs.CurrentV: self.damage_attr.dynamic_current},
-            DetailsAttrs.Armor: {DetailsAttrs.BaseV: self.armor_attr.base,
-                                 DetailsAttrs.CurrentV: self.armor_attr.dynamic_current},
+            EntityAttrs.Damage: {EntityAttrs.BaseV: self.damage_attr.base,
+                                 EntityAttrs.CurrentV: self.damage_attr.dynamic_current},
+            EntityAttrs.Armor: {EntityAttrs.BaseV: self.armor_attr.base,
+                                EntityAttrs.CurrentV: self.armor_attr.dynamic_current},
 
         }
 
@@ -168,19 +158,19 @@ class BaseMech(BaseEntity):
             if attr is None or attr_value is None:
                 # TODO add logger
                 continue
-            if key == MechAttrs.Position:
+            if key == EntityAttrs.Position:
                 self._position = self.get_position_obj(data.get(key, self.position))
-            elif key in (MechAttrs.CurrentHP, MechAttrs.CurrentEnergy):
+            elif key in (EntityAttrs.CurrentHP, EntityAttrs.CurrentEnergy):
                 setattr(self, attr, attr_value)
             else:
-                getattr(self, attr).base = attr_value.get(DetailsAttrs.BaseV, getattr(self, attr).base)
-                getattr(self, attr).current = attr_value.get(DetailsAttrs.CurrentV, getattr(self, attr).dynamic_current)
+                getattr(self, attr).base = attr_value.get(EntityAttrs.BaseV, getattr(self, attr).base)
+                getattr(self, attr).current = attr_value.get(EntityAttrs.CurrentV, getattr(self, attr).dynamic_current)
 
     def get_details(self) -> List[BaseDetail]:
         return [slot.detail for slot in [*self._left_slots.values(), *self._right_slots.values()] if slot.is_full]
 
     def __str__(self):
-        return str(self.attr_dict())
+        return f"{self.uid}"#:-{self.attr_dict()}"
 
     def make_empty(self):
         self._skills.clear()
@@ -226,37 +216,37 @@ class BaseMech(BaseEntity):
         self.damage_attr.base = self.get_collected_damage()
 
     def get_collected_damage(self) -> float:
-        return self._collect_parameter_value_from_details(DetailsAttrs.Damage)
+        return self._collect_parameter_value_from_details(EntityAttrs.Damage)
 
     def calculate_armor(self):
         self.armor_attr.base = self.get_collected_armor()
 
     def get_collected_armor(self) -> float:
-        return self._collect_parameter_value_from_details(DetailsAttrs.Armor)
+        return self._collect_parameter_value_from_details(EntityAttrs.Armor)
 
     def calculate_max_hp(self):
         self.max_hp_attr.base = self.get_collected_max_hp()
 
     def get_collected_max_hp(self) -> float:
-        return self._collect_parameter_value_from_details(DetailsAttrs.AddHP)
+        return self._collect_parameter_value_from_details(EntityAttrs.AddHP)
 
     def calculate_hp_regen(self):
         self.hp_regen_attr.base = self.get_collected_hp_regen()
 
     def get_collected_hp_regen(self) -> float:
-        return self._collect_parameter_value_from_details(DetailsAttrs.HPRegen)
+        return self._collect_parameter_value_from_details(EntityAttrs.HPRegen)
 
     def calculate_max_energy(self):
         self.max_energy_attr.base = self.get_collected_max_energy()
 
     def get_collected_max_energy(self) -> float:
-        return self._collect_parameter_value_from_details(DetailsAttrs.AddEnergy)
+        return self._collect_parameter_value_from_details(EntityAttrs.AddEnergy)
 
     def calculate_energy_regen(self):
         self.energy_regen_attr.base = self.get_collected_energy_regen()
 
     def get_collected_energy_regen(self) -> float:
-        return self._collect_parameter_value_from_details(DetailsAttrs.EnergyRegen)
+        return self._collect_parameter_value_from_details(EntityAttrs.EnergyRegen)
 
     def _collect_parameter_value_from_details(self, part_attr):
         v = 0

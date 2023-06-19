@@ -1,6 +1,6 @@
 from typing import Callable, Dict, List, Any, Optional, Tuple
-from core.entities.base.position import EntityPositionPart
-from core.entities.base.stats_attrs import EntityBaseAttrsPart
+from core.entities.position import EntityPositionPart
+from core.entities.stats_attrs import EntityBaseAttrsPart
 
 
 class EventsManagerAbc:

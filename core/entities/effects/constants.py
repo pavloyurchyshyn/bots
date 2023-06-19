@@ -1,3 +1,6 @@
+class SerializeConst:
+    Effects = 'effects'
+
 class EffectType:
     Stun = 'stun'
     Silence = 'silence'
@@ -7,3 +10,6 @@ class EffectType:
     HpDecrease = 'dmg_d'
     EnergyIncrease = 'enrg_i'
     EnergyDecrease = 'enrg_d'
+
+    HpRegenIncrease = 'hp_r_i'
+    HpRegenDecrease = 'dmg_r_d'

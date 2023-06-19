@@ -47,6 +47,10 @@ class SkillsValidations:
             raise TileNotPassableValError
 
     @classmethod
+    def validate_target_is_mech(cls, target_xy_coord, all_meches, *_, **__):
+        return any([mech for mech in all_meches if mech.position == target_xy_coord])
+
+    @classmethod
     def target_in_range(cls, skill, target_xy_coord, mech, **_):
         if skill.cast_range != INFINITE_VALUE and \
                 HexMath.get_xy_distance(mech.position, target_xy_coord) > skill.cast_range:

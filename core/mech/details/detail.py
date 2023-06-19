@@ -2,6 +2,7 @@ from typing import Union
 from core.mech.details.constants import *
 from core.mech.exceptions import *
 from global_obj.logger import get_logger
+from core.entities.stats_attrs import EntityAttrs
 
 __all__ = ['BaseDetail', ]
 
@@ -38,15 +39,15 @@ class BaseDetail:
         if self.detail_type is None:
             raise NoDetailTypeError
 
-        self._damage = kwargs.get(DetailsAttrs.Damage, 0)
-        self._armor = kwargs.get(DetailsAttrs.Armor, 0)
-        self._add_hp = kwargs.get(DetailsAttrs.AddHP, 0)
-        self._hp_regen = kwargs.get(DetailsAttrs.HPRegen, 0)
-        self._add_energy = kwargs.get(DetailsAttrs.AddEnergy, 0)
-        self._energy_regen = kwargs.get(DetailsAttrs.EnergyRegen, 0)
+        self._damage = kwargs.get(EntityAttrs.Damage, 0)
+        self._armor = kwargs.get(EntityAttrs.Armor, 0)
+        self._add_hp = kwargs.get(EntityAttrs.AddHP, 0)
+        self._hp_regen = kwargs.get(EntityAttrs.HPRegen, 0)
+        self._add_energy = kwargs.get(EntityAttrs.AddEnergy, 0)
+        self._energy_regen = kwargs.get(EntityAttrs.EnergyRegen, 0)
 
         self._skills = []
-        self.add_skills(kwargs.get(DetailsAttrs.Skills, []))
+        self.add_skills(kwargs.get(MechAttrs.Skills, []))
 
     def add_skills(self, skills) -> None:
         for skill in skills:

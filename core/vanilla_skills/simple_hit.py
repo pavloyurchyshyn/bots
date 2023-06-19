@@ -41,8 +41,6 @@ class SimpleHit(BaseSkill):
 
         self.set_on_cooldown()
 
-
-
     def get_dict(self) -> dict:
         return self.get_base_dict()
 

@@ -1,9 +1,11 @@
-from typing import List, Optional, Tuple
-from core.entities.base.effects.base import BaseEffect
+from typing import List, Optional, Tuple, Union
+from core.entities.effects.base import BaseEffect
+from core.entities.entity_abc import BaseEntityAbc
+
 
 class EffectsManager:
-    def __init__(self, entity: Optional['BaseEntity'] = None, effects: Optional[List[BaseEffect]] = None):
-        self.entity: 'BaseEntity' = self if entity is None else entity
+    def __init__(self, entity: Optional[Union[BaseEntityAbc, 'BaseEntity']] = None, effects: Optional[List[BaseEffect]] = None):
+        self.entity: BaseEntityAbc = self if entity is None else entity
         self.effects: List[BaseEffect] = effects if effects else []
 
     def apply_effects(self):
@@ -21,6 +23,7 @@ class EffectsManager:
         for effect in self.effects.copy():
             effect.tick()
             if effect.not_active:
+                effect.on_end()
                 self.remove_effect(effect=effect)
 
     def get_effects_by_type(self, type_: str) -> Tuple['BaseEffect']:

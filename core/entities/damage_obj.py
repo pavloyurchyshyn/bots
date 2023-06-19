@@ -1,5 +1,5 @@
 from core.mech.skills.abs import BaseSkillInterface
-from core.entities.base.entity import BaseEntity
+from core.entities.entity import BaseEntity
 
 
 class Damage:

@@ -1,11 +1,11 @@
 from abc import abstractmethod
 from typing import Optional, Tuple, Dict, List, Callable
-from core.entities.base.entity import BaseEntity
+from core.entities.entity import BaseEntity
 from core.mech.details.body import BaseBody
 from core.mech.details.detail import BaseDetail
 from core.mech.details.slot import BaseSlot
 from core.mech.skills.skill import BaseSkill
-from core.entities.base.stats_attrs import Attr
+from core.entities.stats_attrs import Attr
 
 class MechAbs(BaseEntity):
     body: BaseBody

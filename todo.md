@@ -18,14 +18,14 @@ First priority:
     - change actions order
     - highlight slot for current card use 
     - ~~skip~~
-    - cancel skip
+    - ~~cancel skip~~
     - ~~cancel_action~~
     - ~~check is action valid after move~~
     - card use trace predict
 
     - damage class
     - skill use class
-
+    - validation cache
     - detail wearing
     - ready logic
     - ~~ready warning if bad steps~~
@@ -55,8 +55,11 @@ First priority:
     - on_effect_apply_event
     - on_effects_end_event
     
-  - attrs system:
-    - 
+  - attrs system
+    - cast range attr
+    - effects duration
+  - create skill, effects etc configs
+  
   - mech effects:
     - effects manager
     - stun, 

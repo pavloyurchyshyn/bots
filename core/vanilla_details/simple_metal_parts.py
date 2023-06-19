@@ -1,7 +1,7 @@
 from core.mech.details.body import BaseBody
 from core.mech.details.arm import BaseArm
 from core.mech.details.leg import BaseLeg
-from core.mech.details.constants import DetailsAttrs
+from core.entities.stats_attrs import EntityAttrs
 
 from core.vanilla_details.names import DetailNames
 from core.vanilla_skills.simple_step import SimpleStep
@@ -30,9 +30,9 @@ class MetalLeg(BaseLeg):
     def __init__(self, unique_id):
         skills = [SimpleStep, ]
         data = {
-            DetailsAttrs.AddEnergy: 1,
-            DetailsAttrs.HPRegen: 0.25,
-            DetailsAttrs.AddHP: 1,
+            EntityAttrs.AddEnergy: 1,
+            EntityAttrs.HPRegen: 0.25,
+            EntityAttrs.AddHP: 1,
         }
         super(MetalLeg, self).__init__(unique_id=unique_id, damage=1, armor=1, skills=skills, **data)
 
@@ -42,8 +42,8 @@ class MetalBody(BaseBody):
     original_name = 'Metal Body'
 
     def __init__(self, unique_id):
-        data = {DetailsAttrs.EnergyRegen: 1,
-                DetailsAttrs.AddEnergy: 10,
-                DetailsAttrs.AddHP: 10,
-                DetailsAttrs.HPRegen: 1}
+        data = {EntityAttrs.EnergyRegen: 1,
+                EntityAttrs.AddEnergy: 10,
+                EntityAttrs.AddHP: 10,
+                EntityAttrs.HPRegen: 1}
         super(MetalBody, self).__init__(unique_id=unique_id, damage=1, armor=1, **data)

@@ -3,6 +3,7 @@ from core.mech.mech import BaseMech
 from core.mech.details.body import BaseBody
 from core.pools.details_pool import DetailsPool
 from core.mech.details.constants import MechSerializeConst, DetailsTypes, MechAttrs
+from core.entities.stats_attrs import EntityAttrs
 
 
 class MechSerializer:
@@ -16,7 +17,8 @@ class MechSerializer:
             # MechAttrs.Position: mech.position,
             # MechAttrs.CurrentHP: mech.health_points,
             # MechAttrs.CurrentEnergy: mech.energy,
-            MechAttrs.Attrs: mech.attr_dict(),
+            MechSerializeConst.UID: mech.uid,
+            EntityAttrs.Attrs: mech.attr_dict(),
         }
         if mech.body:
             data[MechSerializeConst.Body] = mech.body.unique_id
@@ -41,13 +43,15 @@ class MechSerializer:
 
     def dict_to_mech(self, data: dict) -> BaseMech:
         """
-        Dict with data in string format about vanile_details
+        Dict with data in string format about vanilla_details
         :param data:
         :return:
         """
-        attrs = data.pop(MechAttrs.Attrs, {})
+        attrs = data.pop(EntityAttrs.Attrs, {})
         body: BaseBody = self.details_pool.get_detail_by_id(data.get(MechSerializeConst.Body))
-        mech = BaseMech(position=tuple(attrs.get(MechAttrs.Position, (-100, -100))), body_detail=body)
+        mech = BaseMech(uid=data.pop(MechSerializeConst.UID),
+                        position=tuple(attrs.get(EntityAttrs.Position, (-100, -100))),
+                        body_detail=body)
 
         self.update_mech_details(mech, data)
 

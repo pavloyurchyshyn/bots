@@ -39,7 +39,7 @@ class BaseSkillInterface:
         pass
 
     @abstractmethod
-    def use(self, **kwargs) -> dict:
+    def use(self, **kwargs) -> None:
         """
         Do action.
         """

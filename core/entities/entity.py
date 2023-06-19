@@ -1,9 +1,9 @@
 from typing import Type, Optional, List, Union, Tuple
-from core.entities.base.events import EventsManager
-from core.entities.base.position import EntityPositionPart
-from core.entities.base.stats_attrs import EntityBaseAttrsPart, Attr
-from core.entities.base.effects.manager import EffectsManager
-from core.entities.base.effects.base import BaseEffect
+from core.entities.events import EventsManager
+from core.entities.position import EntityPositionPart
+from core.entities.stats_attrs import EntityBaseAttrsPart, Attr
+from core.entities.effects.manager import EffectsManager
+from core.entities.effects.base import BaseEffect
 from core.world.base.hex_utils import EntityPosition
 
 
@@ -37,3 +37,7 @@ class BaseEntity(EntityBaseAttrsPart, EntityPositionPart):
         self.events_manager.do_(self.events_manager.Events.PreMoveEvent, entity=self, position=position)
         super().change_position(position=position)
         self.events_manager.do_(self.events_manager.Events.PostMoveEvent, entity=self, position=position)
+
+    @property
+    def effects(self):
+        return self.effects_manager.effects

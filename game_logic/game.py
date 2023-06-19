@@ -7,9 +7,10 @@ from core.world.base.logic.world import LogicWorld
 from game_logic.bots.bot_player import BotPlayer
 from game_logic.game_data.game_data import GameData
 from game_logic.game_data.game_settings import GameSettings
-
 from game_logic.game_data.id_generator import IdGenerator
+
 from core.pools.details_pool import DetailsPool
+from core.entities.meta_events_manager import MetaEventsManager
 
 
 class Game(GameData):
@@ -26,6 +27,9 @@ class Game(GameData):
         self.bots: List[BotPlayer] = bots
         self.players: Dict[int, PlayerObj] = players  # player number -> player
         self.world: LogicWorld = world
+        self.events_manager: MetaEventsManager = MetaEventsManager()
+        # TODO add bots meches
+        self.events_manager.bulk_entities_add(self.players_meches)
 
     @property
     def everybody_ready(self) -> bool:

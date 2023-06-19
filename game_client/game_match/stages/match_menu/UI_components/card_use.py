@@ -2,6 +2,7 @@ from global_obj.main import Global
 from visual.cards.skill.card import SkillCard
 from core.mech.skills.skill import BaseSkill
 from core.world.base.visual.world import VisualWorld
+from core.world.base.logic.tiles_data import EmptyTile
 from core.mech.skills.constants import Targets
 from core.validators.skill import ValidationError, NoEmptyStepError
 from core.validators.constants import ValidationKeys
@@ -9,6 +10,7 @@ from server_stuff.constants.requests import GameStgConst as GSC
 from core.world.base.hex_utils import HexMath
 from settings.localization.menus.UI import UILocal
 from settings.localization.validation import ValidationMsg as ValidationLoc
+from core.mech.skills.constants import INFINITE_VALUE
 
 
 from core.functions.scenario import get_free_slot_id
@@ -88,11 +90,17 @@ class CardUseC:
                                             b_qr=self.w.get_tile_by_xy(self.player.latest_scenario_mech.position),
                                             color=(0, 155, 0) if self.good_target else (255, 100,100), width=2)
             if self.draw_good_square:
+                cast_range = self.selected_card_to_use.skill.cast_range
+                if cast_range == INFINITE_VALUE:
+                    cast_range = self.w.x_size if self.w.x_size > self.w.y_size else self.w.y_size
                 tiles = HexMath.get_neighbors_qr(*self.player.latest_scenario_mech.position_qr,
-                                                 self.selected_card_to_use.skill.cast_range)
+                                                 range_radius=int(cast_range))
 
 
                 for tile in tiles:
+                    if tile not in self.w.qr_to_tile or self.w.get_tile_by_qr(tile).name == EmptyTile.name:
+                        continue
+
                     if target_hex and tile == target_hex.qr:
                         continue
                     try:

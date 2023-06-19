@@ -68,7 +68,7 @@ class DetailsPool:
         return [(detail.name, unique_id) for unique_id, detail in self.id_to_detail.items()]
 
     def get_simple_mech(self, position=(0, 0)) -> BaseMech:
-        mech: BaseMech = BaseMech(position)
+        mech: BaseMech = BaseMech(uid=self.id_generator.get_id(), position=position)
         body = self.create_add_and_get_detail_to_pool(DetailNames.SimpleMetal.Body)
         mech.set_body(body)
 
