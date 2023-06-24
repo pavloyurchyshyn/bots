@@ -1,6 +1,5 @@
 from settings.localization.validation import ValidationMsg as ValidationLoc
 
-
 class ValidationError(Exception):
     def __init__(self, msg: str = 'Unable to use'):
         self.msg = msg
@@ -8,6 +7,9 @@ class ValidationError(Exception):
     def __str__(self):
         return self.msg
 
+class AnotherTileRequiredError(ValidationError):
+    def __init__(self):
+        super().__init__(ValidationLoc.AnotherTileRequiredError)
 
 class NoEmptyStepError(ValidationError):
     def __init__(self):

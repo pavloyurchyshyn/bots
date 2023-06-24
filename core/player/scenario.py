@@ -34,19 +34,24 @@ class Scenario:
         self.__actions[slot] = None
 
     def add(self, action: Action):
-        for k, action_slot in self.__actions.items():
-            if action_slot is None:
-                self.add_action(k, action)
-                action.slot = k
-                return k
-
-        raise NoEmptyStepError
+        k = self.get_first_free_slot()
+        if k is None:
+            raise NoEmptyStepError
+        else:
+            self.add_action(k, action)
+            action.slot = k
+            return k
 
     def add_action(self, slot: int, action: Action):
         if slot not in self.__actions:
             raise IndexError(f'Wrong scenario key "{slot}" not in {self.__actions}')
 
         self.__actions[slot] = action
+
+    def get_first_free_slot(self) -> int:
+        for k, action_slot in self.__actions.items():
+            if action_slot is None:
+                return k
 
     def create_and_add_action(self, skill_uid:str, use_attrs: dict, mech_copy, slot: int = None, valid: bool = True):
         action = Action(slot=slot, skill_uid=skill_uid, use_attrs=use_attrs, mech_copy=mech_copy, valid=valid)

@@ -23,8 +23,8 @@ First priority:
     - ~~check is action valid after move~~
     - card use trace predict
 
-    - damage class
-    - skill use class
+    - damage class>>??
+    - skill use class>>??
     - validation cache
     - detail wearing
     - ready logic
@@ -162,3 +162,6 @@ First priority:
  - switch target tiles demonstration types
  - custom font
  - render dots in text
+
+REFERENCES
+https://store.steampowered.com/app/1770050/Total_Tank_Generals/

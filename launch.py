@@ -55,7 +55,7 @@ class GameRunner:
             start = finish
             # update time
             global_clock.update(dt)
-            Global.round_clock.update(dt)
+            Global.real_time_clock.update(dt)
 
             global_mouse.update()
             global_keyboard.update()
@@ -63,6 +63,16 @@ class GameRunner:
             for event in events:
                 self.check_for_mouse_event(event)
                 self.check_for_keyboard_event(event)
+                if event.type == pygame.QUIT:
+                    Global.stages.close_game()
+                    GAME_BODY.close_game()
+                    self.close_game()
+                    break
+
+            if global_keyboard.alt_and_f4:
+                GAME_BODY.close_game()
+                self.close_game()
+                break
 
             GAME_BODY.game_loop()
 
@@ -74,8 +84,7 @@ class GameRunner:
 
             # global_mouse.test()
             # Global.keyboard.test()
-            if global_keyboard.alt_and_f4:
-                self.close_game()
+
 
             display.update()
 

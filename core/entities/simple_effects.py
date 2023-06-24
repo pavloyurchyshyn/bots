@@ -6,11 +6,11 @@ from core.entities.stats_attrs import EntityAttrs
 
 class SimpleAttrEffect(BaseEffect):
     is_positive = True
-    def __init__(self, dealer: BaseEntity, target: BaseEntity,
+    def __init__(self, uid: str, dealer: BaseEntity, target: BaseEntity,
                  attr: str,
                  mul_value: float = 0.01, add_value: float = 0.01,
                  duration: int = 5):
-        super().__init__(dealer=dealer, target=target, duration=duration)
+        super().__init__(uid=uid, dealer=dealer, target=target, duration=duration)
 
         self.add_value: float = add_value
         self.mul_value: float = mul_value
@@ -37,10 +37,11 @@ class SimpleDamageBuff(SimpleAttrEffect):
     name = 'damage_boost'
     verbal_name = 'Damage Boost'
 
-    def __init__(self, dealer: BaseEntity, target: BaseEntity,
+    def __init__(self, uid: str, dealer: BaseEntity, target: BaseEntity,
                  mul_dmg: int = 0.01, add_dmg: int = 0.01,
                  duration: int = 5):
-        super().__init__(dealer=dealer, target=target,
+        super().__init__(uid=uid,
+                         dealer=dealer, target=target,
                          mul_value=mul_dmg, add_value=add_dmg,
                          duration=duration,
                          attr=EntityAttrs.Damage)
@@ -52,10 +53,10 @@ class SimpleDamageDebuff(SimpleAttrEffect):
     name = 'damage_deboost'
     verbal_name = 'Damage deboost'
 
-    def __init__(self, dealer: BaseEntity, target: BaseEntity,
+    def __init__(self, uid: str, dealer: BaseEntity, target: BaseEntity,
                  mul_dmg: int = 0.01, add_dmg: int = 0.01,
                  duration: int = 5):
-        super().__init__(dealer=dealer, target=target,
+        super().__init__(uid=uid, dealer=dealer, target=target,
                          mul_value=mul_dmg, add_value=add_dmg,
                          duration=duration,
                          attr=EntityAttrs.Damage)
@@ -68,13 +69,13 @@ class SimpleHPRegenBuff(SimpleAttrEffect):
     name = 'hp_regen_boost'
     verbal_name = 'HP regen boost'
 
-    def __init__(self, dealer: BaseEntity, target: BaseEntity,
+    def __init__(self, uid: str, dealer: BaseEntity, target: BaseEntity,
                  mul_hp_r: int = 0.01, add_hp_r: int = 0.01,
                  duration: int = 5):
         super().__init__(dealer=dealer, target=target,
                          mul_value=mul_hp_r, add_value=add_hp_r,
                          duration=duration,
-                         attr=EntityAttrs.HPRegen)
+                         attr=EntityAttrs.HPRegen, uid=uid)
 
 
 class SimpleHPRegenDebuff(SimpleAttrEffect):
@@ -83,13 +84,13 @@ class SimpleHPRegenDebuff(SimpleAttrEffect):
     name = 'hp_regen_deboost'
     verbal_name = 'HP regen deboost'
 
-    def __init__(self, dealer: BaseEntity, target: BaseEntity,
+    def __init__(self, uid: str, dealer: BaseEntity, target: BaseEntity,
                  mul_hp_r: int = 0.01, add_hp_r: int = 0.01,
                  duration: int = 5):
         super().__init__(dealer=dealer, target=target,
                          mul_value=mul_hp_r, add_value=add_hp_r,
                          duration=duration,
-                         attr=EntityAttrs.HPRegen)
+                         attr=EntityAttrs.HPRegen, uid=uid)
 
 
 
@@ -99,13 +100,13 @@ class SimpleHPIncrease(SimpleAttrEffect):
     verbal_name = 'HP Increase'
 
 
-    def __init__(self, dealer: BaseEntity, target: BaseEntity,
+    def __init__(self, uid: str, dealer: BaseEntity, target: BaseEntity,
                  mul_hp_r: int = 0.01, add_hp_r: int = 0.01,
                  duration: int = 5):
         super().__init__(dealer=dealer, target=target,
                          mul_value=mul_hp_r, add_value=add_hp_r,
                          duration=duration,
-                         attr=EntityAttrs.MaxHP)
+                         attr=EntityAttrs.MaxHP, uid=uid)
 
 
 class SimpleHPDecrease(SimpleAttrEffect):
@@ -114,11 +115,11 @@ class SimpleHPDecrease(SimpleAttrEffect):
     verbal_name = 'HP Decrease'
 
 
-    def __init__(self, dealer: BaseEntity, target: BaseEntity,
+    def __init__(self, uid: str, dealer: BaseEntity, target: BaseEntity,
                  mul_hp_r: int = -0.01, add_hp_r: int = -0.01, duration: int = 5):
         super().__init__(dealer=dealer, target=target,
                          mul_value=mul_hp_r, add_value=add_hp_r,
                          duration=duration,
-                         attr=EntityAttrs.MaxHP)
+                         attr=EntityAttrs.MaxHP, uid=uid)
 
 # TODO do all attrs

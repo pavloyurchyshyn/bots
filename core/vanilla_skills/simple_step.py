@@ -11,7 +11,7 @@ class SimpleStep(BaseSkill):
         super(SimpleStep, self).__init__(unique_id=unique_id, num=num,
                                          energy_cost=1,
                                          cooldown=1,
-                                         target_validation_func=SkillsValidations.validate_tile_target,
+                                         target_validation_func=SkillsValidations.validate_another_tile_target,
                                          )
 
     def use(self, player, game_obj, target_xy, mech: BaseMech = None, **_):

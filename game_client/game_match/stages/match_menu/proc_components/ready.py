@@ -16,7 +16,7 @@ class ReadyProc:
 
     def update_time(self, r: dict, request_data=None, **kwargs):
         Global.logger.debug(f'Updated time: {r[GSC.Time]}')
-        Global.round_clock.set_time(r[GSC.Time])
+        Global.real_time_clock.set_time(r[GSC.Time])
 
     def update_ready_status(self, r: dict, request_data, **kwargs):
         Global.logger.debug(f'Ready status: {request_data}')

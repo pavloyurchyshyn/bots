@@ -3,7 +3,7 @@ from logging import Logger
 from global_obj.clock import Clock
 from global_obj.stages import Stages
 from global_obj.logger import get_logger
-
+from game_logic.game_data.steps_clock import RoundsClock
 from core.validators.constants import ValidationKeys
 
 from interfaces.skills_pool_interface import SkillsPoolInterface
@@ -22,7 +22,8 @@ class Global:
     logger: Logger = get_logger()
     clock: Clock = Clock()  # global for all game
     stages: Stages = Stages(logger)
-    round_clock: Clock = Clock()  # not counting on pause etc.
+    real_time_clock: Clock = Clock()  # not counting on pause etc.
+    rounds_clock: RoundsClock = RoundsClock()
     test_draw = False
 
     game = None
@@ -61,6 +62,7 @@ class Global:
         cls.skill_pool: SkillsPoolInterface = game.skills_pool
         from core.mech.mech_serializer import MechSerializer
         cls.mech_serializer: MechSerializer = MechSerializer(game.details_pool)
+        cls.rounds_clock: RoundsClock = game.rounds_clock
 
     @classmethod
     def del_game_obj(cls):

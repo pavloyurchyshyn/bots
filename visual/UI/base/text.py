@@ -249,8 +249,8 @@ class Text(BaseUI):
 
         return text_surf
 
-    def draw(self):
-        self.default_draw()
+    def draw(self, dx: int = 0, dy: int = 0):
+        self.default_draw(dx=dx, dy=dy)
 
     def change_text(self, text: str) -> None:
         self.str_text = self.get_localization_text(text, self.raw_text)
@@ -266,7 +266,7 @@ class Text(BaseUI):
 
     @staticmethod
     def get_localization_text(text: str, raw: bool) -> str:
-        return text if raw else Global.localization.get_text_with_localization(text)
+        return str(text) if raw else str(Global.localization.get_text_with_localization(text))
 
     def reload_text(self) -> None:
         self.str_text = self.get_localization_text(str(self.str_text), self.raw_text)

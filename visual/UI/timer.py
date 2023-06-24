@@ -14,8 +14,8 @@ class Timer(Text):
                                     **kwargs)
 
     def update(self):
-        self.change_text(Global.round_clock.str_time)
-        if Global.round_clock.time > self.emergency_time:
+        self.change_text(Global.real_time_clock.str_time)
+        if Global.real_time_clock.time > self.emergency_time:
             self.change_color(simple_colors.red)
         else:
             self.change_color(simple_colors.white)

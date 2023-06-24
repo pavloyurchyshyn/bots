@@ -6,6 +6,7 @@ from core.entities.stats_attrs import EntityAttrs
 from core.vanilla_details.names import DetailNames
 from core.vanilla_skills.simple_step import SimpleStep
 from core.vanilla_skills.simple_hit import SimpleHit
+from core.vanilla_skills.double_damage import DoubleDamage
 
 __all__ = ['MetalArm', 'MetalLeg', 'MetalBody']
 
@@ -16,7 +17,7 @@ class MetalArm(BaseArm):
     verbal_name = 'Metal Arm'
 
     def __init__(self, unique_id):
-        skills = [SimpleHit, ]
+        skills = [SimpleHit, DoubleDamage]
 
         super(MetalArm, self).__init__(unique_id=unique_id, damage=1, armor=1, add_hp=1,
                                        skills=skills,
