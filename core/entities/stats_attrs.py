@@ -136,6 +136,21 @@ class EntityBaseAttrsPart:
     def deal_damage(self, dmg: float):
         self._hp -= dmg
 
+    def have_enough_energy(self, energy: float) -> bool:
+        return self._energy - energy >= 0.
+
+    def spend_energy(self, energy: float, allow_minus: bool = False):
+        # TODO think
+        # if energy > self._energy and not allow_minus:
+        #     raise NotEnoughEnergyError
+
+        self._energy -= energy
+
+    def set_health_points(self, hp: float):
+        self._hp = hp
+
+    def set_energy(self, energy: float):
+        self._energy = energy
     def refresh_hp(self):
         self._hp = self.max_hp_attr.dynamic_current
 

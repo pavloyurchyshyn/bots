@@ -44,7 +44,7 @@ def recalculate_scenario(player: PlayerObj):
                 else:
                     action.make_valid()
 
-                skill.use(player=player, target_xy=tile_xy, mech=mech_copy, game_obj=Global.game)
+                skill.use(player=player, target_xy=tile_xy, mech=mech_copy, game_obj=Global.game, skill_cast_uid=action.skill_cast_uid)
                 action.mech_copy = mech_copy
 
             else:

@@ -47,7 +47,8 @@ class CardUseC:
                            GSC.SkillM.ActionID: action_id,
                            GSC.SkillM.UseAttrs: {
                                Targets.Tile: tile_xy,
-                                                 }
+                                                 },
+                           GSC.SkillM.InvalidUse: False,
                            }
             request = {GSC.SkillM.UseSkill: use_skill_d}
             skill = self.selected_card_to_use.skill
@@ -69,6 +70,7 @@ class CardUseC:
                     if Global.mouse.l_up:
                         Global.logger.info(f'Using skill: {request}')
                         Global.connection.send_json(request)
+                        Global.connection.send_json({GSC.Mech.Effects: 1})
                 elif Global.mouse.l_up:
                     self.add_ok_popup(f'No free slots') # TODO localization
 

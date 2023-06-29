@@ -6,11 +6,11 @@ from core.entities.entity import BaseEntity
 
 
 class DoubleDamageAttrs:
-    spell_cost = 1
+    spell_cost = 3
     cooldown = 10
 
     damage_boost_mul_add = 0
-    damage_boost_mul_val = 2
+    damage_boost_mul_val = 1
 
 
 
@@ -19,8 +19,9 @@ class DoubleDamageEffect(SimpleDamageBuff):
     name = 'double_damage_effect'
     verbal_name = 'Double Damage Effect'
     
-    def __init__(self, dealer, target):
-        super().__init__(dealer=dealer, target=target,
+    def __init__(self, uid: str, dealer, target):
+        super().__init__(uid=uid,
+                         dealer=dealer, target=target,
                          duration=1,
                          mul_dmg=DoubleDamageAttrs.damage_boost_mul_val,
                          add_dmg=DoubleDamageAttrs.damage_boost_mul_add)
@@ -40,10 +41,11 @@ class DoubleDamage(BaseSkill):
                                            )
 
 
-    def use(self, player, game_obj, target_xy, mech: BaseEntity) -> None:
-        effect = DoubleDamageEffect(dealer=player.mech, target=mech)
+    def use(self, player, game_obj, target_xy, mech: BaseEntity, skill_cast_uid: str, **__) -> None:
+        effect = DoubleDamageEffect(dealer=player.mech, target=mech, uid=skill_cast_uid)
         mech.effects_manager.add_effect(effect)
         effect.affect()
+        mech.spend_energy(self.energy_cost)
         self.set_on_cooldown()
 
 

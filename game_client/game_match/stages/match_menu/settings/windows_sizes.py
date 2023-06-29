@@ -77,6 +77,23 @@ class UsedCards:
     size = h_size, v_size
     rect = (x, y, h_size, v_size)
 
+class EffectsRect:
+    X_k = 0.2
+    Y_k = 0.695
+    H_K = 0.5
+    V_K = 0.03
+
+    x = scaled_w(X_k)
+    y = scaled_h(Y_k)
+    h_size = scaled_w(H_K)
+    v_size = scaled_h(V_K)
+    size = h_size, v_size
+    rect = (x, y, h_size, v_size)
+
+    class EffectIconRect:
+        H_K = V_K = scaled_h(0.03)
+        size = H_K, V_K
+
 
 class HpBar:
     X_K = 0.2

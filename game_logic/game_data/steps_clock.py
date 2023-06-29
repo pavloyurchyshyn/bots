@@ -1,11 +1,11 @@
 class RoundsClock:
-    def __init__(self, actions_per_step=3, rounds_count: int = 0):
+    def __init__(self, actions_per_step=3, rounds_count: int = 0, current_round: int = 1):
         self._rounds_count = rounds_count  # rounds
         self._actions_count = 0
         self._actions_per_step = actions_per_step
 
         self._current_action = 0
-        self._current_round = 0
+        self._current_round = current_round
 
     def reload(self):
         self._rounds_count = 0  # rounds
@@ -15,6 +15,9 @@ class RoundsClock:
 
     def set_actions_per_step(self, count: int):
         self._actions_per_step = count
+
+    def set_current_round(self, r: int):
+        self._current_round = r
 
     def next_step(self):
         self._current_action += 1

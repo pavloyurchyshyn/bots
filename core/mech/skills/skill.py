@@ -67,7 +67,7 @@ class BaseSkill:
         self.cooldown = value if value else self.cooldown_value
 
     @abstractmethod
-    def use(self, player, game_obj, target_xy, mech=None) -> None:
+    def use(self, skill_cast_uid:str, player, game_obj, target_xy, mech=None) -> None:
         """
         Do action.
         """

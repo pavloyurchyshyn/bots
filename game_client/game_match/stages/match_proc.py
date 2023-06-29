@@ -74,6 +74,7 @@ class MatchStage(Processor, ReadyProc, CardsProc):
                    for slot, player_data
                    in players_data.items()}
         self.game_object.players = players
+        self.game_object.rounds_clock.set_current_round(response[GameStgConst.Round])
 
         self.update_time(response, response[GameStgConst.Time])
 

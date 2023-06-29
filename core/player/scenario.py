@@ -19,7 +19,7 @@ class ScenarioActions(OrderedDict):
 
 
 class Scenario:
-    def __init__(self, player: PlayerAbs, scenario: Dict[int, dict] = None):
+    def __init__(self, player: PlayerAbs, scenario: Dict[int, Action] = None):
         scenario = {} if scenario is None else scenario
         self.__actions_count = len(scenario)
         self.player: PlayerAbs = player
@@ -53,8 +53,10 @@ class Scenario:
             if action_slot is None:
                 return k
 
-    def create_and_add_action(self, skill_uid:str, use_attrs: dict, mech_copy, slot: int = None, valid: bool = True):
-        action = Action(slot=slot, skill_uid=skill_uid, use_attrs=use_attrs, mech_copy=mech_copy, valid=valid)
+    def create_and_add_action(self, skill_cast_uid:str, skill_uid:str,
+                              use_attrs: dict, mech_copy, slot: int = None, valid: bool = True):
+        action = Action(slot=slot, skill_uid=skill_uid, use_attrs=use_attrs,
+                        mech_copy=mech_copy, valid=valid, skill_cast_uid=skill_cast_uid)
         if slot is None:
             self.add(action)
         else:

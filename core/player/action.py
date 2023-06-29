@@ -11,9 +11,10 @@ class Action:
     One skill use
     """
     _skip: bool = False
-    def __init__(self, slot: int, skill_uid:str, use_attrs: dict, mech_copy: BaseMech, valid: bool = True):
-        self.slot = slot
-        self.skill_uid = skill_uid
+    def __init__(self, skill_cast_uid: str, slot: int, skill_uid:str, use_attrs: dict, mech_copy: BaseMech, valid: bool = True):
+        self.skill_cast_uid: str = skill_cast_uid
+        self.slot: int = slot
+        self.skill_uid: str = skill_uid
         self.use_attrs: MappingProxyType = MappingProxyType(use_attrs)
         self.mech_copy: BaseMech = mech_copy
         self.valid: bool = valid

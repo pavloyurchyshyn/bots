@@ -23,7 +23,8 @@ class BaseEffect:
     name: str = None
     verbal_name: str = None
 
-    def __init__(self, dealer: Union['BaseEntityAbc', 'BaseEntity'], target: Union['BaseEntityAbc', 'BaseEntity'], duration: int):
+    def __init__(self, uid: str, dealer: Union['BaseEntityAbc', 'BaseEntity'],
+                 target: Union['BaseEntityAbc', 'BaseEntity'], duration: int):
         if self.name is None or self.verbal_name is None:
             raise NoNameDefinedError
 
@@ -32,7 +33,7 @@ class BaseEffect:
 
         if self.is_positive is None:
             raise PositiveNotDefinedError
-
+        self.uid: str = uid
         self.dealer: 'BaseEntityAbc' = dealer
         self.target: 'BaseEntityAbc' = target
         self.duration: int = round(duration)
