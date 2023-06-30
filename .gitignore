@@ -18,7 +18,5 @@ dist
 build
 launch.spec
 server.spec
-game.ico
-server.ico
 some_code/server_stuff_bad
 some_code/server_stuff_bad/*
