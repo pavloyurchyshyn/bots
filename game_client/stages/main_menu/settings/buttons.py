@@ -8,6 +8,7 @@ from game_client.stages.main_menu.settings.uids import UIDs
 from global_obj.main import Global
 from visual.styles import get_btn_style, DEFAULT_V_SIZE, DEFAULT_H_SIZE
 
+
 MENU_UIDS = (
     # UIDs.NewGame,
     # UIDs.LoadGame,
@@ -17,10 +18,6 @@ MENU_UIDS = (
     # UIDs.Settings,
     UIDs.Exit,
 )
-
-
-def mock_func(b):
-    print(f'TODO: Clicked {b.uid}')
 
 
 def test_draw_btn(b: Button):
@@ -39,8 +36,11 @@ def exit_btn_func(b):
     ui_manager: UIManager = b.parent.UI_manager
     for uid in MENU_UIDS:
         ui_manager.get_by_uid(uid).deactivate()
-    ui_manager.get_by_uid(UIDs.ExitYes).make_active_and_visible()
-    ui_manager.get_by_uid(UIDs.ExitNo).make_active_and_visible()
+
+    b.parent.add_yes_no_popup(msg='Close game?',
+                              yes_action=yes_btn_func, no_action=no_btn_func,
+                              yes_uid=UIDs.ExitYes, no_uid=UIDs.ExitNo,
+                              parent=b.parent)
 
 
 def join_menu(b):
@@ -53,11 +53,11 @@ def yes_btn_func(b):
 
 
 def no_btn_func(b):
-    ui_manager: UIManager = b.parent.UI_manager
+    b.parent.close(button)
+
+    ui_manager: UIManager = b.parent.parent.UI_manager
     for uid in MENU_UIDS:
         ui_manager.get_by_uid(uid).activate()
-    ui_manager.get_by_uid(UIDs.ExitYes).make_inactive_and_invisible()
-    ui_manager.get_by_uid(UIDs.ExitNo).make_inactive_and_invisible()
 
 
 def set_host_game(b: Button):
@@ -150,41 +150,6 @@ for button in BUTTONS_DATA.values():
     button['kwargs'][ButtonAttrs.Style] = default_style
     start_pos += button['kwargs'][ButtonAttrs.VSizeK] + button['kwargs'][ButtonAttrs.VSizeK] * 0.15
 
-BUTTONS_DATA['exit_yes'] = {
-    "kwargs": {
-        ButtonAttrs.Style: default_style,
-        ButtonAttrs.HSizeK: 0.1,
-        ButtonAttrs.VSizeK: 0.05,
-        TextAttrs.Text: UILocal.MainMenu.ExitYes,
-        ButtonAttrs.Layer: 1,
-        ButtonAttrs.UID: UIDs.ExitYes,
-        ButtonAttrs.XK: 0.39,
-        ButtonAttrs.YK: 0.5,
-        ButtonAttrs.Active: False,
-        ButtonAttrs.Visible: False,
-        ButtonAttrs.OnClickAction: yes_btn_func,
-        ButtonAttrs.InactiveAfterClick: 1,
-        ButtonAttrs.InvisAfterClick: 1,
-    }
-}
-
-BUTTONS_DATA['exit_no'] = {
-    "kwargs": {
-        ButtonAttrs.Style: default_style,
-        ButtonAttrs.HSizeK: 0.1,
-        ButtonAttrs.VSizeK: 0.05,
-        TextAttrs.Text: UILocal.MainMenu.ExitNo,
-        ButtonAttrs.Layer: 1,
-        ButtonAttrs.UID: UIDs.ExitNo,
-        ButtonAttrs.XK: 0.51,
-        ButtonAttrs.YK: 0.5,
-        ButtonAttrs.Active: False,
-        ButtonAttrs.Visible: False,
-        ButtonAttrs.OnClickAction: no_btn_func,
-        ButtonAttrs.InactiveAfterClick: 1,
-        ButtonAttrs.InvisAfterClick: 1,
-    }
-}
 
 BUTTONS_DATA['test_draw'] = {
     "kwargs": {

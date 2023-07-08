@@ -147,7 +147,7 @@ class Button(BaseButton):
         return self
 
     def render(self):
-        self.fill_surface(self.active_surface, self.style.surface_color)
+        self.fill_surface(surface=self.active_surface, color=self.style.surface_color)
         self.text.render()
         self.text.draw()
         self.draw_border(self.active_surface, self.style.border_color)

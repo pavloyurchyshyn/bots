@@ -31,12 +31,6 @@ class MainMenu(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         collided_popup_btn = self.update_popups()
 
         self.simple_buttons_update(self.draw_border)
-        # for b in self.buttons:
-        #     b.draw()
-        #     if b.active and b.collide_point(Global.mouse.pos):
-        #         self.draw_border(b)
-        #         if Global.mouse.l_up:
-        #             b.do_action()
 
         self.draw_popups()
         if collided_popup_btn:
