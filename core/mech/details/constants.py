@@ -48,3 +48,4 @@ class MechSerializeConst:
     RightSlots: str = 'right_slots'
     Weapon: str = 'weapon'
     Detail: str = 'detail'
+    Effects: str = 'effects'

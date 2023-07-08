@@ -8,7 +8,6 @@ from core.mech.skills.constants import Targets
 from core.player.scenario import NoEmptyStepError
 from core.validators.errors import PlayerDoesntOwnSkillValError, SkillNotInPullValError
 from core.functions.scenario import recalculate_scenario, skip_action
-from core.entities.effects.serializer import serialize_effect
 
 
 class MechRelatedLogic(ComponentAbs):
@@ -16,12 +15,12 @@ class MechRelatedLogic(ComponentAbs):
     def __init__(self):
         self.actions[GSC.Mech.Effects] = self.get_mech_effects
 
-
     def get_mech_effects(self, action: str, client: Client, player_obj: PlayerObj, **__):
         mech = player_obj.latest_scenario_mech
         if mech:
-            effects = [serialize_effect(effect=effect) for effect in mech.effects]
+            effects = [effect.get_dict() for effect in mech.effects]
         else:
             effects = ()
 
         client.sync_send_json({action: effects})
+        print(Global.mech_serializer.mech_to_dict(mech))

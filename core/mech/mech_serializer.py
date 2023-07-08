@@ -2,15 +2,18 @@ from global_obj.logger import get_logger
 from core.mech.mech import BaseMech
 from core.mech.details.body import BaseBody
 from core.pools.details_pool import DetailsPool
+from core.pools.effects_pool import EffectsPool
 from core.mech.details.constants import MechSerializeConst, DetailsTypes, MechAttrs
 from core.entities.stats_attrs import EntityAttrs
+from core.entities.effects.serializer import deserialize_effect
 
 
 class MechSerializer:
     logger = get_logger()
 
-    def __init__(self, details_pool: DetailsPool):
+    def __init__(self, details_pool: DetailsPool, effects_pool: EffectsPool):
         self.details_pool: DetailsPool = details_pool
+        self.effects_pool: EffectsPool = effects_pool
 
     def mech_to_dict(self, mech: BaseMech) -> dict:
         data = {
@@ -19,6 +22,7 @@ class MechSerializer:
             # MechAttrs.CurrentEnergy: mech.energy,
             MechSerializeConst.UID: mech.uid,
             EntityAttrs.Attrs: mech.attr_dict(),
+            MechSerializeConst.Effects: [effect.get_dict() for effect in mech.effects],
         }
         if mech.body:
             data[MechSerializeConst.Body] = mech.body.unique_id
@@ -56,6 +60,10 @@ class MechSerializer:
         self.update_mech_details(mech, data)
 
         mech.set_attrs(attrs)
+
+        for effect_data in data[MechSerializeConst.Effects]:
+            effect = deserialize_effect(effect_dict=effect_data)
+            effect.affect()
 
         return mech
 

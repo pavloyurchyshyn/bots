@@ -1,3 +1,4 @@
+import traceback
 from os import environ, getcwd
 environ['VisualPygameOn'] = 'on'
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "1"
@@ -84,7 +85,6 @@ class GameRunner:
 
             # global_mouse.test()
             # Global.keyboard.test()
-
 
             display.update()
 
@@ -193,3 +193,9 @@ if __name__ == '__main__':
         except Exception as e:
             print(e)
         exit(1)
+
+    except Exception as e:
+        game.game_body.close_game()
+        print(e)
+        print(traceback.format_exc())
+

@@ -10,6 +10,7 @@ from game_logic.game_data.game_settings import GameSettings
 from game_logic.game_data.id_generator import IdGenerator
 
 from core.pools.details_pool import DetailsPool
+from core.entities.entity import BaseEntity
 from core.entities.meta_events_manager import MetaEventsManager
 
 
@@ -19,6 +20,7 @@ class Game(GameData):
                  setting: GameSettings,
                  players: Dict[int, PlayerObj],
                  bots: List[BotPlayer],
+                 entities: List[BaseEntity] = None,
                  id_generator: IdGenerator = None,
                  details_pool: DetailsPool = None,
                  ):
@@ -26,6 +28,7 @@ class Game(GameData):
         super().__init__(id_generator=id_generator, details_pool=details_pool)
         self.bots: List[BotPlayer] = bots
         self.players: Dict[int, PlayerObj] = players  # player number -> player
+        self.other_entities: List[BaseEntity] = entities if entities else []
         self.world: LogicWorld = world
         self.events_manager: MetaEventsManager = MetaEventsManager()
         # TODO add bots meches

@@ -61,6 +61,7 @@ First priority:
   - create skill, effects etc configs
   
   - mech effects:
+    - THINK ABOUT FAKE EFFECTS
     - effects manager
     - stun, 
     - silence, 

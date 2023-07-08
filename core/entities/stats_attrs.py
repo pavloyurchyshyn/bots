@@ -1,4 +1,6 @@
 from typing import Callable, List, Type, Optional
+from core.world.base.logic.tile import LogicTile
+from core.mech.skills.skill import BaseSkill
 
 
 class Attr:
@@ -76,6 +78,7 @@ class Attr:
         if func in self.dynamic_additionals_functions:
             self.dynamic_additionals_functions.remove(func)
 
+
 class EntityAttrs:
     CurrentV = 'c'
     BaseV = 'b'
@@ -96,6 +99,7 @@ class EntityAttrs:
 
     Attrs = 'attrs'
 
+
 class EntityBaseAttrsPart:
     AttrsDict = {
         EntityAttrs.Damage: 'damage_attr',
@@ -110,6 +114,7 @@ class EntityBaseAttrsPart:
         EntityAttrs.CurrentEnergy: '_energy',
         EntityAttrs.Position: 'position',
     }
+
     def __init__(self,
                  current_hp: float = 0,
                  max_hp: float = 0, current_max_hp: float = 0,
@@ -120,6 +125,13 @@ class EntityBaseAttrsPart:
                  energy_regen: float = 0, current_energy_regen: float = 0,
                  damage: float = 0, current_damage: float = 0,
                  armor: float = 0, current_armor: float = 0,
+
+                 luck: int = 1, current_luck: int = 1,
+                 skill_use_energy_k: int = 1, current_skill_use_energy_k: int = 1,
+                 move_energy_k: int = 1, current_move_energy_k: int = 1,
+                 heal_k_base: int = 1, heal_k_current: int = 1,
+                 # positive_effect_duration_k_base: int = 1, positive_effect_duration_k_current: int = 1, # TODO
+                 # negative_effect_duration_k_base: int = 1, negative_effect_duration_k_current: int = 1,
                  attrs_class: Type[Attr] = Attr,
                  ):
         self._hp: float = current_hp
@@ -133,11 +145,44 @@ class EntityBaseAttrsPart:
         self.damage_attr: Attr = attrs_class(base=damage, current=current_damage)
         self.armor_attr: Attr = attrs_class(base=armor, current=current_armor)
 
+        # TODO add to AttrsDict
+        self.luck_attr: Attr = attrs_class(base=luck, current=current_luck)
+        self.skill_use_energy_k_attr: Attr = attrs_class(base=skill_use_energy_k, current=current_skill_use_energy_k)
+        self.move_energy_k_attr: Attr = attrs_class(base=move_energy_k, current=current_move_energy_k)
+        self.heal_k_attr: Attr = attrs_class(base=heal_k_base, current=heal_k_current)
+
+        # self.positive_effect_duration_k_attr: Attr = attrs_class(base=positive_effect_duration_k_base, # TODO
+        #                                                          current=positive_effect_duration_k_current)
+        # self.negative_effect_duration_k_attr: Attr = attrs_class(base=negative_effect_duration_k_base,
+        #                                                          current=negative_effect_duration_k_current)
+
+    @property
+    def luck(self) -> float:
+        return self.luck_attr.dynamic_current
+
+    @property
+    def skill_use_k(self) -> float:
+        return self.skill_use_energy_k_attr.dynamic_current
+
+    @property
+    def heal_k(self) -> float:
+        return self.heal_k_attr.dynamic_current
+
+    @property
+    def move_energy_k(self) -> float:
+        return self.move_energy_k_attr.dynamic_current
+
     def deal_damage(self, dmg: float):
         self._hp -= dmg
 
     def have_enough_energy(self, energy: float) -> bool:
         return self._energy - energy >= 0.
+
+    def spend_energy_on_skill_use(self, skill: BaseSkill, allow_minus: bool = False):
+        self.spend_energy(energy=skill.energy_cost * self.skill_use_k, allow_minus=allow_minus)
+
+    def spend_energy_on_move(self, skill: BaseSkill, tile: LogicTile, allow_minus: bool):
+        self.spend_energy(energy=(tile.move_energy_k + self.move_energy_k) * skill.energy_cost, allow_minus=allow_minus)
 
     def spend_energy(self, energy: float, allow_minus: bool = False):
         # TODO think
@@ -151,6 +196,7 @@ class EntityBaseAttrsPart:
 
     def set_energy(self, energy: float):
         self._energy = energy
+
     def refresh_hp(self):
         self._hp = self.max_hp_attr.dynamic_current
 

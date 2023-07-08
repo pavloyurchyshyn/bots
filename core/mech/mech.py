@@ -19,14 +19,13 @@ class BaseMech(BaseEntity):
     Body contains other vanilla_details.
     """
 
-
     def __init__(self, uid: str, position,
                  body_detail: BaseBody = None,
                  attrs_kwargs: dict = None,
                  effects: Optional[List[BaseEffect]] = None):
         attrs_kwargs = {} if attrs_kwargs is None else attrs_kwargs
-        super().__init__(position=position, **attrs_kwargs, effects=effects)
-        self.uid: str = uid
+        super().__init__(uid=uid, position=position, **attrs_kwargs, effects=effects)
+        self.copy_tag: int = -1
 
         self.body: BaseBody = body_detail
 
@@ -112,8 +111,6 @@ class BaseMech(BaseEntity):
             for detail in self.details:
                 self._skills.extend(detail.skills)
 
-
-
     def attr_dict(self):
         # TODO add base and current
         return {
@@ -122,12 +119,12 @@ class BaseMech(BaseEntity):
             EntityAttrs.CurrentEnergy: self._energy,
 
             EntityAttrs.MaxHP: {EntityAttrs.BaseV: self.max_hp_attr.base,
-                              EntityAttrs.CurrentV: self.max_hp_attr.dynamic_current},
+                                EntityAttrs.CurrentV: self.max_hp_attr.dynamic_current},
             EntityAttrs.HPRegen: {EntityAttrs.BaseV: self.hp_regen_attr.base,
                                   EntityAttrs.CurrentV: self.hp_regen_attr.dynamic_current},
 
             EntityAttrs.MaxEnergy: {EntityAttrs.BaseV: self.max_energy_attr.base,
-                                  EntityAttrs.CurrentV: self.max_energy_attr.dynamic_current},
+                                    EntityAttrs.CurrentV: self.max_energy_attr.dynamic_current},
             EntityAttrs.EnergyRegen: {EntityAttrs.BaseV: self.energy_regen_attr.base,
                                       EntityAttrs.CurrentV: self.energy_regen_attr.dynamic_current},
 
@@ -156,7 +153,7 @@ class BaseMech(BaseEntity):
         return [slot.detail for slot in [*self._left_slots.values(), *self._right_slots.values()] if slot.is_full]
 
     def __str__(self):
-        return f"{self.uid}"#:-{self.attr_dict()}"
+        return f"{self.uid}"  #:-{self.attr_dict()}"
 
     def make_empty(self):
         self._skills.clear()
@@ -165,7 +162,9 @@ class BaseMech(BaseEntity):
         self.body = None
 
     def get_copy(self) -> 'BaseMech':
-        return deepcopy(self)
+        mech = deepcopy(self)
+        mech.copy_tag += 1
+        return mech
 
     @property
     def skills(self) -> List[BaseSkill]:
@@ -188,7 +187,6 @@ class BaseMech(BaseEntity):
     @property
     def right_slots(self):
         return self._right_slots
-
 
     def collect_base_attrs(self):
         self.calculate_damage()

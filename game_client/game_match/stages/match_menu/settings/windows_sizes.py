@@ -91,8 +91,8 @@ class EffectsRect:
     rect = (x, y, h_size, v_size)
 
     class EffectIconRect:
-        H_K = V_K = scaled_h(0.03)
-        size = H_K, V_K
+        h_size = v_size = scaled_h(0.03)
+        size = h_size, v_size
 
 
 class HpBar:

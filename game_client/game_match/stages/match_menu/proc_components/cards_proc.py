@@ -19,15 +19,18 @@ class CardsProc:
         self.actions[GSC.SkillM.ScenarioIsFull] = self.scenario_is_full
         self.actions[GSC.SkillM.CancelSkillUse] = self.cancel_skill_use
         self.actions[GSC.SkillM.SkipCommand] = self.process_skip
-        self.actions[GSC.Mech.Effects] = self.get_my_mech_effects
+        self.actions[GSC.Mech.Effects] = self.update_my_mech_effects
 
-    def get_my_mech_effects(self, *_, request_data, **__):
+    def update_my_mech_effects(self, *_, request_data, **__):
         for effect in request_data:
             effect = deserialize_effect(effect)
-            print('target', effect.target.uid, 'dealer', effect.dealer.uid, 'csat_uid', effect.uid)
-            print(effect.__dict__)
-            # if effect
-            print('=====')
+            mech_effect = self.player.mech.effects_manager.get_effect_by_uid(effect.uid)
+            if mech_effect:
+                mech_effect.on_end()
+                mech_effect.__dict__.update(effect.__dict__)
+                mech_effect.affect()
+            else:
+                effect.affect()
 
     def cancel_skill_use(self, *_, request_data, **__):
         for slot in request_data:

@@ -27,54 +27,56 @@ class SkillUseLogic(ComponentAbs):
         invalid_use = action_data.get(GSC.SkillM.InvalidUse, False)
         action_id = int(action_data.get(GSC.SkillM.ActionID, None))
 
+        try:
+            if skill:
+                skill_cast_uid: str = f'{client.slot}_{Global.rounds_clock.current_round}_' \
+                                      f'{player_obj.scenario.get_first_free_slot()}_{randbytes(16)}'
 
-        if skill:
-            skill_cast_uid: str = f'{client.slot}_{Global.rounds_clock.current_round}_' \
-                                  f'{player_obj.scenario.get_first_free_slot()}_{randbytes(16)}'
+                action_data[GSC.SkillM.SkillCastUID] = skill_cast_uid
 
-            action_data[GSC.SkillM.SkillCastUID] = skill_cast_uid
+                try:
+                    skill.validate_use(player=player_obj,
+                                       target_xy_coord=tile_xy,
+                                       mech=player_obj.latest_scenario_mech,
+                                       **Global.get_dict_for_validations(),
+                                       )
 
-            try:
-                skill.validate_use(player=player_obj,
-                                   target_xy_coord=tile_xy,
-                                   mech=player_obj.latest_scenario_mech,
-                                   **Global.get_dict_for_validations(),
-                                   )
+                except NoEmptyStepError as e:
+                    client.sync_send_json({GSC.SkillM.ScenarioIsFull: True})
+                    Global.logger.warning(f'Player {client} has no empty slots')
 
-            except NoEmptyStepError as e:
-                client.sync_send_json({GSC.SkillM.ScenarioIsFull: True})
-                Global.logger.warning(f'Player {client} has no empty slots')
+                except(PlayerDoesntOwnSkillValError, SkillNotInPullValError) as e:
+                    Global.logger.warning(f'{client}: {e}')
+                    # TODO send update
 
-            except(PlayerDoesntOwnSkillValError, SkillNotInPullValError) as e:
-                Global.logger.warning(f'{client}: {e}')
-                # TODO send update
+                except Exception as e:
+                    action_data[GSC.SkillM.SkillValid] = False
+                    if invalid_use:
+                        skill.use(player=player_obj, target_xy=tile_xy, mech=mech_copy, game_obj=Global.game,
+                                  skill_cast_uid=skill_cast_uid)
+                        player_obj.scenario.create_and_add_action(use_attrs=action_data[GSC.SkillM.UseAttrs],
+                                                                  mech_copy=mech_copy, skill_uid=skill_uid,
+                                                                  slot=action_id, skill_cast_uid=skill_cast_uid)
+                        client.sync_send_json({action: action_data})
+                    else:
+                        Global.logger.warning(f'{client} failed to use card: {action_data}')
+                        Global.logger.warning(f'Reason: {e}')
 
-            except Exception as e:
-                action_data[GSC.SkillM.SkillValid] = False
-                if invalid_use:
-                    skill.use(player=player_obj, target_xy=tile_xy, mech=mech_copy, game_obj=Global.game,
-                              skill_cast_uid=skill_cast_uid)
+                else:
+                    skill.use(player=player_obj, target_xy=tile_xy,
+                              mech=mech_copy, game_obj=Global.game, skill_cast_uid=skill_cast_uid)
+                    action_data[GSC.SkillM.SkillValid] = True
                     player_obj.scenario.create_and_add_action(use_attrs=action_data[GSC.SkillM.UseAttrs],
                                                               mech_copy=mech_copy, skill_uid=skill_uid,
                                                               slot=action_id, skill_cast_uid=skill_cast_uid)
+                    recalculate_scenario(player_obj)
+                    Global.logger.info(f'{client} used card: {action_data}')
                     client.sync_send_json({action: action_data})
-                else:
-                    Global.logger.warning(f'{client} failed to use card: {action_data}')
-                    Global.logger.warning(f'Reason: {e}')
-
             else:
-                skill.use(player=player_obj, target_xy=tile_xy,
-                          mech=mech_copy, game_obj=Global.game, skill_cast_uid=skill_cast_uid)
-                action_data[GSC.SkillM.SkillValid] = True
-                player_obj.scenario.create_and_add_action(use_attrs=action_data[GSC.SkillM.UseAttrs],
-                                                          mech_copy=mech_copy, skill_uid=skill_uid,
-                                                          slot=action_id, skill_cast_uid=skill_cast_uid)
-                recalculate_scenario(player_obj)
-                Global.logger.info(f'{client} used card: {action_data}')
-                client.sync_send_json({action: action_data})
-        else:
-            Global.logger.warning(f'User {client} tried to use skill which not exists.')
-            # TODO send data update
+                Global.logger.warning(f'User {client} tried to use skill which not exists.')
+                # TODO send data update
+        except Exception as e:
+            Global.logger.error(f'{client} skill use error: {e}')
 
     def process_cancel_action(self, action: str, client: Client,
                               action_data: Tuple[int], player_obj: PlayerObj,

@@ -29,7 +29,6 @@ class Scenario:
             # after requests its turns to str
             self.__actions[int(k)] = v
 
-
     def cancel_action(self, slot: int) -> None:
         self.__actions[slot] = None
 

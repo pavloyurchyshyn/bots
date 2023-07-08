@@ -5,6 +5,7 @@ from core.entities.stats_attrs import EntityBaseAttrsPart
 
 class EventsManagerAbc:
     Events = None
+
     def __init__(self, entity):
         self.entity = entity
         self.subs: Dict[str, List[Callable]] = {}
@@ -12,16 +13,17 @@ class EventsManagerAbc:
     def sub_func(self, func: Callable):
         pass
 
-
     def unsub_func(self, func: Callable):
         pass
 
     def do_(self, event: str, *args, **kwargs) -> List[Any]:
         pass
 
+
 class EffectsManagerAbc:
     entity: 'BaseEntityAbc'
     effects: List['BaseEffect']
+
     def __init__(self, entity: Optional['BaseEntityAbc'] = None, effects: Optional[List['BaseEffect']] = None):
         pass
 
@@ -53,5 +55,6 @@ class EffectsManagerAbc:
 
 
 class BaseEntityAbc(EntityPositionPart, EntityBaseAttrsPart):
+    uid: str
     events_manager: EventsManagerAbc
     effects_manager: EffectsManagerAbc

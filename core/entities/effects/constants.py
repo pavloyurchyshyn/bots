@@ -1,5 +1,16 @@
 class SerializeConst:
     Effects = 'effects'
+    Name = 'name'
+    UID = 'uid'
+    Target = 'target'
+    Dealer = 'dealer'
+    IsPositive = 'is_positive'
+    KeepAfterDeath = 'keep_after_death'
+    Permanent = 'permanent'
+    Types = 'types'
+    ParentSkill = 'parent_skill'
+    Duration = 'duration'
+
 
 class EffectType:
     Stun = 'stun'

@@ -8,6 +8,7 @@ from core.validators.constants import ValidationKeys
 
 from interfaces.skills_pool_interface import SkillsPoolInterface
 from interfaces.details_pool_interface import DetailsPoolInterface
+from core.pools.effects_pool import EffectsPool
 from interfaces.mech_serializer_interface import MechSerializerInterface
 
 __all__ = 'Global',
@@ -29,6 +30,7 @@ class Global:
     game = None
     details_pool: DetailsPoolInterface = None
     skill_pool: SkillsPoolInterface = None
+    effects_pool: EffectsPool = None
     mech_serializer: MechSerializerInterface = None
 
     if VisualPygameOn:
@@ -60,8 +62,9 @@ class Global:
         cls.game = game
         cls.details_pool: DetailsPoolInterface = game.details_pool
         cls.skill_pool: SkillsPoolInterface = game.skills_pool
+        cls.effects_pool: EffectsPool = game.effects_pool
         from core.mech.mech_serializer import MechSerializer
-        cls.mech_serializer: MechSerializer = MechSerializer(game.details_pool)
+        cls.mech_serializer: MechSerializer = MechSerializer(game.details_pool, effects_pool=game.effects_pool)
         cls.rounds_clock: RoundsClock = game.rounds_clock
 
     @classmethod
@@ -82,6 +85,3 @@ class Global:
             ValidationKeys.Players: cls.game.players if cls.game else None,
             ValidationKeys.World: cls.game.world if cls.game else None,
         }
-
-if __name__ == '__main__':
-    pass

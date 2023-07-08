@@ -61,8 +61,8 @@ class DetailsPool:
 
     def collect_details_classes(self):
         self.classes_dict.clear()
-        for part in inspect.getmembers(details_module, inspect.isclass):
-            self.classes_dict[part[1].name] = part[1]
+        for _, part_class in inspect.getmembers(details_module, inspect.isclass):
+            self.classes_dict[part_class.name] = part_class
 
     def get_dict(self):
         return [(detail.name, unique_id) for unique_id, detail in self.id_to_detail.items()]
