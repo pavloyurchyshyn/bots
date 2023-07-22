@@ -40,7 +40,7 @@ class UIDefault:
 
     # ------- Buttons ---------------
     ButtonSurfaceColor = (35, 95, 120)
-    ButtonBorderColor = (0, 45, 70)
+    ButtonBorderColor = (0, 145, 170)
 
     ButtonInacSurfaceColor = (55, 55, 55)
 

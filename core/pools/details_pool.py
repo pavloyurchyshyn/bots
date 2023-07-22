@@ -86,8 +86,3 @@ class DetailsPool:
 
         return mech
 
-
-if __name__ == '__main__':
-    a = DetailsPool(SkillsPool())
-    a.collect_details_classes()
-    print(a.__dict__)

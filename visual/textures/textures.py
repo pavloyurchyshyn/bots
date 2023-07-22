@@ -4,6 +4,9 @@ from global_obj.logger import get_logger
 from settings.base import TEXTURES_FOLDER
 from settings.common import get_texture_pack
 from visual.textures.texture_pack import TexturePack
+from settings.visual.cards import SkillCardSize
+
+
 LOGGER = get_logger()
 
 
@@ -13,6 +16,9 @@ class Textures:
         self.packs: Dict[str, TexturePack] = {}
         self.pack_hash: Dict[str, Dict[Tuple[str, Tuple[int, int]], Surface]] = {}
 
+    def get_card_texture(self, img: str, size: Tuple[int, int] = SkillCardSize.SIZE) -> Surface:
+        return self.get_texture_with_size(path=f'/cards/{img}', size=size)
+
     def get_tile_texture(self, tile_type: str, img: str) -> Surface:
         return self.current_pack.get_texture('tiles', str(tile_type), str(img))
 
@@ -21,9 +27,9 @@ class Textures:
 
     def get_texture_with_size(self, path: str, size: Tuple[int, int]):
         k = (path, size)
-        surface = self.current_pack.get_texture(path)
         self.pack_hash[get_texture_pack()] = pack_hash = self.pack_hash.get(get_texture_pack(), {})
         if k not in pack_hash:
+            surface = self.current_pack.get_texture(path)
             pack_hash[k] = transform.smoothscale(surface, size)
         return pack_hash[k]
 

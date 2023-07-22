@@ -1,5 +1,3 @@
-if __name__ == '__main__':
-    pass
 from pygame.rect import Rect
 from typing import List, Type, Tuple, Optional, Dict
 from _thread import start_new_thread
@@ -110,21 +108,21 @@ class VisualWorld(LogicWorld):
 
         # draw.polygon(surface, tile.tile_data.color, tile.dots)
         # draw.lines(surface, (50, 50, 50), True, points=tile.dots)
-        surface.blit(Global.textures.get_scaled_tile_texture(tile.name, tile.img, tile.size), tile.texture_pos)
+        surface.blit(Global.textures.get_scaled_tile_texture(tile.name, tile.img, tile.texture_size), tile.texture_pos)
         # draw_circle(surface, (255, 0, 0), tile.center, 3)
         # draw.rect(surface, (255, 255, 255), (tile.texture_pos, tile.texture.get_size()), 1)
         if tile.at_edge:
             draw.lines(surface, (200, 200, 255), True, points=tile.dots, width=3)
 
-        from visual.UI.base.font import get_custom_font
-        font = get_custom_font(int(self.big_surface.get_width()//300))
-        text = font.render(f'{tile.xy_id}', True, (255, 255, 255))
-        pos = self.hex_math.xy_id_to_xy_coordinates(tile.x_id, tile.y_id, self.tile_radius)
-        surface.blit(text, (pos[0] - text.get_width() // 2, pos[1] - text.get_height() // 2 - 5))
-
-        text = font.render(f'{tile.qrs}', True, (255, 255, 255))
-        pos = self.hex_math.xy_id_to_xy_coordinates(tile.x_id, tile.y_id, self.tile_radius)
-        surface.blit(text, (pos[0] - text.get_width() // 2, pos[1] - text.get_height() // 2 + 5))
+        # from visual.UI.base.font import get_custom_font
+        # font = get_custom_font(int(self.big_surface.get_width() // 300))
+        # text = font.render(f'{tile.xy_id}', True, (255, 255, 255))
+        # pos = self.hex_math.xy_id_to_xy_coordinates(tile.x_id, tile.y_id, self.tile_radius)
+        # surface.blit(text, (pos[0] - text.get_width() // 2, pos[1] - text.get_height() // 2 - 5))
+        #
+        # text = font.render(f'{tile.qrs}', True, (255, 255, 255))
+        # pos = self.hex_math.xy_id_to_xy_coordinates(tile.x_id, tile.y_id, self.tile_radius)
+        # surface.blit(text, (pos[0] - text.get_width() // 2, pos[1] - text.get_height() // 2 + 5))
         # self.textures.get_texture()
 
     def get_tile_from_data(self, x, y, tile_data: Type[TileDataAbs], **extra_data) -> VisualTile | LogicTile:
@@ -167,12 +165,13 @@ class VisualWorld(LogicWorld):
         x, y = self.hex_math.qr_to_xy_coords(*qr, self.tile_radius)
         return int(x * self.scale) + self.dx + self.x, int(y * self.scale) + self.y + self.dy
 
-    def draw_ray_from_a_to_b_xy(self, a_xy: tuple, b_xy: tuple, color = (155, 155, 155), width = 1):
+    def draw_ray_from_a_to_b_xy(self, a_xy: tuple, b_xy: tuple, color=(155, 155, 155), width=1):
         a = Cube(*self.hex_math.xy_id_to_qr(*a_xy))
         b = Cube(*self.hex_math.xy_id_to_qr(*b_xy))
 
         self.draw_ray_from_a_to_b(a_qr=a, b_qr=b, color=color, width=width)
-    def draw_ray_from_a_to_b(self, a_qr: Cube, b_qr: Cube, color = (155, 155, 155), width = 1):
+
+    def draw_ray_from_a_to_b(self, a_qr: Cube, b_qr: Cube, color=(155, 155, 155), width=1):
         if (a_qr.qrs, b_qr.qrs) not in self.cached_rays:
             self.cached_rays[(a_qr.qrs, b_qr.qrs)] = HexMath.ray_from_a_to_b(a_qr, b_qr)
         ray = self.cached_rays[(a_qr.qrs, b_qr.qrs)]

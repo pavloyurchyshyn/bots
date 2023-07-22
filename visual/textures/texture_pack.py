@@ -28,7 +28,7 @@ class TexturePack:
             if keys:
                 return self.textures[keys[0]]
             else:
-                LOGGER.debug(f'Returns error texture {k}') # TODO warn
+                LOGGER.warning(f'Returns error texture {k}')  # TODO warn
                 return self.ERROR_TEXTURE
 
     def load(self, parent_path):

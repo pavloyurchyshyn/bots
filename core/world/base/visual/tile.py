@@ -19,8 +19,9 @@ class VisualTile(LogicTile, HexSizes):
 
         # self.center = center
         center = self.center
-        texture_size = self.size
-        self.texture_pos = center[0] - texture_size[0] // 2, center[1] - texture_size[1] // 2
+        self.texture_size = self.size[0], self.size[0]
+        dy = self.hex_width - self.hex_height  # TODO do prettier
+        self.texture_pos = center[0] - self.texture_size[0] // 2, center[1] - (self.texture_size[1] + dy)//2 - 1
         # self.lt_pos = center[0] - texture_size[0], center[1] - texture_size[1]
         #
         # self.dots: List[Tuple[int, int]] = dots

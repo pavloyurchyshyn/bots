@@ -11,7 +11,7 @@ from game_client.game_match.stages.setup_proc import SetupStage
 from game_client.game_match.stages.match_proc import MatchStage
 
 
-class StagesController:
+class GameStagesController:
     def __init__(self, game_body):
         self.setup_processor: SetupStage = None
         self.match_processor: MatchStage = None

@@ -12,12 +12,14 @@ from visual.UI.base.mixins import DrawElementBorderMixin
 
 from game_client.stages.main_menu.settings.menu_abs import MenuAbs
 from game_client.stages.main_menu.settings.buttons import BUTTONS_DATA, exit_btn_func, no_btn_func
+from core.world.base.visual.world import VisualWorld
 
 
 class MainMenu(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
     def __init__(self):
         super().__init__(BUTTONS_DATA)
         PopUpsController.__init__(self)
+        self.w = VisualWorld(Global.display.get_rect())  # TODO
 
     def update(self):
         self.draw_back_ground()
