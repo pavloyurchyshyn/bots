@@ -17,7 +17,7 @@ from core.functions.scenario import get_free_slot_id
 
 
 def get_send_function(data: dict) -> callable:
-    def func(b, invalid_use:bool = True, *_, **__):
+    def func(b, invalid_use: bool = True, *_, **__):
         data[GSC.SkillM.UseSkill][GSC.SkillM.InvalidUse] = invalid_use
         Global.connection.send_json(data)
         b.parent.close(b)
@@ -70,10 +70,8 @@ class CardUseC:
                     if Global.mouse.l_up:
                         Global.logger.info(f'Using skill: {request}')
                         Global.connection.send_json(request)
-                        Global.connection.send_json({GSC.Mech.Effects: 1})
                 elif Global.mouse.l_up:
-                    self.add_ok_popup(f'No free slots') # TODO localization
-
+                    self.add_ok_popup(f'No free slots')  # TODO localization
 
     def validate(self, skill: BaseSkill, mech=None,**additional_kwargs):
         mech = mech if mech else self.player.latest_scenario_mech
@@ -97,7 +95,6 @@ class CardUseC:
                     cast_range = self.w.x_size if self.w.x_size > self.w.y_size else self.w.y_size
                 tiles = HexMath.get_neighbors_qr(*self.player.latest_scenario_mech.position_qr,
                                                  range_radius=int(cast_range))
-
 
                 for tile in tiles:
                     if tile not in self.w.qr_to_tile or self.w.get_tile_by_qr(tile).name == EmptyTile.name:

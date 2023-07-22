@@ -8,7 +8,8 @@ from game_client.game_match.stages.match_menu.settings.windows_sizes import HpBa
 from visual.UI.utils import get_surface
 from visual.UI.base.text import Text
 
-class BaseUIBar:# (BaseUI, DrawBorderMixin):
+
+class BaseUIBar:  # (BaseUI, DrawBorderMixin):
     def __init__(self, uid: str, rect: Rect,
                  value: int, max_value: int,
                  rect_round: int = 3,
@@ -47,11 +48,15 @@ class BaseUIBar:# (BaseUI, DrawBorderMixin):
         self.surface.fill((0, 0, 0, 0))
         draw_rect(self.surface, self.background_color, (0, 0, self.h_size, self.v_size),
                   width=0, border_radius=self.rect_round)
-        draw_rect(self.surface, self.bar_color, (0, 0, self.h_size * (self.value / self.max_value), self.v_size), 0, self.rect_round)
+
+        max_val = self.max_value if self.max_value != 0 else 0.00001
+        draw_rect(self.surface, self.bar_color, (0, 0, self.h_size * (self.value / max_val), self.v_size), 0,
+                  self.rect_round)
         draw_rect(self.surface, self.border_color, (0, 0, self.h_size, self.v_size), 1, self.rect_round)
 
     def draw(self, dx: int = 0, dy: int = 0):
         Global.display.blit(self.surface, (self.x + dx, self.y + dy))
+
 
 class HpAndManaC:
     def __init__(self):
@@ -64,18 +69,18 @@ class HpAndManaC:
 
         self.hp_text: Text = Text(uid='hp_bar_text', text='2', raw_text=1,
                                   x_k=HpBar.X_K, y_k=HpBar.Y_K,
-                                  h_size_k=HpBar.H_SIZE_K/5, v_size_k=HpBar.V_SIZE_K)
+                                  h_size_k=HpBar.H_SIZE_K / 5, v_size_k=HpBar.V_SIZE_K)
 
         self.energy_bar: BaseUIBar = BaseUIBar('energy_bar',
-                                           bar_color=(0, 0, 155),
-                                           background_color=(50, 50, 100),
-                                           rect=Rect(ManaBar.x, ManaBar.y, ManaBar.h_size, ManaBar.v_size),
-                                           value=1, max_value=2)
+                                               bar_color=(0, 0, 155),
+                                               background_color=(50, 50, 100),
+                                               rect=Rect(ManaBar.x, ManaBar.y, ManaBar.h_size, ManaBar.v_size),
+                                               value=1, max_value=2)
         self.energy_bar.render()
 
         self.energy_text: Text = Text(uid='energy_bar_text', text='2', raw_text=1,
-                                  x_k=ManaBar.X_K, y_k=ManaBar.Y_K,
-                                  h_size_k=ManaBar.H_SIZE_K/5, v_size_k=ManaBar.V_SIZE_K)
+                                      x_k=ManaBar.X_K, y_k=ManaBar.Y_K,
+                                      h_size_k=ManaBar.H_SIZE_K / 5, v_size_k=ManaBar.V_SIZE_K)
 
     def draw_hp_and_mana_win(self):
         if self.mech:
