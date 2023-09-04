@@ -115,4 +115,4 @@ class Mouse:
 
     @property
     def position(self):
-        return self.pos
+        return self._pos
