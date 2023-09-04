@@ -1,4 +1,5 @@
-from math import atan2
+from typing import Tuple
+from math import atan2, radians, cos, sin
 
 
 def get_angle_between_dots(dot_pos_1, dot_pos_2):
@@ -13,3 +14,7 @@ def get_angle_between_dots(dot_pos_1, dot_pos_2):
 
 def dot_in_rect(xy, rx, ry, rh_size, rv_size) -> bool:
     return rx <= xy[0] <= rx + rh_size and ry <= xy[1] <= ry + rv_size
+
+
+def get_ray_endpoint(start: Tuple[int, int], angle: radians, length: int) -> Tuple[int, int]:
+    return int(start[0] + cos(angle) * length), int(start[1] + sin(angle) * length)
