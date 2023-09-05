@@ -9,7 +9,7 @@ class Attr:
                  base_multiplier: float = 0, multiplier: float = 0,
                  base_additional: float = 0, additional: float = 0,
                  multipliers_functions: List[Callable] = None,
-                 additionals_functions: List[Callable] = None,
+                 additional_functions: List[Callable] = None,
                  ):
         self.name: Optional[str] = name
         self.base: float = base
@@ -22,7 +22,7 @@ class Attr:
         self.additional: float = additional
 
         self.dynamic_multipliers_functions: List[Callable] = multipliers_functions if multipliers_functions else []
-        self.dynamic_additionals_functions: List[Callable] = additionals_functions if additionals_functions else []
+        self.dynamic_additional_functions: List[Callable] = additional_functions if additional_functions else []
 
     def set_multiplayer(self, value: float) -> None:
         self.multiplier = value
@@ -62,7 +62,7 @@ class Attr:
         return sum(map(lambda f: f(attr=self, *args, **kwargs), self.dynamic_multipliers_functions))
 
     def get_dynamic_additional(self, *args, **kwargs) -> float:
-        return sum(map(lambda f: f(attr=self, *args, **kwargs), self.dynamic_additionals_functions))
+        return sum(map(lambda f: f(attr=self, *args, **kwargs), self.dynamic_additional_functions))
 
     def add_multiplayer_func(self, func: Callable) -> None:
         self.dynamic_multipliers_functions.append(func)
@@ -72,11 +72,11 @@ class Attr:
             self.dynamic_multipliers_functions.remove(func)
 
     def add_additional_func(self, func: Callable) -> None:
-        self.dynamic_additionals_functions.append(func)
+        self.dynamic_additional_functions.append(func)
 
     def delete_additional_func(self, func: Callable) -> None:
-        if func in self.dynamic_additionals_functions:
-            self.dynamic_additionals_functions.remove(func)
+        if func in self.dynamic_additional_functions:
+            self.dynamic_additional_functions.remove(func)
 
 
 class EntityAttrs:
@@ -97,6 +97,13 @@ class EntityAttrs:
     MaxHP = 'max_hp'
     MaxEnergy = 'max_energy'
 
+    Luck: str = 'luck'
+    AddRange: str = 'add_range'
+    SkillUseEnrgK: str = 'skill_use_enrg_k'
+    MoveEnrgK: str = 'move_energy_k'
+    HealK: str = 'heal_k'
+    PosEffectsDurK = 'pos_eff_dur'
+    NegEffectsDurK = 'neg_eff_dur'
     Attrs = 'attrs'
 
 
@@ -113,6 +120,15 @@ class EntityBaseAttrsPart:
         EntityAttrs.CurrentHP: '_hp',
         EntityAttrs.CurrentEnergy: '_energy',
         EntityAttrs.Position: 'position',
+
+        EntityAttrs.Luck: 'luck',
+        EntityAttrs.AddRange: 'additional_range',
+        EntityAttrs.SkillUseEnrgK: 'move_energy_k',
+        EntityAttrs.MoveEnrgK: 'additional_range',
+        EntityAttrs.HealK: 'heal_k',
+        EntityAttrs.PosEffectsDurK: 'pos_effects_duration',
+        EntityAttrs.NegEffectsDurK: 'neg_effects_duration',
+
     }
 
     def __init__(self,
@@ -130,8 +146,12 @@ class EntityBaseAttrsPart:
                  skill_use_energy_k: int = 1, current_skill_use_energy_k: int = 1,
                  move_energy_k: int = 1, current_move_energy_k: int = 1,
                  heal_k_base: int = 1, heal_k_current: int = 1,
-                 # positive_effect_duration_k_base: int = 1, positive_effect_duration_k_current: int = 1, # TODO
-                 # negative_effect_duration_k_base: int = 1, negative_effect_duration_k_current: int = 1,
+                 positive_effect_duration_k_base: int = 1, positive_effect_duration_k_current: int = 1,  # TODO
+                 negative_effect_duration_k_base: int = 1, negative_effect_duration_k_current: int = 1,
+
+                 additional_range_attr_base=0,
+                 additional_range_attr_current=0,
+
                  attrs_class: Type[Attr] = Attr,
                  ):
         self._hp: float = current_hp
@@ -145,20 +165,26 @@ class EntityBaseAttrsPart:
         self.damage_attr: Attr = attrs_class(base=damage, current=current_damage)
         self.armor_attr: Attr = attrs_class(base=armor, current=current_armor)
 
-        # TODO add to AttrsDict
         self.luck_attr: Attr = attrs_class(base=luck, current=current_luck)
+
+        self.additional_range_attr: Attr = attrs_class(base=additional_range_attr_base,
+                                                       current=additional_range_attr_current)
         self.skill_use_energy_k_attr: Attr = attrs_class(base=skill_use_energy_k, current=current_skill_use_energy_k)
         self.move_energy_k_attr: Attr = attrs_class(base=move_energy_k, current=current_move_energy_k)
-        self.heal_k_attr: Attr = attrs_class(base=heal_k_base, current=heal_k_current)
+        self.heal_k_attr: Attr = attrs_class(base=heal_k_base, current=heal_k_current)  # skill heal value * attr%
 
-        # self.positive_effect_duration_k_attr: Attr = attrs_class(base=positive_effect_duration_k_base, # TODO
-        #                                                          current=positive_effect_duration_k_current)
-        # self.negative_effect_duration_k_attr: Attr = attrs_class(base=negative_effect_duration_k_base,
-        #                                                          current=negative_effect_duration_k_current)
+        self.positive_effect_duration_k_attr: Attr = attrs_class(base=positive_effect_duration_k_base,  # TODO
+                                                                 current=positive_effect_duration_k_current)
+        self.negative_effect_duration_k_attr: Attr = attrs_class(base=negative_effect_duration_k_base,
+                                                                 current=negative_effect_duration_k_current)
 
     @property
     def luck(self) -> float:
-        return self.luck_attr.dynamic_current
+        return int(self.luck_attr.dynamic_current)
+
+    @property
+    def additional_range(self) -> int:
+        return int(self.additional_range_attr.dynamic_current)
 
     @property
     def skill_use_k(self) -> float:
@@ -234,3 +260,11 @@ class EntityBaseAttrsPart:
     @property
     def armor(self) -> float:
         return self.armor_attr.dynamic_current
+
+    @property
+    def pos_effects_duration(self):
+        return self.positive_effect_duration_k_attr.dynamic_current
+
+    @property
+    def neg_effects_duration(self):
+        return self.negative_effect_duration_k_attr.dynamic_current
