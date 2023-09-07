@@ -12,6 +12,7 @@ from core.world.base.logic.world import LogicWorld
 from core.world.base.logic.tiles_data import EmptyTile
 from core.world.base.logic.tiles_data import TileDataAbs
 from core.world.base.hex_utils import HexMath, Cube
+from core.shape.hex import Hex
 
 
 class VisualWorld(LogicWorld):
@@ -36,6 +37,14 @@ class VisualWorld(LogicWorld):
         self.cached_rays: Dict[Tuple, List[Tuple[int, int]]] = {}
 
         self.scale = 1
+
+        self.missing_tile_texture: Surface = None
+        self.render_missing_tile()
+
+    def render_missing_tile(self):
+        surface: Surface = get_surface(h_size=self.tile_size[0], v_size=self.tile_size[0], transparent=1)
+        draw.polygon(surface, (200, 0, 0), Hex(0, self.tile_size[0] - self.tile_size[1], self.tile_radius).dots[1:]) #  TODO finish
+        self.missing_tile_texture = surface
 
     def adapt_scale_to_win_size(self):
         h_size, v_size = self.hex_math.get_grid_size(self.x_size, self.y_size, self.tile_radius)
@@ -108,7 +117,14 @@ class VisualWorld(LogicWorld):
 
         # draw.polygon(surface, tile.tile_data.color, tile.dots)
         # draw.lines(surface, (50, 50, 50), True, points=tile.dots)
-        surface.blit(Global.textures.get_scaled_tile_texture(tile.name, tile.img, tile.texture_size), tile.texture_pos)
+        try:
+            surface.blit(Global.textures.get_scaled_tile_texture(tile_type=tile.name,
+                                                                 img=tile.img,
+                                                                 size=tile.texture_size, raise_error=True),
+                     tile.texture_pos)
+        except FileNotFoundError:
+            surface.blit(self.missing_tile_texture, tile.texture_pos)
+
         # draw_circle(surface, (255, 0, 0), tile.center, 3)
         # draw.rect(surface, (255, 255, 255), (tile.texture_pos, tile.texture.get_size()), 1)
         if tile.at_edge:

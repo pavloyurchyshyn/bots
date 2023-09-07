@@ -24,7 +24,7 @@ def set_texture_pack(texture_pack):
     GLOBAL_SETTINGS['texture_pack'] = texture_pack
 
 
-def get_texture_pack() -> str:
+def get_texture_pack_name() -> str:
     return GLOBAL_SETTINGS['texture_pack']
 
 

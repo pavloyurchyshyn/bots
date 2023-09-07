@@ -108,9 +108,8 @@ First priority:
 - Visual 
   - Tile
     - images
-      - rotation
-      - different hp stages for tile
-      - animations
+      - rotation?
+      - animations?
   - tiles textures system
       - different hp stages for tile
 
