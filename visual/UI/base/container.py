@@ -36,9 +36,17 @@ class Container(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBord
 
     def change_dy(self, dy):
         if self.summary_els_height > self.height:
-            self.dy += dy * self.summary_els_height / len(self.__elements) * 0.25
+            self.dy += dy * self.scroll_speed
+            step = self.v_size * 0.01
+            steps_h = step * (len(self.__elements) + 1.5)
+            if steps_h + self.summary_els_height + self.dy < self.height:
+                self.dy = self.height - steps_h - self.summary_els_height
+            if self.dy > 0:
+                self.dy = 0
             self.calculate_elements_position()
             self.render()
+        else:
+            self.dy = 0
 
     def add_element(self, element: BaseUI):
         self.__elements.append(element)
@@ -60,17 +68,8 @@ class Container(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBord
     def calculate_elements_position(self):
         step = self.v_size * 0.01
         y = step + self.dy
-
-        steps_h = step * (len(self.__elements) - 1)
-
-        if (self.summary_els_height + self.dy + steps_h) < self.height:
-            # TODO ?????
-            y = self.height - self.summary_els_height - step
-            self.dy = self.height - self.summary_els_height - step
-
         for el in self.__elements:
             el.move((el.x, y))
-            # el.y = y
             y += step + el.v_size
 
     def get_x(self) -> int:
