@@ -175,7 +175,7 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         self.maps_container.draw()
         if self.maps_container.collide_point(Global.mouse.pos):
             if Global.mouse.scroll:
-                self.maps_container.change_dx(Global.mouse.scroll)
+                self.maps_container.change_dy(Global.mouse.scroll)
 
             mouse_pos = Global.mouse.pos
             for el in self.maps_container.elements:

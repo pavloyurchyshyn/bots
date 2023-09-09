@@ -5,6 +5,7 @@ from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorderMixin, Bui
 
 
 class Container(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBorderMixin):
+    # TODO fix logic
     def __init__(self, uid, draw_elements=False, scroll_k=0.24, **kwargs):
         super(Container, self).__init__(uid=uid, **kwargs)
         ShapeAbs.__init__(self, **kwargs)
@@ -33,9 +34,9 @@ class Container(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBord
     def clear(self):
         self.__elements.clear()
 
-    def change_dx(self, ddx):
+    def change_dy(self, dy):
         if self.summary_els_height > self.height:
-            self.dy += ddx * self.summary_els_height / len(self.__elements) * 0.25
+            self.dy += dy * self.summary_els_height / len(self.__elements) * 0.25
             self.calculate_elements_position()
             self.render()
 
@@ -59,10 +60,11 @@ class Container(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBord
     def calculate_elements_position(self):
         step = self.v_size * 0.01
         y = step + self.dy
-        if step + self.dy > step:
-            self.dy = 0
-            y = step
-        elif (self.summary_els_height > self.height) and self.summary_els_height + self.dy + step < self.height:
+
+        steps_h = step * (len(self.__elements) - 1)
+
+        if (self.summary_els_height + self.dy + steps_h) < self.height:
+            # TODO ?????
             y = self.height - self.summary_els_height - step
             self.dy = self.height - self.summary_els_height - step
 

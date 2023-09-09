@@ -30,7 +30,7 @@ class MapsButtonsContainer:
     X = 0.802
     Y = 0.25
     H_size = 0.196
-    V_size = 0.5
+    V_size = 0.3
 
 
 class MapFuncElCons:
@@ -40,14 +40,14 @@ class MapFuncElCons:
     V_size = .1
 
     LBtnX = 0.74
-    LBtnY = 0.015
+    LBtnY = 0.06
     LBtnH_size = 0.15
-    LBtnV_size = 0.97
+    LBtnV_size = 0.88
 
     DltBtnX = 0.895
-    DltBtnY = 0.015
+    DltBtnY = 0.06
     DltBtnH_size = 0.1
-    DltBtnV_size = 0.96
+    DltBtnV_size = 0.88
 
 
 class MapFuncUI(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBorderMixin):

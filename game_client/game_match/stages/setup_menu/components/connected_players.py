@@ -130,7 +130,7 @@ class ConnectedPlayers:
         self.connected_players.draw()
         if self.connected_players.collide_point(Global.mouse.pos):
             if Global.mouse.scroll:
-                self.connected_players.change_dx(Global.mouse.scroll)
+                self.connected_players.change_dy(Global.mouse.scroll)
 
             mouse_pos = Global.mouse.pos
             for el in self.connected_players.elements:

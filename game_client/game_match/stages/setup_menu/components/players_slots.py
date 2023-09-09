@@ -171,7 +171,7 @@ class PlayersSlots:
         self.players_slots.draw()
         if self.players_slots.collide_point(Global.mouse.pos):
             if Global.mouse.scroll:
-                self.players_slots.change_dx(Global.mouse.scroll)
+                self.players_slots.change_dy(Global.mouse.scroll)
 
             mouse_pos = Global.mouse.pos
             for el in self.players_slots.elements:

@@ -42,8 +42,9 @@ class VisualWorld(LogicWorld):
         self.render_missing_tile()
 
     def render_missing_tile(self):
+        # TODO make some better image
         surface: Surface = get_surface(h_size=self.tile_size[0], v_size=self.tile_size[0], transparent=1)
-        draw.polygon(surface, (200, 0, 0), Hex(0, self.tile_size[0] - self.tile_size[1], self.tile_radius).dots[1:]) #  TODO finish
+        draw.polygon(surface, (200, 0, 0), Hex(0, self.tile_size[0] - self.tile_size[1], self.tile_radius).dots[1:])
         self.missing_tile_texture = surface
 
     def adapt_scale_to_win_size(self):
@@ -110,9 +111,9 @@ class VisualWorld(LogicWorld):
         if tile.name == EmptyTile.name:
             # draw.polygon(surface, (0, 0, 0), tile.dots)
             # draw.lines(surface, (0, 0, 0), True, points=tile.dots)
-            draw_circle(surface, (30, 30, 30), tile.center, 3)
-            if tile.at_edge:
-                draw.lines(surface, (200, 200, 255), True, points=tile.dots, width=3)
+            # draw_circle(surface, (30, 30, 30), tile.center, 3)
+            # if tile.at_edge:
+            #     draw.lines(surface, (200, 200, 255), True, points=tile.dots, width=3)
             return
 
         # draw.polygon(surface, tile.tile_data.color, tile.dots)
