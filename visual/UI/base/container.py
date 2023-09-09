@@ -5,7 +5,8 @@ from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorderMixin, Bui
 
 
 class Container(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBorderMixin):
-    # TODO fix logic
+    STEP_K = 0.01
+
     def __init__(self, uid, draw_elements=False, scroll_k=0.24, **kwargs):
         super(Container, self).__init__(uid=uid, **kwargs)
         ShapeAbs.__init__(self, **kwargs)
@@ -37,7 +38,7 @@ class Container(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBord
     def change_dy(self, dy):
         if self.summary_els_height > self.height:
             self.dy += dy * self.scroll_speed
-            step = self.v_size * 0.01
+            step = self.v_size * self.STEP_K
             steps_h = step * (len(self.__elements) + 1.5)
             if steps_h + self.summary_els_height + self.dy < self.height:
                 self.dy = self.height - steps_h - self.summary_els_height
@@ -66,7 +67,7 @@ class Container(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBord
         self.update_scroll_speed()
 
     def calculate_elements_position(self):
-        step = self.v_size * 0.01
+        step = self.v_size * self.STEP_K
         y = step + self.dy
         for el in self.__elements:
             el.move((el.x, y))
