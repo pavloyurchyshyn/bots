@@ -11,7 +11,7 @@ from game_client.stages.maps_editor.settings.other import *
 from game_client.stages.maps_editor.settings.uids import UIDs
 from game_client.stages.maps_editor.settings.menu_abs import MenuAbs
 from game_client.stages.maps_editor.settings.buttons import BUTTONS_DATA
-from game_client.stages.maps_editor.settings.pencil_buttons import PENCIL_BUTTONS
+from game_client.stages.maps_editor.settings.pencil_buttons import PencilElement
 
 from visual.UI.base.menu import Menu
 from visual.UI.base.text import Text
@@ -25,7 +25,7 @@ from settings.tile_settings import TileSettings
 
 class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
     def __init__(self):
-        super(MapEditor, self).__init__({**BUTTONS_DATA, **PENCIL_BUTTONS})
+        super(MapEditor, self).__init__({**BUTTONS_DATA})
         PopUpsController.__init__(self)
         self.name_inp = InputBase(UIDs.MapNameInput,
                                   text='',
@@ -80,17 +80,45 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         self.spawns: List[Tuple[int, int]] = None if map_save is None else map_save.spawns
         self.load_save(map_save)
 
-        self.maps_container = Container('container', True,
+        self.maps_container = Container('maps_container', True,
                                         parent=self,
                                         x_k=MapsButtonsContainer.X, y_k=MapsButtonsContainer.Y,
                                         h_size_k=MapsButtonsContainer.H_size,
                                         v_size_k=MapsButtonsContainer.V_size)
         self.fill_saves_container()
 
+        self.pencils_container: Container = Container('pencils_container', True,
+                                                      parent=self,
+                                                      x_k=0.802, y_k=0.55,
+                                                      h_size_k=MapsButtonsContainer.H_size,
+                                                      v_size_k=MapsButtonsContainer.V_size
+                                                      )
+        self.chosen_pencil: PencilElement = None
+        self.fill_pencils_container()
+
         self.unsaved_edit = False
 
         self.current_pencil_type: TileDataAbs = TileTypes.Forest
         self.update_spawns_text()
+
+    def update(self):
+        Global.display.fill((0, 0, 0))
+        collided_popup_btn = self.update_popups()
+
+        self.size_txt.draw()
+        self.w_v_size_txt.draw()
+        self.w_h_size_txt.draw()
+        self.spawns_amount_txt.draw()
+        self.update_and_draw_map()
+        self.upd_draw_input()
+        self.upd_draw_buttons()
+
+        self.upd_draw_map_container()
+        self.upd_draw_pencils_container()
+
+        self.draw_popups()
+        if collided_popup_btn:
+            self.draw_border_around_element(collided_popup_btn)
 
     def load_save(self, map_save: MapSave):
         self.name_inp.change_text(map_save.name)
@@ -101,15 +129,23 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         self.update_sizes_texts()
         self.update_spawns_text()
 
+    def fill_pencils_container(self):
+        self.pencils_container.clear()
+        for tile_type in TileTypes.types_dict.values():
+            self.pencils_container.add_element(PencilElement(tile_type, parent=self.pencils_container).build())
+        self.pencils_container.build()
+        self.pencils_container.elements[0].choose()
+        self.pencils_container.render()
+
     def fill_saves_container(self):
         self.maps_mngr.load_maps()
         self.maps_container.clear()
         for map_save in self.maps_mngr.maps:
             self.maps_container.add_element(MapFuncUI(uid=map_save.name, map_save=map_save,
-                                                      parent=self.maps_container, editor_ui=self))
+                                                      parent=self.maps_container, editor_ui=self), render=False)
 
         self.maps_container.add_element(MapFuncUI(uid=Empty.name, map_save=Empty(),
-                                                  parent=self.maps_container, editor_ui=self))
+                                                  parent=self.maps_container, editor_ui=self), render=False)
         self.maps_container.build()
 
     def init_map(self, map_save: MapSave):
@@ -135,24 +171,6 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
     def update_spawns_text(self):
         self.spawns_amount_txt.change_text(f'Spawns : {len(self.spawns)}')
 
-    def update(self):
-        Global.display.fill((0, 0, 0))
-        collided_popup_btn = self.update_popups()
-
-        self.size_txt.draw()
-        self.w_v_size_txt.draw()
-        self.w_h_size_txt.draw()
-        self.spawns_amount_txt.draw()
-        self.update_and_draw_map()
-        self.upd_draw_input()
-        self.upd_draw_buttons()
-
-        self.upd_draw_map_container()
-
-        self.draw_popups()
-        if collided_popup_btn:
-            self.draw_border_around_element(collided_popup_btn)
-
     def update_popups(self):
         collided_popup_btn = None
         if self.popups:
@@ -170,6 +188,22 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
             Global.mouse.l_up = False
             Global.mouse._pos = -10, -10
         return collided_popup_btn
+
+    def upd_draw_pencils_container(self):
+        self.pencils_container.draw()
+        if self.pencils_container.collide_point(Global.mouse.pos):
+            self.pencils_container.change_dy(Global.mouse.scroll)
+
+            mouse_pos = Global.mouse.pos
+            for el in self.pencils_container.elements:
+                el: PencilElement
+                if el.collide_point(mouse_pos):
+                    self.draw_border_around_element(el)
+                    if Global.mouse.l_up:
+                        # el.choose_btn.do_action()
+                        el.choose()
+                        self.pencils_container.render()
+                        break
 
     def upd_draw_map_container(self):
         self.maps_container.draw()

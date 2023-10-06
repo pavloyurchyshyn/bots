@@ -9,7 +9,6 @@ from core.world.base.map_save import MapSave
 from visual.styles import get_green_btn_style
 from settings.screen.size import scaled_w, scaled_h
 from server_stuff.constants.requests import SetupStageReq
-from settings.localization.menus.UI import UILocal
 
 
 class MapRect:

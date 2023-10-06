@@ -154,7 +154,7 @@ class Text(BaseUI):
         for line_i in range(len(lines)):
             line = lines[line_i].split()
             if new_line:
-                line = [*new_line, * line]
+                line = [*new_line, *line]
                 new_line.clear()
 
             line_h = font.size(" ".join(line))[0]
@@ -177,14 +177,12 @@ class Text(BaseUI):
                             new_line.clear()
                             new_line.append(word[letters_count:])
 
-
                     else:
                         new_line.append(word)
                         line_h_ += space_size + word_size
             else:
-                lines_.append( lines[line_i])
+                lines_.append(lines[line_i])
                 continue
-
 
         lines_.append(" ".join(new_line))
         new_line.clear()
@@ -193,6 +191,7 @@ class Text(BaseUI):
 
     def v_size_is_bigger(self, v_size):
         return v_size > self.v_size - 1
+
     def h_size_is_bigger(self, h_size):
         return h_size > self.h_size - 1
 
@@ -232,11 +231,9 @@ class Text(BaseUI):
         v_k = 1
         h_k = 1
         if not self.unlimited_h_size and h_size > self.h_size:
-            # h_size = self.h_size
             h_k = h_size / self.h_size
             bigger = True
         if not self.unlimited_v_size and v_size > self.v_size:
-            # v_size = self.v_size
             v_k = v_size / self.v_size
             bigger = True
 
@@ -249,8 +246,8 @@ class Text(BaseUI):
 
         return text_surf
 
-    def draw(self):
-        self.default_draw()
+    def draw(self, parent_surface: Surface = None):
+        self.default_draw(parent_surface=parent_surface)
 
     def change_text(self, text: str) -> None:
         self.str_text = self.get_localization_text(text, self.raw_text)

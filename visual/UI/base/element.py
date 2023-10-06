@@ -61,6 +61,9 @@ class BaseUI(BaseUIAbs, ABC):
 
         self.surface = self.get_surface() if build_surface else None
 
+    def recheck_parent_surface(self) -> None:
+        self.parent_surface = self.parent.surface or Global.display
+
     def default_get_x(self) -> int:
         return int(self.x_k * self.parent_surface.get_width())
 
@@ -92,9 +95,9 @@ class BaseUI(BaseUIAbs, ABC):
 
         surface.fill(color)
 
-    def default_draw(self):
+    def default_draw(self, parent_surface: Surface = None):
         if self.visible:
-            self.parent_surface.blit(self.surface, self.position)
+            (self.parent_surface if parent_surface is None else parent_surface).blit(self.surface, self.position)
 
     def set_active(self, state: bool):
         self.active = state

@@ -41,6 +41,7 @@ class BaseButton(BaseUI, DrawBorderMixin, BuildRectShapeMixin, ShapeAbs, GetSurf
         self.active_surface: Surface = self.get_rect_surface(self.h_size, self.v_size,
                                                              transparent=self.style.surface_transparent,
                                                              flags=self.style.surface_flags,
+                                                             color=self.style.surface_color if self.style.surface_color else kwargs.get(St)
                                                              )
         self.inactive_surface: Surface = self.get_rect_surface(self.h_size, self.v_size,
                                                                transparent=self.style.inac_surface_transparent,

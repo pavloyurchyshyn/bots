@@ -159,10 +159,10 @@ class TileTypes:
         Water.name: Water,
         DeepRiver.name: DeepRiver,
         Bridge.name: Bridge,
-        HighBridge.name: HighBridge,
-        Wall.name: Wall,
+        # HighBridge.name: HighBridge,
+        # Wall.name: Wall,
         Field.name: Field,
-        Hole.name: Hole,
+        # Hole.name: Hole,
         SpawnTile.name: SpawnTile,
     }
 

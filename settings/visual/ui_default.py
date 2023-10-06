@@ -11,8 +11,8 @@ class UIDefault:
         g_0 = 90
         b_0 = 90
 
-        r_1 = 255
-        g_1 = 255
+        r_1 = 120
+        g_1 = 120
         b_1 = 255
 
     TextColor = CommonColors.white

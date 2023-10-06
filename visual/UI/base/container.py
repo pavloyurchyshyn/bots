@@ -11,7 +11,6 @@ class Container(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBord
         super(Container, self).__init__(uid=uid, **kwargs)
         ShapeAbs.__init__(self, **kwargs)
 
-        # self.surface = self.get_surface()
         self.__elements: List[BaseUI] = []
         self.__elements_dict = {}
         self.draw_elems = draw_elements
@@ -36,6 +35,8 @@ class Container(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBord
         self.__elements.clear()
 
     def change_dy(self, dy):
+        if dy == 0:
+            return
         if self.summary_els_height > self.height:
             self.dy += dy * self.scroll_speed
             step = self.v_size * self.STEP_K
@@ -49,12 +50,13 @@ class Container(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBord
         else:
             self.dy = 0
 
-    def add_element(self, element: BaseUI):
+    def add_element(self, element: BaseUI, render: bool = True):
         self.__elements.append(element)
         self.__elements_dict[element.uid] = element
         self.summary_els_height += element.height
         self.calculate_elements_position()
-        self.render()
+        if render:
+            self.render()
         self.update_scroll_speed()
 
     def delete_element(self, element: BaseUI):
