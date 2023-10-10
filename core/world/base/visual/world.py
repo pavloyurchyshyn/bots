@@ -2,9 +2,9 @@ from pygame.rect import Rect
 from typing import List, Type, Tuple, Optional, Dict
 from _thread import start_new_thread
 from pygame import draw, Surface, transform
-from pygame.draw import circle as draw_circle, rect as draw_rect
 from global_obj.main import Global
 from visual.UI.utils import get_surface
+from visual.UI.base.text import Text
 from settings.tile_settings import TileSettings
 from core.world.base.logic.tile import LogicTile
 from core.world.base.visual.tile import VisualTile
@@ -13,6 +13,7 @@ from core.world.base.logic.tiles_data import EmptyTile
 from core.world.base.logic.tiles_data import TileDataAbs
 from core.world.base.hex_utils import HexMath, Cube
 from core.shape.hex import Hex
+from settings.visual.graphic import GraphicConfig
 
 
 class VisualWorld(LogicWorld):
@@ -45,6 +46,8 @@ class VisualWorld(LogicWorld):
         # TODO make some better image
         surface: Surface = get_surface(h_size=self.tile_size[0], v_size=self.tile_size[0], transparent=1)
         draw.polygon(surface, (200, 0, 0), Hex(0, self.tile_size[0] - self.tile_size[1], self.tile_radius).dots[1:])
+        text = Text('', text='?', parent_surface=surface, font_size=GraphicConfig.FontSize * 2)
+        text.draw()
         self.missing_tile_texture = surface
 
     def adapt_scale_to_win_size(self):
@@ -106,23 +109,18 @@ class VisualWorld(LogicWorld):
         self.render_tile(self.big_surface, self.xy_to_tile[xy])
         self.reload_surface()
 
+    @staticmethod
+    def get_scaled_texture_from_tile(tile: VisualTile):
+        return Global.textures.get_scaled_tile_texture(tile_type=tile.name,
+                                                       img=tile.img,
+                                                       size=tile.texture_size, raise_error=True)
+
     def render_tile(self, surface, tile: VisualTile):
-        # pos = self.hex_math.get_lt_by_id(tile.id_x, tile.id_y, self.tile_size)
         if tile.name == EmptyTile.name:
-            # draw.polygon(surface, (0, 0, 0), tile.dots)
-            # draw.lines(surface, (0, 0, 0), True, points=tile.dots)
-            # draw_circle(surface, (30, 30, 30), tile.center, 3)
-            # if tile.at_edge:
-            #     draw.lines(surface, (200, 200, 255), True, points=tile.dots, width=3)
             return
 
-        # draw.polygon(surface, tile.tile_data.color, tile.dots)
-        # draw.lines(surface, (50, 50, 50), True, points=tile.dots)
         try:
-            surface.blit(Global.textures.get_scaled_tile_texture(tile_type=tile.name,
-                                                                 img=tile.img,
-                                                                 size=tile.texture_size, raise_error=True),
-                     tile.texture_pos)
+            surface.blit(self.get_scaled_texture_from_tile(tile=tile), tile.texture_pos)
         except FileNotFoundError:
             surface.blit(self.missing_tile_texture, tile.texture_pos)
 

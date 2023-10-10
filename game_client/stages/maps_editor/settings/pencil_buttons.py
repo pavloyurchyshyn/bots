@@ -63,8 +63,8 @@ class PencilElement(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, Draw
     def choose_pencil_on_click(self, *_, **__):
         if self.parent.parent.chosen_pencil:
             self.parent.parent.chosen_pencil.unchose()
-        self.parent.parent.current_pencil_type = self.tile_class
         self.parent.parent.chosen_pencil = self
+        self.parent.parent.update_pencil_tile_icon()
         Global.logger.info(f'Chosen pencil: {self.tile_class.name}')
 
     def render_unchosen_surface(self):
