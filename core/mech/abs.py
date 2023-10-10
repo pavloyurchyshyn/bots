@@ -1,27 +1,29 @@
 from abc import abstractmethod
 from typing import Optional, Tuple, Dict, List, Callable
-from core.mech.mixins import MechPropertiesMixin, MechParameterCalculationMixin
+from core.entities.entity import BaseEntity
 from core.mech.details.body import BaseBody
 from core.mech.details.detail import BaseDetail
 from core.mech.details.slot import BaseSlot
 from core.mech.skills.skill import BaseSkill
+from core.entities.stats_attrs import Attr
 
-
-class MechAbs(MechPropertiesMixin, MechParameterCalculationMixin):
+class MechAbs(BaseEntity):
     body: BaseBody
-    _position: Optional[Tuple[int, int]]
     _left_slots: Dict[int, BaseSlot]
     _right_slots: Dict[int, BaseSlot]
 
-    _damage: float
-    _armor: float
     _hp: float
-    _hp_regen: float
-    _energy: float
-    _energy_regen: float
+    max_hp_attr: Attr
+    hp_regen_attr: Attr
 
-    _current_hp: float
-    _current_energy: float
+    _energy: float
+    max_energy_attr: Attr
+    energy_regen_attr: Attr
+
+    damage_attr: Attr
+    armor_attr: Attr
+
+    position: Optional[Tuple[int, int]]
 
     _skills: List['BaseSkill']
 
@@ -85,11 +87,9 @@ class MechAbs(MechPropertiesMixin, MechParameterCalculationMixin):
     def set_max_hp(self):
         pass
 
-
     @abstractmethod
     def set_health_points(self, hp: float):
         pass
-
 
     @abstractmethod
     def set_max_energy(self):

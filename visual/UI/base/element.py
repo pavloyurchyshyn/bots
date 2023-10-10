@@ -92,9 +92,10 @@ class BaseUI(BaseUIAbs, ABC):
 
         surface.fill(color)
 
-    def default_draw(self):
+    def default_draw(self, dx: int = 0, dy: int = 0):
         if self.visible:
-            self.parent_surface.blit(self.surface, self.position)
+            x, y = self.position
+            self.parent_surface.blit(self.surface, (x + dx, y + dy))
 
     def set_active(self, state: bool):
         self.active = state

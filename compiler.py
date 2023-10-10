@@ -34,7 +34,9 @@ try:
             compiled_out.mkdir()
 
             subprocess.call('pyinstaller '
-                            '--noconfirm --onefile --windowed '
+                            '--noconfirm'
+                            ' --onefile'
+                            ' --windowed '
                             f'--icon "{GAME_ICO}" '
                             f'--add-data "{root/"localization"};localization/" '
                             f'--add-data "{root/"sounds"};sounds/" '

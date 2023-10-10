@@ -22,7 +22,7 @@ def recalculate_scenario(player: PlayerObj):
         if action.skip:
             action.make_valid()
         else:
-            tile_xy: Tuple[int, int]  = action.target_xy
+            tile_xy: Tuple[int, int] = action.target_xy
             skill: BaseSkill = action.skill
             if skill:
                 try:
@@ -38,13 +38,13 @@ def recalculate_scenario(player: PlayerObj):
                     continue
 
                 except Exception as e:
-                    Global.logger.warning(f'Error during scenario recalculation for {skill} {action.slot}: {e}')
+                    Global.logger.warning(f'Validation error during scenario recalculation for {skill} {action.slot}: {e}')
                     action.make_invalid()
 
                 else:
                     action.make_valid()
 
-                skill.use(player=player, target_xy=tile_xy, mech=mech_copy, game_obj=Global.game)
+                skill.use(player=player, target_xy=tile_xy, mech=mech_copy, game_obj=Global.game, skill_cast_uid=action.skill_cast_uid)
                 action.mech_copy = mech_copy
 
             else:

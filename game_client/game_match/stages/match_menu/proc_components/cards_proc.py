@@ -6,6 +6,7 @@ from core.mech.mech import BaseMech
 from core.player.player import PlayerObj
 from settings.localization.validation import ValidationMsg
 from core.functions.scenario import recalculate_scenario, skip_action
+from core.entities.effects.serializer import deserialize_effect
 
 
 class CardsProc:
@@ -18,6 +19,18 @@ class CardsProc:
         self.actions[GSC.SkillM.ScenarioIsFull] = self.scenario_is_full
         self.actions[GSC.SkillM.CancelSkillUse] = self.cancel_skill_use
         self.actions[GSC.SkillM.SkipCommand] = self.process_skip
+        self.actions[GSC.Mech.Effects] = self.update_my_mech_effects
+
+    def update_my_mech_effects(self, *_, request_data, **__):
+        for effect in request_data:
+            effect = deserialize_effect(effect)
+            mech_effect = self.player.mech.effects_manager.get_effect_by_uid(effect.uid)
+            if mech_effect:
+                mech_effect.on_end()
+                mech_effect.__dict__.update(effect.__dict__)
+                mech_effect.affect()
+            else:
+                effect.affect()
 
     def cancel_skill_use(self, *_, request_data, **__):
         for slot in request_data:
@@ -38,20 +51,22 @@ class CardsProc:
     def process_use_card(self, *_, request_data, **__):
         Global.logger.info(f'Use skill {request_data}')
         skill_uid = request_data[GSC.SkillM.SkillUID]
+        skill_cast_uid = request_data[GSC.SkillM.SkillCastUID]
         is_valid = request_data[GSC.SkillM.SkillValid]
         tile_xy = tuple(map(int, request_data[GSC.SkillM.UseAttrs][Targets.Tile]))
         mech_copy: BaseMech = self.player.latest_scenario_mech.get_copy()
         action_id = request_data.get(GSC.SkillM.ActionID, None)
 
         skill = tuple(filter(lambda s: s.unique_id == skill_uid, mech_copy.skills))[0]
-        skill.use(player=self.player, target_xy=tile_xy, mech=mech_copy, game_obj=Global.game)
+        skill.use(skill_cast_uid=skill_cast_uid,
+                  player=self.player, target_xy=tile_xy,
+                  mech=mech_copy, game_obj=Global.game)
         self.player.scenario.create_and_add_action(use_attrs=request_data[GSC.SkillM.UseAttrs],
                                                    mech_copy=mech_copy, skill_uid=skill_uid,
-                                                   valid=is_valid, slot=action_id)
+                                                   valid=is_valid, slot=action_id, skill_cast_uid=skill_cast_uid)
 
         recalculate_scenario(player=self.player)
         self.UI.collect_skills_deck()
-
 
     def process_select_card(self, r: dict):
         skill_uid = r[GSC.SkillM.SelectSkill]

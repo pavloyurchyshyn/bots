@@ -50,7 +50,7 @@ class MatchStage(Processor, ReadyProc, CardsProc):
         Global.logger.warning(f'Bad request: {r}:\n{request_data}')
 
     def connect(self, response: dict):
-        Global.logger.debug(f'Connecting to match: {response}')
+        Global.logger.info(f'Connecting to match: {response}')
         settings = response[GameStgConst.Settings]
         self.settings: GameSettings = GameSettings(players_num=settings.pop('players_num', 0),
                                                    real_players_num=settings.pop('real_players_num', 0),
@@ -74,6 +74,7 @@ class MatchStage(Processor, ReadyProc, CardsProc):
                    for slot, player_data
                    in players_data.items()}
         self.game_object.players = players
+        self.game_object.rounds_clock.set_current_round(response[GameStgConst.Round])
 
         self.update_time(response, response[GameStgConst.Time])
 

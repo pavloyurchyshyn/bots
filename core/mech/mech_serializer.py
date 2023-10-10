@@ -2,21 +2,27 @@ from global_obj.logger import get_logger
 from core.mech.mech import BaseMech
 from core.mech.details.body import BaseBody
 from core.pools.details_pool import DetailsPool
+from core.pools.effects_pool import EffectsPool
 from core.mech.details.constants import MechSerializeConst, DetailsTypes, MechAttrs
+from core.entities.stats_attrs import EntityAttrs
+from core.entities.effects.serializer import deserialize_effect
 
 
 class MechSerializer:
     logger = get_logger()
 
-    def __init__(self, details_pool: DetailsPool):
+    def __init__(self, details_pool: DetailsPool, effects_pool: EffectsPool):
         self.details_pool: DetailsPool = details_pool
+        self.effects_pool: EffectsPool = effects_pool
 
     def mech_to_dict(self, mech: BaseMech) -> dict:
         data = {
             # MechAttrs.Position: mech.position,
             # MechAttrs.CurrentHP: mech.health_points,
             # MechAttrs.CurrentEnergy: mech.energy,
-            MechAttrs.Attrs: mech.attr_dict(),
+            MechSerializeConst.UID: mech.uid,
+            EntityAttrs.Attrs: mech.attr_dict(),
+            MechSerializeConst.Effects: [effect.get_dict() for effect in mech.effects],
         }
         if mech.body:
             data[MechSerializeConst.Body] = mech.body.unique_id
@@ -41,18 +47,23 @@ class MechSerializer:
 
     def dict_to_mech(self, data: dict) -> BaseMech:
         """
-        Dict with data in string format about vanile_details
+        Dict with data in string format about vanilla_details
         :param data:
         :return:
         """
+        attrs = data.pop(EntityAttrs.Attrs, {})
         body: BaseBody = self.details_pool.get_detail_by_id(data.get(MechSerializeConst.Body))
-        mech = BaseMech(tuple(data.get(MechAttrs.Position, (-100, -100))), body_detail=body)
+        mech = BaseMech(uid=data.pop(MechSerializeConst.UID),
+                        position=tuple(attrs.get(EntityAttrs.Position, (-100, -100))),
+                        body_detail=body)
 
         self.update_mech_details(mech, data)
 
-        # mech.set_energy(data.get(MechAttrs.CurrentEnergy, 0))
-        # mech.set_health_points(data.get(MechAttrs.CurrentHP, 0))
-        mech.set_attrs(data.get(MechAttrs.Attrs, {}))
+        mech.set_attrs(attrs)
+
+        for effect_data in data[MechSerializeConst.Effects]:
+            effect = deserialize_effect(effect_dict=effect_data)
+            effect.affect()
 
         return mech
 
@@ -73,31 +84,3 @@ class MechSerializer:
                             )
                         else:
                             detail.remove_weapon()
-
-
-if __name__ == '__main__':
-    from core.mech.test_mech import MetalMech
-    from game_logic import IdGenerator
-
-    builder = MechSerializer(DetailsPool(IdGenerator()))
-    builder.details_pool.load_details_classes_list([
-        ('simple_metal_body', 0),
-        ('simple_metal_arm', 1),
-        ('simple_metal_arm', 2),
-        ('simple_metal_leg', 3),
-        ('simple_metal_leg', 4),
-    ])
-
-    m = MetalMech((1, 0))
-    print('mech', m.__dict__)
-    d = builder.mech_to_dict(m)
-    print('mech dict', d)
-    m1 = builder.dict_to_mech(d)
-
-    print()
-    print(d)
-    print('# ===================')
-    print(m.__dict__)
-    print(m1.__dict__)
-
-    print(m.attr_dict(), m.attr_dict() == m1.attr_dict(), m1.attr_dict())

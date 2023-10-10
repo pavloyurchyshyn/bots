@@ -3,11 +3,12 @@ from logging import Logger
 from global_obj.clock import Clock
 from global_obj.stages import Stages
 from global_obj.logger import get_logger
-
+from game_logic.game_data.steps_clock import RoundsClock
 from core.validators.constants import ValidationKeys
 
 from interfaces.skills_pool_interface import SkillsPoolInterface
 from interfaces.details_pool_interface import DetailsPoolInterface
+from core.pools.effects_pool import EffectsPool
 from interfaces.mech_serializer_interface import MechSerializerInterface
 
 __all__ = 'Global',
@@ -22,12 +23,14 @@ class Global:
     logger: Logger = get_logger()
     clock: Clock = Clock()  # global for all game
     stages: Stages = Stages(logger)
-    round_clock: Clock = Clock()  # not counting on pause etc.
+    real_time_clock: Clock = Clock()  # not counting on pause etc.
+    rounds_clock: RoundsClock = RoundsClock()
     test_draw = False
 
     game = None
     details_pool: DetailsPoolInterface = None
     skill_pool: SkillsPoolInterface = None
+    effects_pool: EffectsPool = None
     mech_serializer: MechSerializerInterface = None
 
     if VisualPygameOn:
@@ -59,8 +62,10 @@ class Global:
         cls.game = game
         cls.details_pool: DetailsPoolInterface = game.details_pool
         cls.skill_pool: SkillsPoolInterface = game.skills_pool
+        cls.effects_pool: EffectsPool = game.effects_pool
         from core.mech.mech_serializer import MechSerializer
-        cls.mech_serializer: MechSerializer = MechSerializer(game.details_pool)
+        cls.mech_serializer: MechSerializer = MechSerializer(game.details_pool, effects_pool=game.effects_pool)
+        cls.rounds_clock: RoundsClock = game.rounds_clock
 
     @classmethod
     def del_game_obj(cls):
@@ -80,6 +85,3 @@ class Global:
             ValidationKeys.Players: cls.game.players if cls.game else None,
             ValidationKeys.World: cls.game.world if cls.game else None,
         }
-
-if __name__ == '__main__':
-    pass

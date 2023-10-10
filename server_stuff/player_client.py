@@ -1,7 +1,9 @@
 import asyncio
 from fastapi import WebSocket
 from server_stuff.constants.start_and_connect import LoginArgs
+from global_obj.logger import get_logger
 
+LOGGER = get_logger()
 
 class Client:
     def __init__(self, nickname: str,
@@ -17,6 +19,7 @@ class Client:
         self.slot: int = slot
 
     def sync_send_json(self, data: dict):
+        LOGGER.info(f'Send to {str(self)}: {data}')
         asyncio.create_task(self.socket.send_json(data))
 
     @property

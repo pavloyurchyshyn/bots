@@ -35,6 +35,21 @@ class SkillsValidations:
             raise NotEnoughEnergyValError
 
     @classmethod
+    def validate_another_tile_target(cls, target_xy_coord, skill, world, mech, **_):
+        tile = world.get_tile_by_xy(target_xy_coord)
+        if skill.TargetsConst.Tile not in skill.targets:
+            raise BadTargetTypeValError
+
+        if mech.position == target_xy_coord:
+            raise AnotherTileRequiredError
+
+        if tile is None:
+            raise NoSuchTileValError
+
+        if tile.not_passable:
+            raise TileNotPassableValError
+
+    @classmethod
     def validate_tile_target(cls, target_xy_coord, skill, world, **_):
         tile = world.get_tile_by_xy(target_xy_coord)
         if skill.TargetsConst.Tile not in skill.targets:
@@ -45,6 +60,10 @@ class SkillsValidations:
 
         if tile.not_passable:
             raise TileNotPassableValError
+
+    @classmethod
+    def validate_target_is_mech(cls, target_xy_coord, all_meches, *_, **__):
+        return any([mech for mech in all_meches if mech.position == target_xy_coord])
 
     @classmethod
     def target_in_range(cls, skill, target_xy_coord, mech, **_):

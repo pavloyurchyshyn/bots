@@ -1,5 +1,6 @@
 import json
 import _thread
+import traceback
 from typing import Dict
 from global_obj.main import Global
 from core.player.player import PlayerObj
@@ -98,12 +99,14 @@ class StagesController:
                 break
             except Exception as e:
                 Global.logger.info(f'Got thread error: {e}')
+                Global.logger.info(f'Got thread error: {e}')
                 self.process_thread_exception(e)
             else:
                 try:
                     self.current_processor.process_request(r)
                 except Exception as e:
                     Global.logger.warning(f'Failed to process request: {e}')
+                    Global.logger.warning(f'{traceback.format_exc()}')
         Global.logger.info(f'Recv server stopped')
 
     def process_thread_exception(self, e: Exception):

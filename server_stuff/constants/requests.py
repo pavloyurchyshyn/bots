@@ -38,6 +38,7 @@ class GameStgConst:
     MatchData = 'match_data'
     Time = 'time'
     ReadyPlayersNumber = 'ready_players_number'
+    Round = 'round'
 
     Map = 'map'
     DetailsPool = 'details_pool'
@@ -53,8 +54,12 @@ class GameStgConst:
         ReadyStatus = 'ready_status'
         Ready = 'ready'
 
+    class Mech:
+        Effects = 'effects'
+
     class SkillM:  # SkillManipulations
         ActionID = 'action_id'
+        SkillCastUID = 'skill_cast_uid'
 
         SkillStats = 'skill_stats'
         SelectSkill = 'select_skill'

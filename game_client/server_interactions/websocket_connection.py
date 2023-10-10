@@ -2,6 +2,9 @@ import json
 from typing import Any
 from abc import abstractmethod
 from websocket import WebSocket
+from global_obj.logger import get_logger
+
+LOGGER = get_logger()
 
 
 class ConnectionWrapperAbs:
@@ -49,16 +52,22 @@ class WebSocketConnection(ConnectionWrapperAbs):
         self.connection.connect(addr)
 
     def recv_json(self) -> dict:
-        text = self.recv_text()
-        return json.loads(text)
+        j = json.loads(self.recv_text())
+        LOGGER.debug(f'Received json: {j}')
+        return j
 
     def send_json(self, data: dict) -> None:
-        self.send_text(json.dumps(data))
+        j = json.dumps(data)
+        self.send_text(j)
+        LOGGER.info(f'Sending json: {j}')
 
     def recv_text(self) -> str:
-        return self.connection.recv()
+        text = self.connection.recv()
+        LOGGER.info(f"Received text: {text}")
+        return text
 
     def send_text(self, data: str) -> None:
+        LOGGER.debug(f"Sending text: {data}")
         self.connection.send(data)
 
     def close(self) -> None:
