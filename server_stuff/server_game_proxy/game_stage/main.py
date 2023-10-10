@@ -15,12 +15,13 @@ from core.player.player import PlayerObj
 
 from server_stuff.server_game_proxy.game_stage.components.ready import ReadyLogic
 from server_stuff.server_game_proxy.game_stage.components.skill_use import SkillUseLogic
+from server_stuff.server_game_proxy.game_stage.components.mech_related import MechRelatedLogic
 
 from game_logic.game_data.id_generator import IdGenerator
 from core.pools.details_pool import DetailsPool
 
 
-class GameMatch(ReadyLogic, SkillUseLogic):
+class GameMatch(ReadyLogic, SkillUseLogic, MechRelatedLogic):
 
     def __init__(self, server_game_proxy, server):
         self.actions = {
@@ -28,6 +29,7 @@ class GameMatch(ReadyLogic, SkillUseLogic):
         }
         ReadyLogic.__init__(self)
         SkillUseLogic.__init__(self)
+        MechRelatedLogic.__init__(self)
 
         self.server: ServerAbc = server
         self.server_game_proxy = server_game_proxy
@@ -44,7 +46,8 @@ class GameMatch(ReadyLogic, SkillUseLogic):
             GSC.Map: self.current_map_save.get_save_dict(),
             GSC.DetailsPool: self.game_logic.details_pool.get_dict(),
             GSC.PlayersData: {k: player.get_dict() for k, player in self.game_logic.players.items()},
-            GSC.Time: Global.round_clock.time,
+            GSC.Time: Global.real_time_clock.time,
+            GSC.Round: self.game_logic.rounds_clock.current_round,
         }
 
     def setup(self, map_save: MapSave,

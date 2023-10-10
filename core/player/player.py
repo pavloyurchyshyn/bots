@@ -38,13 +38,14 @@ class PlayerObj(PlayerAbs):
         if PlayerAttrs.Mech in d and d[PlayerAttrs.Mech]:
             Global.logger.info(f'Received mech dict: {d[PlayerAttrs.Mech]}')
             mech = Global.mech_serializer.dict_to_mech(d.pop(PlayerAttrs.Mech))
+            Global.logger.info(f'Mech created {mech.attr_dict()}')
         else:
             d.pop(PlayerAttrs.Mech, None)
             mech = None
         return PlayerObj(**d, mech=mech)
 
     def update_attrs(self, attrs_dict: dict):
-        # TODO set vanile_details
+        # TODO set vanilla_details
         for attr, val in attrs_dict.items():
             setattr(self, attr, val)
 

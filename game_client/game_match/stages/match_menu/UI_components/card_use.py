@@ -1,8 +1,8 @@
-from typing import Tuple, Dict
 from global_obj.main import Global
 from visual.cards.skill.card import SkillCard
 from core.mech.skills.skill import BaseSkill
 from core.world.base.visual.world import VisualWorld
+from core.world.base.logic.tiles_data import EmptyTile
 from core.mech.skills.constants import Targets
 from core.validators.skill import ValidationError, NoEmptyStepError
 from core.validators.constants import ValidationKeys
@@ -10,13 +10,14 @@ from server_stuff.constants.requests import GameStgConst as GSC
 from core.world.base.hex_utils import HexMath
 from settings.localization.menus.UI import UILocal
 from settings.localization.validation import ValidationMsg as ValidationLoc
+from core.mech.skills.constants import INFINITE_VALUE
 
 
 from core.functions.scenario import get_free_slot_id
 
 
 def get_send_function(data: dict) -> callable:
-    def func(b, invalid_use:bool = True, *_, **__):
+    def func(b, invalid_use: bool = True, *_, **__):
         data[GSC.SkillM.UseSkill][GSC.SkillM.InvalidUse] = invalid_use
         Global.connection.send_json(data)
         b.parent.close(b)
@@ -46,7 +47,8 @@ class CardUseC:
                            GSC.SkillM.ActionID: action_id,
                            GSC.SkillM.UseAttrs: {
                                Targets.Tile: tile_xy,
-                                                 }
+                                                 },
+                           GSC.SkillM.InvalidUse: False,
                            }
             request = {GSC.SkillM.UseSkill: use_skill_d}
             skill = self.selected_card_to_use.skill
@@ -69,8 +71,7 @@ class CardUseC:
                         Global.logger.info(f'Using skill: {request}')
                         Global.connection.send_json(request)
                 elif Global.mouse.l_up:
-                    self.add_ok_popup(f'No free slots') # TODO localization
-
+                    self.add_ok_popup(f'No free slots')  # TODO localization
 
     def validate(self, skill: BaseSkill, mech=None,**additional_kwargs):
         mech = mech if mech else self.player.latest_scenario_mech
@@ -89,11 +90,16 @@ class CardUseC:
                                             b_qr=self.w.get_tile_by_xy(self.player.latest_scenario_mech.position),
                                             color=(0, 155, 0) if self.good_target else (255, 100,100), width=2)
             if self.draw_good_square:
-                tiles = HexMath.get_neighbors_qr(*self.w.get_tile_by_xy(self.player.latest_scenario_mech.position).qr,
-                                                 self.selected_card_to_use.skill.cast_range)
-
+                cast_range = self.selected_card_to_use.skill.cast_range
+                if cast_range == INFINITE_VALUE:
+                    cast_range = self.w.x_size if self.w.x_size > self.w.y_size else self.w.y_size
+                tiles = HexMath.get_neighbors_qr(*self.player.latest_scenario_mech.position_qr,
+                                                 range_radius=int(cast_range))
 
                 for tile in tiles:
+                    if tile not in self.w.qr_to_tile or self.w.get_tile_by_qr(tile).name == EmptyTile.name:
+                        continue
+
                     if target_hex and tile == target_hex.qr:
                         continue
                     try:

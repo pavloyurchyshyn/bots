@@ -9,3 +9,4 @@ msgs:
   tile_not_passable: Клітинка не прохідна
   out_of_range: Поза дистанцією
   no_empty_steps: Немає вільних кроків
+  another_tile_required: Потрібен інший тайл

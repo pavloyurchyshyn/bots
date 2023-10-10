@@ -18,6 +18,3 @@ class IdGenerator:
     def __call__(self, *args, **kwargs):
         return self.get_id()
 
-
-if __name__ == '__main__':
-    g = IdGenerator()

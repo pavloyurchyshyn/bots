@@ -19,7 +19,7 @@ class ScenarioActions(OrderedDict):
 
 
 class Scenario:
-    def __init__(self, player: PlayerAbs, scenario: Dict[int, dict] = None):
+    def __init__(self, player: PlayerAbs, scenario: Dict[int, Action] = None):
         scenario = {} if scenario is None else scenario
         self.__actions_count = len(scenario)
         self.player: PlayerAbs = player
@@ -29,18 +29,17 @@ class Scenario:
             # after requests its turns to str
             self.__actions[int(k)] = v
 
-
     def cancel_action(self, slot: int) -> None:
         self.__actions[slot] = None
 
     def add(self, action: Action):
-        for k, action_slot in self.__actions.items():
-            if action_slot is None:
-                self.add_action(k, action)
-                action.slot = k
-                return k
-
-        raise NoEmptyStepError
+        k = self.get_first_free_slot()
+        if k is None:
+            raise NoEmptyStepError
+        else:
+            self.add_action(k, action)
+            action.slot = k
+            return k
 
     def add_action(self, slot: int, action: Action):
         if slot not in self.__actions:
@@ -48,8 +47,15 @@ class Scenario:
 
         self.__actions[slot] = action
 
-    def create_and_add_action(self, skill_uid:str, use_attrs: dict, mech_copy, slot: int = None, valid: bool = True):
-        action = Action(slot=slot, skill_uid=skill_uid, use_attrs=use_attrs, mech_copy=mech_copy, valid=valid)
+    def get_first_free_slot(self) -> int:
+        for k, action_slot in self.__actions.items():
+            if action_slot is None:
+                return k
+
+    def create_and_add_action(self, skill_cast_uid: str, skill_uid: str,
+                              use_attrs: dict, mech_copy, slot: int = None, valid: bool = True):
+        action = Action(slot=slot, skill_uid=skill_uid, use_attrs=use_attrs,
+                        mech_copy=mech_copy, valid=valid, skill_cast_uid=skill_cast_uid)
         if slot is None:
             self.add(action)
         else:

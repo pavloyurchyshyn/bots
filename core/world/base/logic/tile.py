@@ -13,7 +13,7 @@ class LogicTile(XYIdHex, Cube):
 
         if type(tile_data) is str:
             tile_data = TileTypes.types_dict[tile_data]
-        # self.tile_data = tile_data
+
         self.name = tile_data.name
         self.verbose_name = tile_data.verbose_name
         self.hp: float = tile_data.hp
@@ -29,7 +29,6 @@ class LogicTile(XYIdHex, Cube):
 
     def apply_type(self, tile_type: Union[str, TileDataAbs]) -> None:
         tile_type = TileTypes.types_dict[tile_type] if type(tile_type) is str else tile_type
-        # self.tile_data = tile_type
         self.name = tile_type.name
         self.hp: float = tile_type.hp
         self.eternal: bool = tile_type.eternal

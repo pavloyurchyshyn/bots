@@ -18,32 +18,65 @@ First priority:
     - change actions order
     - highlight slot for current card use 
     - ~~skip~~
-    - cancel skip
+    - ~~cancel skip~~
     - ~~cancel_action~~
     - ~~check is action valid after move~~
     - card use trace predict
 
-    - damage class
-    - skill use class
-
+    - damage class>>??
+    - skill use class>>??
+    - validation cache
     - detail wearing
     - ready logic
     - ~~ready warning if bad steps~~
-    - mech effects: 
-      - stun, 
-      - silence, 
-      - damage de/increase
-      - range de/increase
-      - effects triggers
-    - mech respawn
-    - other entities:
-      - missiles
-      - smoke
-      - clouds
+  - rounds and steps GLOBAL clock
+  - events react system:
+    - unified functions call args 
+    - on_damage_event
+    - on_deal_damage_event
+    - pre_move_event
+    - post_move_event
+
+    - pre_skill_use_event
+    - on_skill_use_event
+    - post_skill_use_event
+
+    - on_stun_event
+    - on_silence_event
+
+    - on_death_event
+
+    - on_mech_kill_event
+    - on_mech_damage_event
+    - on_npc_kill_event
+    - on_npc_damage_event
+
+    - on_equip_detail
+    - on_effect_apply_event
+    - on_effects_end_event
     
-    - mech luck
-    - pathfinder
-    - game stages
+  - attrs system
+    - cast range attr
+    - effects duration
+  - create skill, effects etc configs
+  
+  - mech effects:
+    - THINK ABOUT FAKE EFFECTS
+    - effects manager
+    - stun, 
+    - silence, 
+    - damage de/increase
+    - range de/increase
+    - effects triggers
+  - mech respawn
+  - other entities:
+    - missiles
+    - smoke
+    - clouds
+    
+  - mech luck
+  - pathfinder
+  - game stages
 ----------------------
 - Basic
   - ~~run/stop server~~
@@ -55,6 +88,7 @@ First priority:
     - game
     
   - world:
+    - fragmentation for sectors to speedup logic 
     - areas
     - weather
     - fire
@@ -89,8 +123,10 @@ First priority:
 
 ### GAME:
 - mech AI
+- saves
 
 ### Features:
+  - check for PICKLE serializing of pools
   - custom details
   - custom skills
 
@@ -126,3 +162,6 @@ First priority:
  - switch target tiles demonstration types
  - custom font
  - render dots in text
+
+REFERENCES
+https://store.steampowered.com/app/1770050/Total_Tank_Generals/

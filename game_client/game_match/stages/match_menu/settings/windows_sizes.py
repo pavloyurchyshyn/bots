@@ -10,10 +10,15 @@ class MapRect:
 
 
 class MechWin:
-    x = scaled_w(0.8)
-    y = scaled_h(0.225)
-    h_size = scaled_w(0.2)
-    v_size = scaled_h(0.5)
+    X_K = 0.8
+    Y_K = 0.225
+    H_SIZE_K = 0.2
+    V_SIZE_K = 0.5
+
+    x = scaled_w(X_K)
+    y = scaled_h(Y_K)
+    h_size = scaled_w(H_SIZE_K)
+    v_size = scaled_h(V_SIZE_K)
     rect = (x, y, h_size, v_size)
 
 
@@ -72,20 +77,46 @@ class UsedCards:
     size = h_size, v_size
     rect = (x, y, h_size, v_size)
 
+class EffectsRect:
+    X_k = 0.2
+    Y_k = 0.695
+    H_K = 0.5
+    V_K = 0.03
+
+    x = scaled_w(X_k)
+    y = scaled_h(Y_k)
+    h_size = scaled_w(H_K)
+    v_size = scaled_h(V_K)
+    size = h_size, v_size
+    rect = (x, y, h_size, v_size)
+
+    class EffectIconRect:
+        h_size = v_size = scaled_h(0.03)
+        size = h_size, v_size
+
 
 class HpBar:
-    x = scaled_w(0.2)
-    y = scaled_h(0.725 + 0.1375 - 0.02)
-    h_size = scaled_w(0.5)
-    v_size = scaled_h(0.02)
+    X_K = 0.2
+    Y_K = 0.725 + 0.1375 - 0.02
+    H_SIZE_K = 0.5
+    V_SIZE_K = 0.02
+    x = scaled_w(X_K)
+    y = scaled_h(Y_K)
+    h_size = scaled_w(H_SIZE_K)
+    v_size = scaled_h(V_SIZE_K)
     rect = (x, y, h_size, v_size)
 
 
 class ManaBar:
-    x = scaled_w(0.2)
-    y = scaled_h(0.725 + 0.1375)
-    h_size = scaled_w(0.5)
-    v_size = scaled_h(0.02)
+    X_K = 0.2
+    Y_K = 0.725 + 0.1375
+    H_SIZE_K = 0.5
+    V_SIZE_K = 0.02
+
+    x = scaled_w(X_K)
+    y = scaled_h(Y_K)
+    h_size = scaled_w(H_SIZE_K)
+    v_size = scaled_h(V_SIZE_K)
     rect = (x, y, h_size, v_size)
 
 

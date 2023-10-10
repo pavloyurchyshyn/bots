@@ -37,7 +37,7 @@ class ReadyW(Window):
         self.timer = Timer('timer', x_k=ReadyWindow.Timer_x_k, y_k=ReadyWindow.Timer_y_k,
                            h_size_k=ReadyWindow.Timer_h_size, v_size_k=ReadyWindow.Timer_v_size)
 
-        Global.round_clock.set_time(-60)
+        Global.real_time_clock.set_time(-60)
 
     def change_button_color_to_ready(self):
         self.ready_btn.text.change_color((0, 255, 0) if self.parent.player.ready else (255, 255, 255))

@@ -9,3 +9,4 @@ msgs:
   tile_not_passable: tile is not passable
   out_of_range: Out of range
   no_empty_steps: No empty steps
+  another_tile_required: Another tile required

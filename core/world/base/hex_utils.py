@@ -93,6 +93,12 @@ class Hexagon(XYIdHex, Cube, HexSizes):
         HexSizes.__init__(self, radius)
 
 
+class EntityPosition(XYIdHex, Cube):
+    def __init__(self, x:int, y: int):
+        super(EntityPosition, self).__init__(x_id=x, y_id=y)
+        Cube.__init__(self, *HexMath.xy_id_to_qr(x, y))
+
+
 class HexMath:
     @classmethod
     def horizontal_spacing(cls, r: int) -> float:
@@ -152,6 +158,9 @@ class HexMath:
     @classmethod
     def xy_id_to_qr(cls, x_id: int, y_id: int) -> Tuple[int, int]:
         return x_id, y_id - x_id // 2
+    @classmethod
+    def qr_to_xy_id(cls, q: int, r: int) -> Tuple[int, int]:
+        return q, r + q // 2
 
     @classmethod
     def xy_id_to_xy_coordinates(cls, x_id: int, y_id: int, radius: int) -> Tuple[int, int]:

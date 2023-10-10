@@ -1,3 +1,4 @@
+
 class MaterialTypes:
     """
     Material types constants.
@@ -8,15 +9,7 @@ class MaterialTypes:
     BIO_TYPE = 'bio'
 
 
-class DetailsAttrs:
-    Id: str = 'unique_id'
-    Damage: str = 'damage'
-    Armor: str = 'armor'
-    AddHP: str = 'add_hp'
-    HPRegen: str = 'hp_regen'  # regeneration
-    AddEnergy: str = 'add_energy'
-    EnergyRegen: str = 'energy_regen'
-    Skills: str = 'skills'
+
 
 
 class SpecialValues:
@@ -25,12 +18,8 @@ class SpecialValues:
 
 
 class MechAttrs:
-    Position: str = 'position'
-    CurrentHP: str = 'current_hp'
-    CurrentEnergy: str = 'current_energy'
-    MaxHP = 'max_hp'
-    MaxEnergy = 'max_energy'
-    Attrs = 'attrs'
+    Skills: str = 'skills'
+
 
 
 class DetailsTypes:
@@ -53,8 +42,10 @@ class SlotNames:
 
 
 class MechSerializeConst:
+    UID = 'uid'
     Body: str = 'body'
     LeftSlots: str = 'left_slots'
     RightSlots: str = 'right_slots'
     Weapon: str = 'weapon'
     Detail: str = 'detail'
+    Effects: str = 'effects'
