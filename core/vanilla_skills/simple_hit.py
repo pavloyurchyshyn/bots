@@ -1,13 +1,16 @@
 from core.mech.mech import BaseMech
 from core.mech.skills.skill import BaseSkill
 
+
 class SimpleStepAttrs:
     name = 'simple_step'
     spell_cost = 1
     cooldown = 1
 
+
 def do_none(*_, **__):
     pass
+
 
 class SimpleHit(BaseSkill):
     name = 'simple_hit'

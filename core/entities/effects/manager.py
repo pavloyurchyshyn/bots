@@ -4,7 +4,8 @@ from core.entities.entity_abc import BaseEntityAbc
 
 
 class EffectsManager:
-    def __init__(self, entity: Optional[Union[BaseEntityAbc, 'BaseEntity']] = None, effects: Optional[List[BaseEffect]] = None):
+    def __init__(self, entity: Optional[Union[BaseEntityAbc, 'BaseEntity']] = None,
+                 effects: Optional[List[BaseEffect]] = None):
         self.entity: BaseEntityAbc = self if entity is None else entity
         self.effects: List[BaseEffect] = effects if effects else []
         self.effects_dict: Dict[str, BaseEffect] = {}

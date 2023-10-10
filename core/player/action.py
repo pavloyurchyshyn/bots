@@ -6,12 +6,16 @@ from core.mech.skills.skill import BaseSkill
 from core.mech.details.detail import BaseDetail
 from core.mech.skills.constants import Targets
 
+
 class Action:
     """
     One skill use
     """
     _skip: bool = False
-    def __init__(self, skill_cast_uid: str, slot: int, skill_uid:str, use_attrs: dict, mech_copy: BaseMech, valid: bool = True):
+
+    def __init__(self, skill_cast_uid: str, slot: int,
+                 skill_uid:str, use_attrs: dict,
+                 mech_copy: BaseMech, valid: bool = True):
         self.skill_cast_uid: str = skill_cast_uid
         self.slot: int = slot
         self.skill_uid: str = skill_uid
@@ -28,6 +32,7 @@ class Action:
     @property
     def target_xy(self) -> tuple:
         return tuple(self.use_attrs.get(Targets.Tile))
+
     @property
     def mech_skills(self) -> List[BaseSkill]:
         return self.mech_copy.skills
@@ -66,5 +71,6 @@ class Action:
 
 class SkipAction(Action):
     _skip = True
+
     def __init__(self, slot, mech_copy: BaseMech, *_, **__):
         super().__init__(slot=slot, use_attrs={}, mech_copy=mech_copy, skill_uid=None)

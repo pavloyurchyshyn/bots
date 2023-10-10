@@ -84,6 +84,7 @@ class Hexagon(XYIdHex, Cube, HexSizes):
         Cube.__init__(self, *HexMath.xy_id_to_qr(x_id, y_id))
         HexSizes.__init__(self, radius)
 
+
 class EntityPosition(XYIdHex, Cube):
     def __init__(self, x:int, y: int):
         super(EntityPosition, self).__init__(x_id=x, y_id=y)

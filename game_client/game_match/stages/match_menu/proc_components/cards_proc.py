@@ -68,7 +68,6 @@ class CardsProc:
         recalculate_scenario(player=self.player)
         self.UI.collect_skills_deck()
 
-
     def process_select_card(self, r: dict):
         skill_uid = r[GSC.SkillM.SelectSkill]
         if skill_uid == GSC.SkillM.UnknownSkill:  # TODO maybe just sync data
