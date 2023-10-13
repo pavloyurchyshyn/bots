@@ -19,11 +19,19 @@ class MapRect:
     rect = (X, Y, H_size, V_size)
 
 
+class PencilNameRect:
+    X = 0
+    Y = 0.75
+    H_size = 0.10
+    V_size = 0.03
+    rect = (X, Y, H_size, V_size)
+
+
 class PencilIconRect:
     X = 0
-    Y = scaled_h(0.75)
+    Y = scaled_h(0.78)
     H_size = scaled_w(0.10)
-    V_size = scaled_h(0.25)
+    V_size = scaled_h(0.22)
     rect = (X, Y, H_size, V_size)
 
 

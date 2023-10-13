@@ -2,7 +2,7 @@ from typing import Optional
 from pygame import Surface
 from game_client.stages.maps_editor.settings.pencil_buttons import PencilElement
 from core.world.base.logic.tile_data.tile_abs import TileDataAbs
-from game_client.stages.maps_editor.settings.other import PencilIconRect, MapsButtonsContainer
+from game_client.stages.maps_editor.settings.other import PencilIconRect, MapsButtonsContainer, PencilNameRect
 from pygame.draw import rect as draw_rect
 from global_obj.main import Global
 from visual.UI.base.text import Text
@@ -24,17 +24,23 @@ class ChosenPencilModule:
                                                       h_size_k=MapsButtonsContainer.H_size,
                                                       v_size_k=MapsButtonsContainer.V_size
                                                       )
+
+        self.pencil_name_txt: Text = Text('pencil_name',
+                                          x_k=PencilNameRect.X, y_k=PencilNameRect.Y,
+                                          h_size_k=PencilNameRect.H_size, v_size_k=PencilNameRect.V_size)
         self.chosen_pencil: PencilElement = None
 
         self.pencil_icon: Optional[Surface] = None
         self.missing_pencil_texture: Surface = None
         self.render_pencil_missing_texture()
         self.pencil_tile_icon: Surface = None
+        w = Hex(0, 0, r=self.icon_tile_radius).width
+        self.pencil_icon_surface_size = w, w
 
         self.fill_pencils_container()
         self.update_pencil_tile_icon()
 
-    def upd_draw_pencils_container(self):
+    def update_draw_pencils_container(self):
         self.pencils_container.draw()
         if self.pencils_container.collide_point(Global.mouse.pos):
             self.pencils_container.change_dy(Global.mouse.scroll)
@@ -49,6 +55,9 @@ class ChosenPencilModule:
                         el.choose()
                         self.pencils_container.render()
                         break
+
+    def draw_current_pencil_name(self):
+        self.pencil_name_txt.draw()
 
     def fill_pencils_container(self):
         self.pencils_container.clear()
@@ -83,15 +92,15 @@ class ChosenPencilModule:
         Global.display.blit(self.pencil_tile_icon, self.pencil_icon_position)
 
     def update_pencil_tile_icon(self):
+        self.pencil_name_txt.change_text(self.chosen_pencil.tile_class.verbose_name)
         self.pencil_tile_icon = self.get_icon_surface()
 
     def get_icon_surface(self) -> Surface:
         tile = self.current_pencil_type
         try:
-            h = Hex(0, 0, r=self.icon_tile_radius)
             return Global.textures.get_scaled_tile_texture(tile_type=tile.name,
                                                            img=tile.img,
-                                                           size=(h.width, h.width),
+                                                           size=self.pencil_icon_surface_size,
                                                            raise_error=True)
         except Exception:
             return self.missing_pencil_texture
