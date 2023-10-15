@@ -23,11 +23,13 @@ class DoubleDamage(BaseSkill):
                                            cast_range=INFINITE_VALUE,
                                            )
 
-    def use(self, player, game_obj, target_xy, mech: BaseEntity, skill_cast_uid: str, **__) -> None:
-        effect = DoubleDamageEffect(dealer=player.mech, target=mech, uid=skill_cast_uid, parent_skill=self)
-        effect.affect()
+    def use(self, player, game_obj, mech: BaseEntity, skill_cast_uid: str, **__) -> None:
+        mech.events_manager.do_pre_skill_use_event(skill=self)
         mech.spend_energy(self.energy_cost)
+        effect = DoubleDamageEffect(dealer=player.mech, target=mech, uid=skill_cast_uid, parent_skill=self)
+        mech.add_effect(effect)
         self.set_on_cooldown()
+        mech.events_manager.do_post_skill_use_event(skill=self)
 
     def get_dict(self) -> dict:
         return self.get_base_dict()

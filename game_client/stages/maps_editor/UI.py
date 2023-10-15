@@ -107,7 +107,7 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin, ChosenP
         self.upd_draw_map_container()
         self.update_draw_pencils_container()
         self.draw_pencil_icon()
-        self.draw_current_pencil_name()
+        self.draw_current_pencil_attrs()
 
         self.draw_popups()
         if collided_popup_btn:

@@ -33,6 +33,10 @@ class BaseEntity(EntityBaseAttrsPart, EntityPositionPart):
         self.events_manager: EventsManager = EventsManager(entity=self)
         self.effects_manager: EffectsManager = EffectsManager(entity=self, effects=effects)
 
+    def add_effect(self, effect: BaseEffect):
+        self.events_manager.on_effect_apply_event(effect=effect)
+        self.effects_manager.add_effect(effect=effect)
+
     def change_position(self, position: Union[Tuple[int, int], EntityPosition]):
         position: EntityPosition = self.get_position_obj(position=position)
         self.events_manager.do_pre_move_event(entity=self, position=position)
@@ -40,5 +44,5 @@ class BaseEntity(EntityBaseAttrsPart, EntityPositionPart):
         self.events_manager.do_post_move_event(entity=self, position=position)
 
     @property
-    def effects(self):
+    def effects(self) -> List[BaseEffect]:
         return self.effects_manager.effects

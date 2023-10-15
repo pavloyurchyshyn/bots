@@ -164,6 +164,7 @@ class TileTypes:
         Field.name: Field,
         # Hole.name: Hole,
         SpawnTile.name: SpawnTile,
+        EmptyTile.name: EmptyTile,
     }
 
 

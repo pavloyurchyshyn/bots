@@ -66,6 +66,7 @@ class BaseSkill:
     def set_on_cooldown(self, value=None):
         self.cooldown = value if value else self.cooldown_value
 
+    # TODO add decorator to wrap in events
     @abstractmethod
     def use(self, skill_cast_uid: str, player, game_obj, target_xy, mech=None) -> None:
         """
