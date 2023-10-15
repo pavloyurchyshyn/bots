@@ -61,6 +61,9 @@ class BaseUI(BaseUIAbs, ABC):
 
         self.surface = self.get_surface() if build_surface else None
 
+    def recheck_parent_surface(self) -> None:
+        self.parent_surface = self.parent.surface or Global.display
+
     def default_get_x(self) -> int:
         return int(self.x_k * self.parent_surface.get_width())
 
@@ -92,10 +95,10 @@ class BaseUI(BaseUIAbs, ABC):
 
         surface.fill(color)
 
-    def default_draw(self, dx: int = 0, dy: int = 0):
+    def default_draw(self, parent_surface: Surface = None, dx: int = 0, dy: int = 0):
         if self.visible:
             x, y = self.position
-            self.parent_surface.blit(self.surface, (x + dx, y + dy))
+            (self.parent_surface if parent_surface is None else parent_surface).blit(self.surface, (x + dx, y + dy))
 
     def set_active(self, state: bool):
         self.active = state
@@ -186,17 +189,21 @@ class DrawBorderMixin:
     @property
     def border_round_attrs(self) -> tuple:
         return self.style.border_radius, \
-               self.style.border_top_left_radius, self.style.border_top_right_radius, \
-               self.style.border_bottom_left_radius, self.style.border_bottom_right_radius
+            self.style.border_top_left_radius, self.style.border_top_right_radius, \
+            self.style.border_bottom_left_radius, self.style.border_bottom_right_radius
 
     def draw_border(self: BaseUI, surface=None, color=None, rect=None):
+        width = self.style.dict.get(StyleAttrs.BorderSize.value, UIDefault.BorderSize)
+        if width == 0:
+            return
+
         surface = surface if surface else self.surface
         color = color if color else self.style.dict.get(StyleAttrs.BorderColor.value, self.Colors.white)
         rect = rect if rect else surface.get_rect()
         draw_rect(surface,
                   color,
                   rect,
-                  self.style.dict.get(StyleAttrs.BorderSize.value, UIDefault.BorderSize),
+                  width,
                   self.style.dict.get(StyleAttrs.BorderRadius.value, UIDefault.BorderRadius),
                   self.style.dict.get(StyleAttrs.BorderTopLeftRadius.value, UIDefault.BorderTopLeftRadius),
                   self.style.dict.get(StyleAttrs.BorderTopRightRadius.value, UIDefault.BorderTopRightRadius),
@@ -208,16 +215,15 @@ class DrawBorderMixin:
         surface = surface if surface else self.surface
         color = color if color else self.style.dict.get(StyleAttrs.SurfaceColor.value, UIDefault.SurfaceColor)
         rect = rect if rect else surface.get_rect()
-
         draw_rect(surface,
                   color,
                   rect,
                   0,
-                  self.style.dict.get(StyleAttrs.BorderRadius.value, UIDefault.BorderRadius) + 2,
-                  self.style.dict.get(StyleAttrs.BorderTopLeftRadius.value, UIDefault.BorderTopLeftRadius) + 2,
-                  self.style.dict.get(StyleAttrs.BorderTopRightRadius.value, UIDefault.BorderTopRightRadius) + 2,
-                  self.style.dict.get(StyleAttrs.BorderBottomLeftRadius.value, UIDefault.BorderBottomLeftRadius) + 2,
-                  self.style.dict.get(StyleAttrs.BorderBottomRightRadius.value, UIDefault.BorderBottomRightRadius) + 2,
+                  self.style.dict.get(StyleAttrs.BackgroundRadius.value, UIDefault.BackgroundRadius),
+                  self.style.dict.get(StyleAttrs.BorderTopLeftRadius.value, UIDefault.BorderTopLeftRadius),
+                  self.style.dict.get(StyleAttrs.BorderTopRightRadius.value, UIDefault.BorderTopRightRadius),
+                  self.style.dict.get(StyleAttrs.BorderBottomLeftRadius.value, UIDefault.BorderBottomLeftRadius),
+                  self.style.dict.get(StyleAttrs.BorderBottomRightRadius.value, UIDefault.BorderBottomRightRadius),
                   )
 
 

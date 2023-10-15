@@ -41,6 +41,7 @@ class BaseButton(BaseUI, DrawBorderMixin, BuildRectShapeMixin, ShapeAbs, GetSurf
         self.active_surface: Surface = self.get_rect_surface(self.h_size, self.v_size,
                                                              transparent=self.style.surface_transparent,
                                                              flags=self.style.surface_flags,
+                                                             color=self.style.surface_color if self.style.surface_color else kwargs.get(St)
                                                              )
         self.inactive_surface: Surface = self.get_rect_surface(self.h_size, self.v_size,
                                                                transparent=self.style.inac_surface_transparent,
@@ -147,7 +148,7 @@ class Button(BaseButton):
         return self
 
     def render(self):
-        self.fill_surface(self.active_surface, self.style.surface_color)
+        self.fill_surface(surface=self.active_surface, color=self.style.surface_color)
         self.text.render()
         self.text.draw()
         self.draw_border(self.active_surface, self.style.border_color)

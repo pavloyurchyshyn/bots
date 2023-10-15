@@ -48,6 +48,7 @@ class StyleAttrs(Enum):
     BorderColor: str = 'border_color'
     InacBorderColor: str = 'inacborder_color'
     BorderSize: str = 'border_size'
+    BackgroundRadius: str = 'back_border_radius'
     BorderRadius: str = 'border_radius'
     BorderTopLeftRadius: str = 'border_top_left_radius'
     BorderTopRightRadius: str = 'border_top_right_radius'
@@ -65,6 +66,7 @@ class TextAttrs(Attrs):
     SplitWords = 'split_words'
     FromLeft = 'from_left'
     Capitalize = 'capitalize'
+
 
 class InputAttr(Attrs):
     OnEnterAction = 'on_enter_action'

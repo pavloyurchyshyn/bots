@@ -11,8 +11,8 @@ class UIDefault:
         g_0 = 90
         b_0 = 90
 
-        r_1 = 255
-        g_1 = 255
+        r_1 = 120
+        g_1 = 120
         b_1 = 255
 
     TextColor = CommonColors.white
@@ -20,7 +20,8 @@ class UIDefault:
     InacTextColor = CommonColors.grey
     BorderColor = CommonColors.white
     InacBorderColor = CommonColors.grey
-    BorderSize: int = 1
+    BorderSize: int = 2
+    BackgroundRadius: int = 5
     BorderRadius: int = 3
     BorderTopLeftRadius: int = -1
     BorderTopRightRadius: int = -1
@@ -36,3 +37,16 @@ class UIDefault:
     FromTop: bool = False
     AA = GraphicConfig.Antialiasing
     AAText = GraphicConfig.AntialiasingText
+
+    # ------- Buttons ---------------
+    ButtonSurfaceColor = (35, 95, 120)
+    ButtonBorderColor = (0, 145, 170)
+
+    ButtonInacSurfaceColor = (55, 55, 55)
+
+    GreenButtonBackColor = (50, 155, 90)
+    GreenButtonBorderColor = (0, 105, 0)
+    ButtonBorderSize = 3
+    ButtonBorderRadius = 3
+    ButtonSurfaceTransparent = True
+

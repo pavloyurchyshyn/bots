@@ -3,6 +3,7 @@ from pygame.mixer import music as Music
 
 import os
 from settings.base import SOUNDS_FOLDER
+
 # from settings.music_default_settings import DEFAULT_MUSIC_VOLUME, MUSIC_MUTED, MUSIC_VOLUME
 # from common.save_and_load_json_config import get_common_config, save_common_config
 
@@ -22,22 +23,22 @@ class MusicPlayer:
 
         self.played_list = set()
 
-        #settings = get_common_config()
+        # settings = get_common_config()
 
         self._current_song = None
         self._current_song_path = None
         self._current_song_length = None
 
-        self._volume_lvl = 0.8#settings.get(MUSIC_VOLUME, DEFAULT_MUSIC_VOLUME)  # sound lvl from 0.0 to 1.0
+        self._volume_lvl = 0.8  # settings.get(MUSIC_VOLUME, DEFAULT_MUSIC_VOLUME)  # sound lvl from 0.0 to 1.0
 
-        self._muted = 0#settings.get(MUSIC_MUTED, 0)
+        self._muted = 0  # settings.get(MUSIC_MUTED, 0)
         self._paused = 0
 
         Music.set_volume(self._volume_lvl)
         # self.save_settings()
 
     def get_music_pos(self):
-        return Music.get_pos()/1000  # seconds
+        return Music.get_pos() / 1000  # seconds
 
     def update(self):
         if not Music.get_busy() and not self._muted and not self._paused:
@@ -53,11 +54,15 @@ class MusicPlayer:
             self.play_back_music()
 
     def load_back_music_list(self):
-        music_list = filter(lambda file: file.endswith('.mp3') or file.endswith('.wav'),
-                            os.listdir(FOLDER_WITH_BACK_MUSIC))
-        music_list = map(lambda music: os.path.abspath(os.path.join(FOLDER_WITH_BACK_MUSIC, music)), music_list)
+        try:
+            music_list = filter(lambda file: file.endswith('.mp3') or file.endswith('.wav'),
+                                os.listdir(FOLDER_WITH_BACK_MUSIC))
+            music_list = map(lambda music: os.path.abspath(os.path.join(FOLDER_WITH_BACK_MUSIC, music)), music_list)
 
-        self.music_set = set(music_list)
+            self.music_set = set(music_list)
+        except FileNotFoundError:
+            # TODO add log message
+            self.music_set = set()
 
     def add_second_song(self):
         if not self.music_set:
@@ -164,5 +169,6 @@ class MusicPlayer:
         click = Sound(os.path.join(SOUNDS_FOLDER, 'button_click.wav'))
         click.set_volume(0.2)
         click.play()
+
 
 GLOBAL_MUSIC_PLAYER = MusicPlayer()

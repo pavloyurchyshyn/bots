@@ -6,6 +6,7 @@ DEFAULT_FONT = font.SysFont(GraphicConfig.DEFAULT_SYS_FONT_NAME, GraphicConfig.F
 
 def fonts_collector(func):
     memory = {}
+
     def wrapper(size, font_name=None):
         if (size, font_name) not in memory:
             font_ = func(size, font_name)
@@ -16,8 +17,8 @@ def fonts_collector(func):
 
         return memory[(size, font_name)]
 
-
     return wrapper
+
 
 @fonts_collector
 def get_custom_font(size: int, font_name=None):
@@ -26,4 +27,3 @@ def get_custom_font(size: int, font_name=None):
         return font.Font(font_name, int(size))
     except Exception:
         return DEFAULT_FONT
-

@@ -26,7 +26,7 @@ class ChatPart:
     def update_chat(self):
         if self.chat.collide_point(Global.mouse.pos):
             if Global.mouse.scroll:
-                self.chat.change_dx(Global.mouse.scroll)
+                self.chat.change_dy(Global.mouse.scroll)
 
         self.chat.draw()
         self.upd_draw_input()

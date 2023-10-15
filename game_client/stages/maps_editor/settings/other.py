@@ -19,6 +19,36 @@ class MapRect:
     rect = (X, Y, H_size, V_size)
 
 
+class PencilNameRect:
+    X = 0
+    Y = 0.75
+    H_size = 0.10
+    V_size = 0.03
+    rect = (X, Y, H_size, V_size)
+
+
+class PencilAttrsSizes:
+    X = 0.10
+    Y_0 = 0.75
+    H_size = 0.10
+    V_size = 0.03
+    HP_Y = Y_0 + V_size
+    Eternal_Y = HP_Y + V_size
+    Height_Y = Eternal_Y + V_size
+    Spawn_Y = Height_Y + V_size
+    MoveEnrgK_Y = Spawn_Y + V_size
+    Walkable_Y = MoveEnrgK_Y + V_size
+    DestType_Y = Walkable_Y + V_size
+
+
+class PencilIconRect:
+    X = 0
+    Y = scaled_h(0.78)
+    H_size = scaled_w(0.10)
+    V_size = scaled_h(0.22)
+    rect = (X, Y, H_size, V_size)
+
+
 class NameInput:
     X = 0.802
     Y = 0.05
@@ -30,7 +60,7 @@ class MapsButtonsContainer:
     X = 0.802
     Y = 0.25
     H_size = 0.196
-    V_size = 0.5
+    V_size = 0.3
 
 
 class MapFuncElCons:
@@ -40,14 +70,14 @@ class MapFuncElCons:
     V_size = .1
 
     LBtnX = 0.74
-    LBtnY = 0.015
+    LBtnY = 0.06
     LBtnH_size = 0.15
-    LBtnV_size = 0.97
+    LBtnV_size = 0.88
 
     DltBtnX = 0.895
-    DltBtnY = 0.015
+    DltBtnY = 0.06
     DltBtnH_size = 0.1
-    DltBtnV_size = 0.96
+    DltBtnV_size = 0.88
 
 
 class MapFuncUI(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBorderMixin):

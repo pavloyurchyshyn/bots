@@ -15,6 +15,7 @@ class EffectsManager:
             effect.affect()
 
     def add_effect(self, effect: BaseEffect):
+        effect.affect()
         self.effects.append(effect)
         self.effects_dict[effect.uid] = effect
 

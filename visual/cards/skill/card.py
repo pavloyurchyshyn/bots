@@ -43,8 +43,10 @@ class SkillCard(SkillCardAbs):
                                h_size_k=0.98,
                                parent_surface=self.surface, auto_draw=False)
 
-        self.mute_surface: Surface = self.get_mute_surface(self.style.on_cd_background_color)# TODO move to textures cache
-        self.invalid_surface: Surface = self.get_mute_surface(self.style.invalid_background_color) # TODO move to textures cache
+        self.mute_surface: Surface = self.get_mute_surface(
+            self.style.on_cd_background_color)  # TODO move to textures cache
+        self.invalid_surface: Surface = self.get_mute_surface(
+            self.style.invalid_background_color)  # TODO move to textures cache
 
         self.render()
 
@@ -58,7 +60,8 @@ class SkillCard(SkillCardAbs):
         draw_rect(self.surface, self.style.border_color, (0, 0, self.h_size, self.v_size), 1, self.style.border_radius)
 
     def draw_back(self):
-        draw_rect(self.surface, self.style.back_color, (0, 0, self.h_size, self.v_size), 0, self.style.border_radius)
+        back = Global.textures.get_card_texture('card_back')
+        self.surface.blit(back, (0, 0))
 
     def get_rect(self, dx: int = 0, dy: int = 0) -> Rect:
         return Rect(self.x + dx, self.y + dy, self.h_size, self.v_size)

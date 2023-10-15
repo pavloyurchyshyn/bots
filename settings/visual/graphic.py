@@ -10,7 +10,7 @@ class GraphicConfig:
 
     Antialiasing = get_and_save_from_common_config('Antialiasing', False)
     AntialiasingText = get_and_save_from_common_config('AntialiasingText', True)
-    FontSize = get_and_save_from_common_config('FontSize', DEFAULT_FONT_SIZE)
+    FontSize = DEFAULT_FONT_SIZE  # get_and_save_from_common_config('FontSize', DEFAULT_FONT_SIZE) # TODO
     FontName = get_and_save_from_common_config('FontName', DEFAULT_FONT_NAME)
 
     @classmethod

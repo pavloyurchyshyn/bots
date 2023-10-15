@@ -42,7 +42,7 @@ class BaseEffect:
         self.dealer: 'BaseEntityAbc' = dealer
         self.target: 'BaseEntityAbc' = target
         self.parent_skill: BaseSkillInterface = parent_skill
-        self.duration: int = round(duration)
+        self.duration: int = int(duration)
 
     def tick(self):
         if self.permanent:

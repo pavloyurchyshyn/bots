@@ -77,6 +77,14 @@ class HexSizes:
     def size(self):
         return HexMath.get_hex_size(self.radius)
 
+    @property
+    def hex_height(self) -> float:
+        return HexMath.get_height(self.radius)
+
+    @property
+    def hex_width(self) -> float:
+        return HexMath.get_width(self.radius)
+
 
 class Hexagon(XYIdHex, Cube, HexSizes):
     def __init__(self, x_id, y_id, radius):
@@ -102,7 +110,7 @@ class HexMath:
 
     @classmethod
     def get_hex_size(cls, radius: int) -> Tuple[int, int]:
-        return int(cls.get_width(radius)), int(cls.get_height(radius))
+        return int(cls.get_width(radius)) + 3, int(cls.get_height(radius)) + 3
 
     @staticmethod
     def get_width(r: int) -> int:
@@ -229,6 +237,7 @@ class HexMath:
     @classmethod
     def get_xy_distance(cls, a: Tuple[int, int], b: Tuple[int, int]) -> float:
         return cls.get_cube_distance(Cube(*cls.xy_id_to_qr(*a)), Cube(*cls.xy_id_to_qr(*b)))
+
     @classmethod
     def lerp(cls, a: Union[int, float], b: Union[int, float], t: Union[int, float]) -> int:
         return a + (b - a) * t

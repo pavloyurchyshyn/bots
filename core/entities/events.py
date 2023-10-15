@@ -3,7 +3,7 @@ from typing import Callable, Dict, List, Any
 
 
 class BaseEventsEnum:
-    # OnDamageEvent = 'on_damage_event'
+    OnDamageEvent = 'on_damage_event'
     PreDamageEvent = 'pre_damage_event'
     PostDamageEvent = 'post_damage_event'
 
@@ -15,22 +15,8 @@ class BaseEventsEnum:
     PostSkillUseEvent = 'post_skill_use_event'
     OnSkillUseEvent = 'on_skill_use_event'
 
-    OnStunEvent = 'on_stun_event'
-    OnSilenceEvent = 'on_silence_event'
-    OnDeathEvent = 'on_silence_event'
-    OnMechKillEvent = 'on_mech_kill_event'
-    OnMechDamageEvent = 'on_mech_damage_event'
-    OnNPCKillEvent = 'on_npc_kill_event'
-    OnNPCDamageEvent = 'on_npc_damage_event'
-    OnEquipDetailEven = 'on_equip_detail_event'
     OnEffectApplyEvent = 'on_effect_apply_event'
     OnEffectEndEvent = 'on_effect_end_event'
-
-    PreActionEvent = 'pre_action_event'
-    PostActionEvent = 'post_action_event'
-    PreRoundEvent = 'pre_round_event'
-    PostRoundEvent = 'post_round_event'
-
 
 class PreRoundEventAbcMixin(ABCMeta):
     """Before any round"""
@@ -128,70 +114,38 @@ class OnSkillUseEventAbcMixin(ABCMeta):
         raise NotImplementedError
 
 
-class OnStunEventAbcMixin(ABCMeta):
-    """Stun used on entity"""
-
-    @abstractmethod
-    def on_stun_event(self, *_, **__):
-        raise NotImplementedError
-
-
-class OnSilenceEventAbcMixin(ABCMeta):
-    """Silence used on entity"""
-
-    @abstractmethod
-    def on_silence_event(self, *_, **__):
-        raise NotImplementedError
+# class OnStunEventAbcMixin(ABCMeta):
+#     """Stun used on entity"""
+#
+#     @abstractmethod
+#     def on_stun_event(self, *_, **__):
+#         raise NotImplementedError
+#
+#
+# class OnSilenceEventAbcMixin(ABCMeta):
+#     """Silence used on entity"""
+#
+#     @abstractmethod
+#     def on_silence_event(self, *_, **__):
+#         raise NotImplementedError
 
 
 class OnDeathEventAbcMixin(ABCMeta):
-    """Silence used on entity"""
+    """Death of entity"""
 
     @abstractmethod
     def on_silence_event(self, *_, **__):
         raise NotImplementedError
 
 
-class OnMechKillEventAbcMixin(ABCMeta):
-    """When entity killed mech"""
-
-    @abstractmethod
-    def on_mech_kill_event(self, *_, **__):
-        raise NotImplementedError
-
-
-class OnMechDamageEventAbcMixin(ABCMeta):
-    """When entity damaged mech"""
-
-    @abstractmethod
-    def on_mech_damage_event(self, *_, **__):
-        raise NotImplementedError
-
-
-class OnNPCKillEventAbcMixin(ABCMeta):
-    """When entity killed npc"""
-
-    @abstractmethod
-    def on_npc_kill_event(self, *_, **__):
-        raise NotImplementedError
-
-
-class OnNPCDamageEventAbcMixin(ABCMeta):
-    """When entity damaged npc"""
-
-    @abstractmethod
-    def on_npc_damage_event(self, *_, **__):
-        raise NotImplementedError
-
-
-class OnEquipDetailEventAbcMixin(ABCMeta):
-    """When entity equips detail"""
-
-    @abstractmethod
-    def on_equip_detail_event(self, *_, **__):
-        raise NotImplementedError
-
-
+# class OnEquipDetailEventAbcMixin(ABCMeta):
+#     """When entity equips detail"""
+#
+#     @abstractmethod
+#     def on_equip_detail_event(self, *_, **__):
+#         raise NotImplementedError
+#
+#
 class OnEffectApplyEventAbcMixin(ABCMeta):
     """When new effect applied"""
 
@@ -208,16 +162,16 @@ class OnEffectEndEventAbcMixin(ABCMeta):
         raise NotImplementedError
 
 
-class OnAllEventsInterface(PreDamageEventAbcMixin, PostDamageEventAbcMixin, OnDealDamageEventAbcMixin,
+class OnAllEventsInterface(PreDamageEventAbcMixin, PostDamageEventAbcMixin,
+                           OnDealDamageEventAbcMixin,
                            PreMoveEventAbcMixin, PostMoveEventAbcMixin,
-                           PreSkillUseEventAbcMixin, PostSkillUseEventAbcMixin, OnSkillUseEventAbcMixin,
+                           PreSkillUseEventAbcMixin, PostSkillUseEventAbcMixin,
+                           OnSkillUseEventAbcMixin,
 
-                           OnStunEventAbcMixin, OnSilenceEventAbcMixin,
+                           # OnStunEventAbcMixin, OnSilenceEventAbcMixin,
 
-                           OnDeathEventAbcMixin,
-                           OnMechKillEventAbcMixin, OnMechDamageEventAbcMixin,
-                           OnNPCKillEventAbcMixin, OnNPCDamageEventAbcMixin,
-                           OnEquipDetailEventAbcMixin,
+                           # OnDeathEventAbcMixin,
+                           # OnEquipDetailEventAbcMixin,
                            OnEffectApplyEventAbcMixin, OnEffectEndEventAbcMixin,
 
                            PreRoundEventAbcMixin, PostRoundEventAbcMixin,
@@ -272,8 +226,9 @@ class EventsManager:
     def do_on_skill_use_event(self, *args, **kwargs):
         self.do_(self.Events.OnSkillUseEvent, *args, **kwargs)
 
-    def on_effect_apply_event(self, *args, **kwargs):
-        self.do_(self.Events.OnEffectApplyEvent, *args, **kwargs)
+    # TODO check for positive or negative effect
+    def on_effect_apply_event(self, effect: 'BaseEffect', *args, **kwargs):
+        self.do_(self.Events.OnEffectApplyEvent, effect=effect, *args, **kwargs)
 
     def on_effect_end_event(self, *args, **kwargs):
         self.do_(self.Events.OnEffectEndEvent, *args, **kwargs)

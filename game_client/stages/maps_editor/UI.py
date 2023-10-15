@@ -5,13 +5,13 @@ from core.world.maps_manager import MapsManager
 from core.world.classic_maps.empty import Empty
 from core.world.base.visual.world import VisualWorld
 from core.world.base.logic.tiles_data import EmptyTile, TileTypes, SpawnTile
-from core.world.base.logic.tile_data.tile_abs import TileDataAbs
 
 from game_client.stages.maps_editor.settings.other import *
 from game_client.stages.maps_editor.settings.uids import UIDs
 from game_client.stages.maps_editor.settings.menu_abs import MenuAbs
 from game_client.stages.maps_editor.settings.buttons import BUTTONS_DATA
-from game_client.stages.maps_editor.settings.pencil_buttons import PENCIL_BUTTONS
+from game_client.stages.maps_editor.settings.pencil_buttons import PencilElement
+from game_client.stages.maps_editor.chosen_pencil_module import ChosenPencilModule
 
 from visual.UI.base.menu import Menu
 from visual.UI.base.text import Text
@@ -23,10 +23,11 @@ from settings.localization.menus.UI import UILocal
 from settings.tile_settings import TileSettings
 
 
-class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
+class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin, ChosenPencilModule):
     def __init__(self):
-        super(MapEditor, self).__init__({**BUTTONS_DATA, **PENCIL_BUTTONS})
+        super(MapEditor, self).__init__({**BUTTONS_DATA})
         PopUpsController.__init__(self)
+        ChosenPencilModule.__init__(self)
         self.name_inp = InputBase(UIDs.MapNameInput,
                                   text='',
                                   default_text='Enter name',
@@ -80,7 +81,7 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         self.spawns: List[Tuple[int, int]] = None if map_save is None else map_save.spawns
         self.load_save(map_save)
 
-        self.maps_container = Container('container', True,
+        self.maps_container = Container('maps_container', True,
                                         parent=self,
                                         x_k=MapsButtonsContainer.X, y_k=MapsButtonsContainer.Y,
                                         h_size_k=MapsButtonsContainer.H_size,
@@ -89,8 +90,28 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
 
         self.unsaved_edit = False
 
-        self.current_pencil_type: TileDataAbs = TileTypes.Forest
         self.update_spawns_text()
+
+    def update(self):
+        Global.display.fill((0, 0, 0))
+        collided_popup_btn = self.update_popups()
+
+        self.size_txt.draw()
+        self.w_v_size_txt.draw()
+        self.w_h_size_txt.draw()
+        self.spawns_amount_txt.draw()
+        self.update_and_draw_map()
+        self.upd_draw_input()
+        self.upd_draw_buttons()
+
+        self.upd_draw_map_container()
+        self.update_draw_pencils_container()
+        self.draw_pencil_icon()
+        self.draw_current_pencil_attrs()
+
+        self.draw_popups()
+        if collided_popup_btn:
+            self.draw_border_around_element(collided_popup_btn)
 
     def load_save(self, map_save: MapSave):
         self.name_inp.change_text(map_save.name)
@@ -106,10 +127,10 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         self.maps_container.clear()
         for map_save in self.maps_mngr.maps:
             self.maps_container.add_element(MapFuncUI(uid=map_save.name, map_save=map_save,
-                                                      parent=self.maps_container, editor_ui=self))
+                                                      parent=self.maps_container, editor_ui=self), render=False)
 
         self.maps_container.add_element(MapFuncUI(uid=Empty.name, map_save=Empty(),
-                                                  parent=self.maps_container, editor_ui=self))
+                                                  parent=self.maps_container, editor_ui=self), render=False)
         self.maps_container.build()
 
     def init_map(self, map_save: MapSave):
@@ -135,24 +156,6 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
     def update_spawns_text(self):
         self.spawns_amount_txt.change_text(f'Spawns : {len(self.spawns)}')
 
-    def update(self):
-        Global.display.fill((0, 0, 0))
-        collided_popup_btn = self.update_popups()
-
-        self.size_txt.draw()
-        self.w_v_size_txt.draw()
-        self.w_h_size_txt.draw()
-        self.spawns_amount_txt.draw()
-        self.update_and_draw_map()
-        self.upd_draw_input()
-        self.upd_draw_buttons()
-
-        self.upd_draw_map_container()
-
-        self.draw_popups()
-        if collided_popup_btn:
-            self.draw_border_around_element(collided_popup_btn)
-
     def update_popups(self):
         collided_popup_btn = None
         if self.popups:
@@ -175,7 +178,7 @@ class MapEditor(Menu, PopUpsController, MenuAbs, DrawElementBorderMixin):
         self.maps_container.draw()
         if self.maps_container.collide_point(Global.mouse.pos):
             if Global.mouse.scroll:
-                self.maps_container.change_dx(Global.mouse.scroll)
+                self.maps_container.change_dy(Global.mouse.scroll)
 
             mouse_pos = Global.mouse.pos
             for el in self.maps_container.elements:

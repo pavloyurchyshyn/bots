@@ -33,7 +33,7 @@ class Body:
     def game_loop(self):
         for b in self.buttons:
             b.draw()
-            if Global.mouse.l_up and b.collide_point(Global.mouse.pos):
+            if Global.mouse.l_up and b.collide_point(Global.mouse.position):
                 b.do_action()
 
 

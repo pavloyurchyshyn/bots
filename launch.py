@@ -11,7 +11,11 @@ init()
 from pygame import display, event as EVENT, MOUSEBUTTONDOWN, MOUSEBUTTONUP, KEYDOWN, TEXTINPUT
 from pygame.time import Clock
 
-display.set_icon(pygame.image.load(Path(getcwd()) / 'game.ico'))
+try:
+    display.set_icon(pygame.image.load(Path(getcwd()) / 'game.ico'))
+except:
+    pass
+
 from global_obj.main import Global
 from visual.UI.constants.colors import WHITE
 from global_obj.display import MAIN_DISPLAY

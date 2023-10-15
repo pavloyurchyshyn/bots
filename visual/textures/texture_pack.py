@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 from typing import Dict, Union
-from core.shape.hex import Hex
 from pygame import Surface, draw
 from global_obj.logger import get_logger
 from visual.UI.utils import get_surface, load_image
@@ -9,8 +8,7 @@ LOGGER = get_logger()
 
 
 class TexturePack:
-    ERROR_TEXTURE = get_surface(231, 200, 1, color=(0, 0, 0, 0))
-    draw.polygon(ERROR_TEXTURE, (200, 0, 0), Hex(0, 0, 115).dots[1:])
+    ERROR_TEXTURE = get_surface(231, 200, 1, color=(200, 0, 0, 0))
 
     def __init__(self, path: Union[str, Path], pack_name: str = None):
         self.path: Path = Path(path)
@@ -18,17 +16,19 @@ class TexturePack:
         self.textures: Dict[str, Surface] = {}
         self.load(self.path)
 
-    def get_texture(self, *args) -> Surface:
-        k = Path(*args).as_posix()
-        if k in self.textures:
-            return self.textures[k]
+    def get_texture(self, *args, raise_error: bool = False) -> Surface:
+        path = Path(*args).as_posix()
+        if path in self.textures:
+            return self.textures[path]
         else:
-            LOGGER.debug(f'Missing texture: {k}')
-            keys = tuple(filter(lambda key: key.startswith(k), self.textures.keys()))
+            LOGGER.debug(f'Missing texture: {path}')
+            keys = tuple(filter(lambda key: key.startswith(path), self.textures.keys()))
             if keys:
                 return self.textures[keys[0]]
             else:
-                LOGGER.debug(f'Returns error texture {k}') # TODO warn
+                LOGGER.warning(f'Returns error texture {path}')  # TODO warn
+                if raise_error:
+                    raise FileNotFoundError(path)
                 return self.ERROR_TEXTURE
 
     def load(self, parent_path):
@@ -52,9 +52,9 @@ class TexturePack:
 
 if __name__ == '__main__':
     from settings.base import TEXTURES_FOLDER
-    from settings.common import get_texture_pack
+    from settings.common import get_texture_pack_name
 
-    tp = TexturePack(TEXTURES_FOLDER / get_texture_pack())
+    tp = TexturePack(TEXTURES_FOLDER / get_texture_pack_name())
     print(tp.name)
     print(tp.path)
     print(Path('1', '', '2'))

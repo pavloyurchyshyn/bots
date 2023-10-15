@@ -113,3 +113,6 @@ class Mouse:
     def test(self):
         print('up', self.l_up, self.r_up, '| down', self.l_down, self.r_down, '| hold', self.l_hold, self.r_hold)
 
+    @property
+    def position(self):
+        return self._pos

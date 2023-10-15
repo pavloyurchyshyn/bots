@@ -5,11 +5,12 @@ from visual.UI.base.element import BaseUI, GetSurfaceMixin, DrawBorderMixin, Bui
 
 
 class Container(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBorderMixin):
+    STEP_K = 0.01
+
     def __init__(self, uid, draw_elements=False, scroll_k=0.24, **kwargs):
         super(Container, self).__init__(uid=uid, **kwargs)
         ShapeAbs.__init__(self, **kwargs)
 
-        # self.surface = self.get_surface()
         self.__elements: List[BaseUI] = []
         self.__elements_dict = {}
         self.draw_elems = draw_elements
@@ -33,18 +34,29 @@ class Container(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBord
     def clear(self):
         self.__elements.clear()
 
-    def change_dx(self, ddx):
+    def change_dy(self, dy):
+        if dy == 0:
+            return
         if self.summary_els_height > self.height:
-            self.dy += ddx * self.summary_els_height / len(self.__elements) * 0.25
+            self.dy += dy * self.scroll_speed
+            step = self.v_size * self.STEP_K
+            steps_h = step * (len(self.__elements) + 1.5)
+            if steps_h + self.summary_els_height + self.dy < self.height:
+                self.dy = self.height - steps_h - self.summary_els_height
+            if self.dy > 0:
+                self.dy = 0
             self.calculate_elements_position()
             self.render()
+        else:
+            self.dy = 0
 
-    def add_element(self, element: BaseUI):
+    def add_element(self, element: BaseUI, render: bool = True):
         self.__elements.append(element)
         self.__elements_dict[element.uid] = element
         self.summary_els_height += element.height
         self.calculate_elements_position()
-        self.render()
+        if render:
+            self.render()
         self.update_scroll_speed()
 
     def delete_element(self, element: BaseUI):
@@ -57,18 +69,10 @@ class Container(BaseUI, ShapeAbs, BuildRectShapeMixin, GetSurfaceMixin, DrawBord
         self.update_scroll_speed()
 
     def calculate_elements_position(self):
-        step = self.v_size * 0.01
+        step = self.v_size * self.STEP_K
         y = step + self.dy
-        if step + self.dy > step:
-            self.dy = 0
-            y = step
-        elif (self.summary_els_height > self.height) and self.summary_els_height + self.dy + step < self.height:
-            y = self.height - self.summary_els_height - step
-            self.dy = self.height - self.summary_els_height - step
-
         for el in self.__elements:
             el.move((el.x, y))
-            # el.y = y
             y += step + el.v_size
 
     def get_x(self) -> int:
